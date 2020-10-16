@@ -5,7 +5,6 @@
 * Théophane DURAND
 * Jules BOULET
 * Sosthène LEROY
-* Marion DURAND
 
 ## Chargé de TD : 
 * Antoine JOUGLET
