@@ -1,0 +1,126 @@
+@startuml
+
+class Computer{
+    -variables: map<std::string, Literal>
+    -error: std::string
+    +{static}getInstance(): Computer
+    +evalLine(s: std::string)
+    +storeVariable(s: std::string, l: Literal)
+    +forgetVariable(s: std::string)
+    +import(filename: std::string)
+    +export(filename: std::string)
+}
+Stack "1" *-left- Computer
+
+enum LiteralType{
+    linteger
+    lrational
+    lreal
+    latom
+    lexpression
+    lprogram
+}
+
+interface Literal{
+    +{static}isLiteral(s: std::string): bool
+    +{static}makeLiteral(s: std::string): Literal
+    +{abstract}getType(): LiteralType
+    +{abstract}toString(): std::string
+}
+
+class LInteger{
+    -value: int
+    +getValue(): int
+}
+Literal <|-left- LInteger
+
+class LRational{
+    -num: int
+    -den: int
+    +getNum(): int
+    +getDen(): int
+}
+Literal <|-right- LRational
+
+class LReal{
+    -value: double
+    +getValue(): double
+}
+Literal <|-- LReal
+
+class LAtom{
+    -value: std::string
+    +getValue(): std::string
+}
+Literal <|-- LAtom
+
+class LExpression{
+    -value: std::string
+    +getValue(): std::string
+}
+LAtom <|-- LExpression
+
+class LProgram{
+    +getLiterals(): std::vector<Literal>
+    +iter(): LiteralIterator
+}
+LProgram *-- Literal: literals
+Literal <|-- LProgram
+
+class Stack{
+    +push(lit: Literal)
+    +pop()
+    +top(): Literal
+    +size(): size_t
+    +iter(): LiteralIterator
+}
+Stack --* "*" Literal: storage
+
+class LiteralIterator{
+    -pos: size_t
+    +LiteralIterator(s: Stack)
+    +LiteralIterator(p: LProgram)
+    +next()
+    +item(): Literal
+    +done(): bool
+}
+
+interface Operator{
+    -{static}operators: std::map<std::string, Operator>
+    +{static}isOperator(s: std::string): bool
+    +{static}getOperator(s: std::string): Operator
+    +{static}{abstract}getInstance(): Operator
+    +{abstract}getArity(): unsigned int
+    +{abstract}apply(stack: Stack)
+}
+
+Operator <|-- OpAdd
+'Operator <|-- OpSub
+'Operator <|-- OpMul
+'Operator <|-- OpDiv
+'Operator <|-- OpDivI
+'Operator <|-- OpMod
+'Operator <|-- OpNeg
+'
+Operator <|-- OpEq
+'Operator <|-- OpNEq
+'Operator <|-- OpSup
+'Operator <|-- OpInf
+'Operator <|-- OpSupE
+'Operator <|-- OpInfE
+'Operator <|-- OpAnd
+'Operator <|-- OpOr
+'Operator <|-- OpNot
+'
+Operator <|-- OpEval
+'
+Operator <|-- OpDup
+'Operator <|-- OpDrop
+'Operator <|-- OpSwap
+'Operator <|-- OpClear
+'
+Operator <|-- OpIfT
+'
+Operator <|-- OpSto
+'Operator <|-- OpForget
+@enduml
