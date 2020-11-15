@@ -1,0 +1,190 @@
+@startuml
+/' Objects '/
+
+class ComputerException {
+	+ComputerException(const QString& str)
+	+getInfo() : QString {query}
+	-info : QString
+}
+
+
+class Controleur {
+	+Controleur(ExpressionManager& m, Pile& v)
+	-expMng : ExpressionManager&
+	-expAff : Pile&
+	+commande(const QString& c) : void
+}
+
+
+class Expression {
+	-Expression(int v)
+	-Expression(const Expression& e)
+	-operator=(const Expression& e) : Expression&
+	+toString() : QString {query}
+	+getValue() : int {query}
+	-value : int
+}
+
+
+class ExpressionManager {
+	-ExpressionManager()
+	-ExpressionManager(const ExpressionManager& m)
+	-~ExpressionManager()
+	+addExpression(int v) : Expression&
+	-exps : Expression**
+	+{static} getInstance() : ExpressionManager&
+	-operator=(const ExpressionManager& m) : ExpressionManager&
+	-{static} handler : Handler
+	+getIterator() : Iterator
+	+begin() : const_iterator {query}
+	+end() : const_iterator {query}
+	+begin() : iterator
+	+end() : iterator
+	-nb : size_t
+	-nbMax : size_t
+	-agrandissementCapacite() : void
+	+{static} libererInstance() : void
+	+removeExpression(Expression& e) : void
+}
+
+
+class ExpressionManager::Iterator {
+	-Iterator(Expression** u, size_t nb)
+	+Iterator()
+	+current() : Expression& {query}
+	-currentExp : Expression**
+	+isDone() : bool {query}
+	-nbRemain : size_t
+	+next() : void
+}
+
+class ExpressionManager::const_iterator {
+	-const_iterator(Expression** u)
+	+const_iterator()
+	+operator*() : Expression& {query}
+	-current : Expression**
+	+operator!=(const_iterator it) : bool {query}
+	+operator++() : const_iterator&
+}
+
+
+class ExpressionManager::iterator {
+	-iterator(Expression** u)
+	+iterator()
+	+operator*() : Expression& {query}
+	-current : Expression**
+	+operator!=(iterator it) : bool {query}
+	+operator++() : iterator&
+}
+
+
+class Item {
+	+Item()
+	+getExpression() : Expression& {query}
+	-exp : Expression*
+	+raz() : void
+	+setExpression(Expression& e) : void
+}
+
+
+class Pile {
+	+Pile()
+	+~Pile()
+	+top() : Expression& {query}
+	-items : Item*
+	+getMessage() : QString {query}
+	-message : QString
+	+estVide() : bool {query}
+	+begin() : const_iterator {query}
+	+end() : const_iterator {query}
+	+begin() : iterator
+	+end() : iterator
+	+modificationEtat() : signals : void
+	+getNbItemsToAffiche() : size_t {query}
+	-nb : size_t
+	-nbAffiche : size_t
+	-nbMax : size_t
+	+taille() : size_t {query}
+	+affiche(QTextStream& f) : void {query}
+	-agrandissementCapacite() : void
+	+pop() : void
+	+push(Expression& e) : void
+	+setMessage(const QString& m) : void
+	+setNbItemsToAffiche(size_t n) : void
+}
+
+
+class Pile::const_iterator {
+	-const_iterator(Item* u)
+	+const_iterator()
+	+operator*() : Expression& {query}
+	-current : Item*
+	+operator!=(const_iterator it) : bool {query}
+	+operator++() : const_iterator&
+}
+
+
+class Pile::iterator {
+	-iterator(Item* u)
+	+iterator()
+	+operator*() : Expression& {query}
+	-current : Item*
+	+operator!=(iterator it) : bool {query}
+	+operator++() : iterator&
+}
+
+
+class ExpressionManager::Handler {
+	+Handler()
+	+~Handler()
+	+instance : ExpressionManager*
+}
+
+
+
+
+
+/' Inheritance relationships '/
+
+
+
+
+/' Aggregation relationships '/
+
+Controleur *-- ExpressionManager
+
+
+Controleur *-- Pile
+
+
+ExpressionManager o-- Expression
+
+
+ExpressionManager::Handler o-right- ExpressionManager
+
+
+ExpressionManager::Iterator o-- Expression
+
+
+ExpressionManager::const_iterator o-- Expression
+
+
+ExpressionManager::iterator o-- Expression
+
+
+Item o-- Expression
+
+
+Pile o-- Item
+
+
+Pile::const_iterator o-- Item
+
+
+Pile::iterator o-- Item
+
+
+
+
+
+@enduml
