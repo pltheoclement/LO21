@@ -1,0 +1,37 @@
+@startuml
+left to right direction
+rectangle CompUT{
+  (Faire des calculs) as (calcul)
+  (Ecrire un programme) as (programme)
+  (Sauvegarder un programme) as (save)
+  (enregistrer une variable) as (variable)
+  (comparer des litérales) as (comparer)
+  (executer un programme) as (execProg)
+}
+
+
+User --> (calcul)
+User --> (programme)
+User --> (save)
+User --> (variable)
+User --> (comparer)
+User --> (execProg)
+
+
+note right of (calcul)
+  Les opérations sont :
+  — +, opérateur binaire.
+  — -, opérateur binaire.
+  — * , opérateur binaire.
+  — /, opérateur binaire. Une tentative de division par zéro ne modifie pas la pile et affiche un message d’erreur à l’utilisateur.
+  — DIV, opérateur binaire : division entière ; MOD, opérateur binaire : modulo (reste de la division entière). Ces opérations ne peuvent s’appliquer que sur des littérales entières.
+  — NEG, opérateur unaire : change le signe de la littérale (transforme un nombre négatif en nombre positif et vice et versa).
+end note
+
+note right of (comparer)
+  — =, !=, =<, >=, <, > : opérateurs binaires pour les tests respectivement égal, différent, inférieur ou égal, supérieur ou égal, strictement inférieur, strictement supérieur.
+  — AND, opérateur binaire : ET logique.
+  — OR, opérateur binaire : OU logique.
+  — NOT, opérateur unaire : NON logique.
+end note
+@enduml
