@@ -1,0 +1,50 @@
+@startuml
+title Aditionner deux litéral
+
+actor user
+participant "__C: Computer__" as Computer
+participant "__S: Stack__" as Stack
+participant "__L: LiteralManager__" as LiteralManager
+participant "__O: OperatorManager__" as OperatorManager
+participant "__Add: OpAdd__" as Add
+
+user -> Computer : l1 = ecrireCommande()
+note left: user écrit "1"
+activate Computer
+Computer -> Computer : evalLigne(l1)
+  group evalLine()
+  Computer -> LiteralManager : isLit = isLiteral(l1)
+  group if isLit == true
+    Computer -> LiteralManager : lit = makeLiteral(l1)
+    Computer -> Stack : push(lit)
+  end
+end
+
+deactivate Computer
+user -> Computer : l2 = ecrireCommande()
+note left: user écrit "1"
+activate Computer
+Computer -> Computer : evalLigne(l2)
+  group evalLine()
+  Computer -> LiteralManager : isLit = isLiteral(l2)
+  group if isLit == true
+    Computer -> LiteralManager : lit = makeLiteral(l2)
+    Computer -> Stack : push(lit)
+  end
+end
+deactivate Computer
+
+user -> Computer : l3 = ecrireCommande()
+note left: user écrit "+"
+activate Computer
+Computer -> Computer : evalLigne(l3)
+  group evalLine()
+  Computer -> LiteralManager : isLit = isLiteral(l3)
+  group if isLit == true
+    Computer -> LiteralManager : lit = makeLiteral(l3)
+    Computer -> Stack : push(lit)
+  end
+end
+deactivate Computer
+
+@enduml
