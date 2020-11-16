@@ -16,19 +16,21 @@ Computer -> Computer : evalLigne(l1)
   Computer -> LiteralManager : isLit = isLiteral(l1)
   group if isLit == true
     Computer -> LiteralManager : lit = makeLiteral(l1)
+    LiteralManager -> "__lit1: LInteger__"** : create()
     Computer -> Stack : push(lit)
   end
 end
 
 deactivate Computer
 user -> Computer : l2 = ecrireCommande()
-note left: user écrit "1"
+note left: user écrit "2"
 activate Computer
 Computer -> Computer : evalLigne(l2)
   group evalLine()
   Computer -> LiteralManager : isLit = isLiteral(l2)
   group if isLit == true
     Computer -> LiteralManager : lit = makeLiteral(l2)
+    LiteralManager -> "__lit2: LInteger__"** : create()
     Computer -> Stack : push(lit)
   end
 end
@@ -39,10 +41,20 @@ note left: user écrit "+"
 activate Computer
 Computer -> Computer : evalLigne(l3)
   group evalLine()
-  Computer -> LiteralManager : isLit = isLiteral(l3)
-  group if isLit == true
-    Computer -> LiteralManager : lit = makeLiteral(l3)
-    Computer -> Stack : push(lit)
+  Computer -> LiteralManager : isOp = isOperator(l3)
+  group if isOp == true
+    Computer -> OperatorManager : Op = getOperator(l3)
+    Computer -> Add **
+    Computer -> Add :apply(Stack)
+    Add -> Stack : item1 = top()
+    note left: item1 = lit2 = 2
+    Stack -> Stack : pop()
+    Add -> Stack : item2 = top()
+    note left: item2 = lit1 = 1
+    Stack -> Stack : pop()
+    Add -> Add : res = additionne(item1, item2)
+    Add -> LiteralManager : lit3 = makeLiteral(res)
+    Add -> Stack : push(lit3)
   end
 end
 deactivate Computer
