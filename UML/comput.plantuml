@@ -98,7 +98,7 @@ interface Operator{
 
 Operator <|-- OpAdd
 'Operator <|-- OpSub
-'Operator <|-- OpMul
+Operator <|-- OpMul
 'Operator <|-- OpDiv
 'Operator <|-- OpDivI
 'Operator <|-- OpMod
