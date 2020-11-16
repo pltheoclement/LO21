@@ -151,16 +151,16 @@ class ExpressionManager::Handler {
 
 /' Aggregation relationships '/
 
-Controleur *-- ExpressionManager
+Controleur *-- "1" ExpressionManager
 
 
-Controleur *-- Pile
+Controleur *-- "1" Pile
 
 
-ExpressionManager o-- Expression
+ExpressionManager o-- "*" Expression
 
 
-ExpressionManager::Handler o-right- ExpressionManager
+ExpressionManager::Handler "1" o-right- "1" ExpressionManager
 
 
 ExpressionManager::Iterator o-- Expression
@@ -172,10 +172,10 @@ ExpressionManager::const_iterator o-- Expression
 ExpressionManager::iterator o-- Expression
 
 
-Item o-- Expression
+Item o-- "1" Expression
 
 
-Pile o-- Item
+Pile "1" o-- "*" Item
 
 
 Pile::const_iterator o-- Item
