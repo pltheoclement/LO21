@@ -22,10 +22,11 @@ enum LiteralType{
 }
 
 interface Literal{
-    +{static}isLiteral(s: std::string): bool
-    +{static}makeLiteral(s: std::string): Literal
-    +{static}makeLiteral(s: int): LiteralInteger
-    +{static}makeLiteral(s: double): LReal
+    +{static}isLiteral(s: std::string): str::string
+    +{static}makeLiteral(s: std::string, type: std::string): Literal
+    +{static}makeLiteral(i: int): LiteralInteger
+    +{static}makeLiteral(d: double): LReal
+    +{static}makeLiteral(n: int, d: int): LReal
     +{abstract}getType(): LiteralType
     +{abstract}toString(): std::string
 }
@@ -39,6 +40,7 @@ Literal <|-left- LInteger
 class LRational{
     -num: int
     -den: int
+    -simplify(): void
     +getNum(): int
     +getDen(): int
 }
@@ -89,7 +91,7 @@ class LiteralIterator{
 
 interface Operator{
     -{static}operators: std::map<std::string, Operator>
-    +{static}isOperator(s: std::string): bool
+    +{static}isOperator(s: std::string): std::string
     +{static}getOperator(s: std::string): Operator
     +{static}{abstract}getInstance(): Operator
     +{abstract}getArity(): unsigned int
@@ -98,7 +100,7 @@ interface Operator{
 
 Operator <|-- OpAdd
 'Operator <|-- OpSub
-Operator <|-- OpMul
+'Operator <|-- OpMul
 'Operator <|-- OpDiv
 'Operator <|-- OpDivI
 'Operator <|-- OpMod

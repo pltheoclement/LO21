@@ -1,0 +1,31 @@
+@startuml
+title Traitement Literale
+
+actor user
+
+participant "__C: Computer__" as Computer
+participant "__S: Stack__" as Stack
+participant "__L: LiteralManager__" as LiteralManager
+participant "__O: OperatorManager__" as OperatorManager
+
+user -> Computer : l1 = ecrireCommande()
+note left: user écrit "1"
+Computer -> Computer : evalLigne(l1)
+activate Computer
+group evalLine()
+  Computer -> LiteralManager : isLit = isLiteral(l1)
+  alt isLit = "int" OR isLit = "real" OR isLit = "prog" OR isLit = "atom" OR isLit = "rational"
+    Computer -> LiteralManager : makeLiteral(l1, isLit)
+  else
+    Computer -> OperatorManager : isOp = isOperator(l1)
+    alt isOp = [Nom d un operator]
+      Computer -> OperatorManager:getOperator(l1)
+      note left: voir diagramme Add
+    else
+      Computer -> Computer : raiseError()
+    end
+  end
+
+end
+
+@enduml

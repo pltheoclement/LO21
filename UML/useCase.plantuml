@@ -9,7 +9,7 @@ rectangle CompUT{
   (executer un programme) as (execProg)
 }
 
-User --> (calcul)
+
 User --> (calcul)
 User --> (programme)
 User --> (save)

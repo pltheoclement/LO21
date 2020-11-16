@@ -12,7 +12,7 @@ user -> Computer : l1 = ecrireCommande()
 note left: user écrit "1"
 Computer -> Computer : evalLigne(l1)
 activate Computer
-  group evalLine()
+group evalLine()
   Computer -> LiteralManager : isLit = isLiteral(l1)
   group if isLit == true
     Computer -> LiteralManager : lit = makeLiteral(l1)
