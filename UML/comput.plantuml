@@ -24,6 +24,8 @@ enum LiteralType{
 interface Literal{
     +{static}isLiteral(s: std::string): bool
     +{static}makeLiteral(s: std::string): Literal
+    +{static}makeLiteral(s: int): LiteralInteger
+    +{static}makeLiteral(s: double): LReal
     +{abstract}getType(): LiteralType
     +{abstract}toString(): std::string
 }
