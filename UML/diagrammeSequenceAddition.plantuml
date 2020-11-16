@@ -14,8 +14,8 @@ Computer -> Computer : evalLigne(l1)
 activate Computer
 group evalLine()
   Computer -> LiteralManager : isLit = isLiteral(l1)
-  group if isLit == true
-    Computer -> LiteralManager : lit = makeLiteral(l1)
+  group if isLit = "int"
+    Computer -> LiteralManager : lit = makeLiteral(l1, isLit)
     activate LiteralManager
     LiteralManager -> "__lit1: LInteger__" as lit1** : create()
     deactivate LiteralManager
@@ -31,8 +31,8 @@ Computer -> Computer : evalLigne(l2)
 activate Computer
   group evalLine()
   Computer -> LiteralManager : isLit = isLiteral(l2)
-  group if isLit == true
-    Computer -> LiteralManager : lit = makeLiteral(l2)
+  group if isLit = "int"
+    Computer -> LiteralManager : lit = makeLiteral(l2, isLit)
     activate LiteralManager
     LiteralManager -> "__lit2: LInteger__" as lit2** : create()
     deactivate LiteralManager
@@ -47,8 +47,8 @@ Computer -> Computer : evalLigne(l3)
 activate Computer
   group evalLine()
   Computer -> LiteralManager : isOp = isOperator(l3)
-  group if isOp == true
-    Computer -> OperatorManager : Op = getOperator(l3)
+  group if isOp == "OpAdd"
+    Computer -> OperatorManager : Op = getOperator(l3, isOp)
     Computer -> Add **
     Computer -> Add :apply(Stack)
     Add -> Stack : item1 = top()
