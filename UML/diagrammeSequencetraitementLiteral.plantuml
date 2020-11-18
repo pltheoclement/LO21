@@ -14,7 +14,7 @@ Computer -> Computer : evalLigne(l1)
 activate Computer
 group evalLine()
   Computer -> LiteralManager : isLit = isLiteral(l1)
-  alt isLit = "int" OR isLit = "real" OR isLit = "prog" OR isLit = "atom" OR isLit = "rational"
+  alt isLit = "int" OR isLit = "real" OR isLit = "prog" OR isLit = "rational" OR isLit = "var"
     Computer -> LiteralManager : makeLiteral(l1, isLit)
   else
     Computer -> OperatorManager : isOp = isOperator(l1)

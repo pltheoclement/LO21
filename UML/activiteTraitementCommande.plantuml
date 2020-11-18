@@ -1,0 +1,33 @@
+@startuml
+(*) --> "commande entrée"
+if "isLiteral(cmd) = linteger" then
+  -->[true] "makeLiteral(cmd, linteger)"
+else
+  if "isLiteral(cmd) = lrational" then
+    -->[true] "makeLiteral(cmd, lrational)"
+  else
+    if "isLiteral(cmd) = lreal" then
+      -->[true] "makeLiteral(cmd, lreal)"
+    else
+      if "isLiteral(cmd) = lvariable" then
+        -->[true] "Stack.push(Computer.getVariable(cmd))"
+      else
+        if "isLiteral(cmd) = lprogram" then
+          -->[true] "Stack.push(Computer.getProgram(cmd))"
+        else
+          if "isOperator(cmd) != nope" then
+            -->[true] "getOperator(cmd)"
+            --> apply(stack)
+          else
+            if "première lettre de cmd est en maj" then
+              -->[true] "makeLiteral(cmd, lexpression)"
+            else
+              -->false "raise Error"
+            endif
+          endif
+        endif
+      endif
+    endif
+  endif
+endif
+@enduml
