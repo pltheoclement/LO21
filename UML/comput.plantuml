@@ -19,6 +19,7 @@ enum LiteralType{
     latom
     lexpression
     lprogram
+    lerror
 }
 
 interface Literal{
