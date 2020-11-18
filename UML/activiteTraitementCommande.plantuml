@@ -10,9 +10,11 @@ else
       -->[true] "makeLiteral(cmd, lreal)"
     else
       if "isLiteral(cmd) = lvariable" then
+      note right: On test ici si la commande est un atom représentant la variable
         -->[true] "Stack.push(Computer.getVariable(cmd))"
       else
         if "isLiteral(cmd) = lprogram" then
+        note right: On test ici si la commande est un atom représentant le programme
           -->[true] "Stack.push(Computer.getProgram(cmd))"
         else
           if "isOperator(cmd) = 'un des opérateurs'" then
@@ -22,7 +24,11 @@ else
             if "première lettre de cmd est en maj" then
               -->[true] "makeLiteral(cmd, lexpression)"
             else
-              -->false "raise Error"
+              if "premier caractère est '[' et dernier carractere est ']'"
+                -->[true] "makeLiteral(cmd, lprogram)"
+              else
+                --> "raise Error"
+              endif
             endif
           endif
         endif
