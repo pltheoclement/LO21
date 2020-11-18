@@ -10,11 +10,11 @@ else
       -->[true] "makeLiteral(cmd, lreal)"
     else
       if "isLiteral(cmd) = lvariable" then
-      note right: On test ici si la commande est un atom représentant la variable
+      note left: On test ici si la commande est un atom représentant la variable
         -->[true] "Stack.push(Computer.getVariable(cmd))"
       else
         if "isLiteral(cmd) = lprogram" then
-        note right: On test ici si la commande est un atom représentant le programme
+        note left: On test ici si la commande est un atom représentant le programme
           -->[true] "Stack.push(Computer.getProgram(cmd))"
         else
           if "isOperator(cmd) = 'un des opérateurs'" then
