@@ -15,7 +15,7 @@ else
         if "isLiteral(cmd) = lprogram" then
           -->[true] "Stack.push(Computer.getProgram(cmd))"
         else
-          if "isOperator(cmd) != nope" then
+          if "isOperator(cmd) = 'un des opérateurs'" then
             -->[true] "getOperator(cmd)"
             --> apply(stack)
           else
