@@ -1,4 +1,5 @@
 @startuml
+title evalLine(cmd)
 (*) --> "commande entrée"
 if "isLiteral(cmd) = linteger" then
   -->[true] "makeLiteral(cmd, linteger)"
@@ -9,13 +10,9 @@ else
     if "isLiteral(cmd) = lreal" then
       -->[true] "makeLiteral(cmd, lreal)"
     else
-      if "isLiteral(cmd) = lvariable" then
-      note left: On test ici si la commande est un atom représentant la variable
-        -->[true] "Stack.push(Computer.getVariable(cmd))"
-      else
-        if "isLiteral(cmd) = lprogram" then
-        note left: On test ici si la commande est un atom représentant le programme
-          -->[true] "Stack.push(Computer.getProgram(cmd))"
+        if "isLiteral(cmd) = latom" then
+        note left: On test ici si la commande est un atom représentant un programme ou une variable
+          -->[true] "eval(latom)"
         else
           if "isOperator(cmd) = 'un des opérateurs'" then
             -->[true] "getOperator(cmd)"
@@ -30,7 +27,6 @@ else
                 --> "raise Error"
               endif
             endif
-          endif
         endif
       endif
     endif
