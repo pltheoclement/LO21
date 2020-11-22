@@ -1,3 +1,5 @@
+Diagramme de classe
+```plantuml
 @startuml
 
 class Computer{
@@ -99,6 +101,8 @@ interface Operator{
     +{abstract}apply(stack: Stack)
 }
 
+Operator o-left- "1" Stack
+
 Operator <|-- OpAdd
 'Operator <|-- OpSub
 'Operator <|-- OpMul
@@ -117,7 +121,7 @@ Operator <|-- OpEq
 'Operator <|-- OpOr
 'Operator <|-- OpNot
 '
-Operator <|-- OpEval
+'Operator <|-- OpEval
 '
 Operator <|-- OpDup
 'Operator <|-- OpDrop
@@ -129,3 +133,4 @@ Operator <|-- OpIfT
 Operator <|-- OpSto
 'Operator <|-- OpForget
 @enduml
+```
