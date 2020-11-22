@@ -1,1 +1,4 @@
 UML/*.sh
+.cproject
+.project
+.settings
