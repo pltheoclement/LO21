@@ -12,7 +12,7 @@ class Computer{
     +import(filename: std::string)
     +export(filename: std::string)
 }
-Stack "1" *-left- Computer
+Stack "1" -left-* Computer
 
 enum LiteralType{
     linteger
@@ -71,7 +71,7 @@ class LProgram{
     +getLiterals(): std::vector<Literal>
     +iter(): LiteralIterator
 }
-LProgram *-- Literal: literals
+LProgram --* Literal: literals
 Literal <|-- LProgram
 
 class Stack{
@@ -81,7 +81,7 @@ class Stack{
     +size(): size_t
     +iter(): LiteralIterator
 }
-Stack --* "*" Literal: storage
+Stack *-- "*" Literal: storage
 
 class LiteralIterator{
     -pos: size_t
@@ -102,6 +102,7 @@ interface Operator{
 }
 
 Operator o-left- "1" Stack
+Computer *-- Operator
 
 Operator <|-- OpAdd
 'Operator <|-- OpSub
@@ -121,7 +122,7 @@ Operator <|-- OpEq
 'Operator <|-- OpOr
 'Operator <|-- OpNot
 '
-'Operator <|-- OpEval
+Operator <|-- OpEval
 '
 Operator <|-- OpDup
 'Operator <|-- OpDrop
