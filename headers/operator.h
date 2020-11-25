@@ -16,15 +16,24 @@
 
 using namespace std;
 
+class OperatorException {
+	string info;
+public:
+	OperatorException(const string& str): info(str){}
+	string getInfo() const { return info; }
+};
+
+
 class Operator{
-	static unique_ptr<Operator> instance;
-	string const name;
+	static map<string, Operator*> operators;
 	unsigned int const arity;
 
 
 public :
-	Operator();
+	Operator(unsigned int a) : arity(a){}
+
 	unsigned int getArity(){return arity;}
+
 	static string isOperator(string s);
 	static Operator* getOperator(string s);
 	virtual ~Operator() = default;
