@@ -12,7 +12,7 @@ class Computer{
     +import(filename: std::string)
     +export(filename: std::string)
 }
-Stack "1" -left-* Computer
+Stack "1" -down-* Computer
 
 enum LiteralType{
     linteger
@@ -94,15 +94,14 @@ class LiteralIterator{
 
 interface Operator{
     -{static}operators: std::map<std::string, Operator>
+    -name: std::string
+    -arity: unsiged int
     +{static}isOperator(s: std::string): std::string
     +{static}getOperator(s: std::string): Operator
     +{static}{abstract}getInstance(): Operator
     +{abstract}getArity(): unsigned int
     +{abstract}apply(stack: Stack)
 }
-
-Operator o-left- "1" Stack
-Computer *-- Operator
 
 Operator <|-- OpAdd
 'Operator <|-- OpSub

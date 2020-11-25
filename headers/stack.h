@@ -8,9 +8,12 @@
 #ifndef HEADERS_STACK_H_
 #define HEADERS_STACK_H_
 
+#include "literal.h"
 
 class Stack{
-
+public:
+	Literal pop();
+	void push(Literal l);
 };
 
 
