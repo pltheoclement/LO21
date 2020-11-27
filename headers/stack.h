@@ -8,12 +8,14 @@
 #ifndef HEADERS_STACK_H_
 #define HEADERS_STACK_H_
 
+#include <memory>
 #include "literal.h"
 
+using namespace std;
 class Stack{
 public:
-	Literal pop();
-	void push(Literal l);
+	shared_ptr<Literal> pop();
+	void push(shared_ptr<Literal> l);
 };
 
 

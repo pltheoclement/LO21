@@ -12,9 +12,7 @@
 
 using namespace std;
 
-map<string, Operator*> Operator::operators;
-
-//Operator::operators.insert({"OpAdd", nullptr});
+map<string, Operator*> Operator::operators;// = {{"OpAdd", nullptr}, {"OpNeg", nullptr};
 
 string Operator::isOperator(string s){
 	if ( Operator::operators.find(s) != Operator::operators.end())
