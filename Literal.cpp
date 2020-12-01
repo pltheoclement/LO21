@@ -35,21 +35,17 @@ Literal Literal::makeLiteral(const std::string& s, LiteralType t){
 }
 
 LInteger LInteger::makeLiteral(const int& i){
-    LInteger* it = new LInteger;
-    it->value = i;
+    LInteger* it = new LInteger(i);
     return *it;
 }
 
 LReal LReal::makeLiteral(const double& d){
-    LReal* re = new LReal;
-    re->value = d;
+    LReal* re = new LReal(d);
     return *re;
 }
 
 LRational LRational::makeLiteral(const int& n, const int& d){
-    LRational* ra = new LRational;
-    ra->num = n;
-    ra->den = d;
+    LRational* ra = new LRational(n,d);
     ra->simplify();
     return *ra;
 }
