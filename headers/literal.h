@@ -9,9 +9,16 @@
 #define HEADERS_LITERAL_H_
 
 class Literal{
-	Literal& operator=(const Literal& l);
+public:
+	Literal();
+	Literal(const Literal& l);
+	Literal& operator=(const Literal& l){return l;}
+
 };
 
-
+class LRational : public Literal {
+public:
+	LRational(const Literal& l);
+};
 
 #endif /* HEADERS_LITERAL_H_ */
