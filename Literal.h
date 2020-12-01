@@ -21,6 +21,7 @@ class LInteger : public Literal {
     LiteralType type = linteger;
     int value;
 public:
+    LInteger(const int& i): value(i){}
     int getValue() const { return value;}
     static LInteger makeLiteral(const int& i);
     std::string toString(){ return std::to_string(value);}
@@ -31,6 +32,7 @@ class LReal : public Literal {
     LiteralType type = lreal;
     double value;
 public:
+    LReal(const double& d): value(d){}
     double getValue() const { return value;}
     static LReal makeLiteral(const double& d);
     std::string toString(){ return std::to_string(value);}
@@ -43,6 +45,7 @@ class LRational : public Literal {
     int den;
     void simplify();
 public:
+    LRational(const int& n, const int& d): num(n), den(d){}
     int getNum() const { return num;}
     int getDen() const { return den;}
     static LRational makeLiteral(const int& n, const int& d);
