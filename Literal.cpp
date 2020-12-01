@@ -46,7 +46,6 @@ LReal LReal::makeLiteral(const double& d){
 
 LRational LRational::makeLiteral(const int& n, const int& d){
     LRational* ra = new LRational(n,d);
-    ra->simplify();
     return *ra;
 }
 
