@@ -45,7 +45,7 @@ class LRational : public Literal {
     int den;
     void simplify();
 public:
-    LRational(const int& n, const int& d): num(n), den(d){}
+    LRational(const int& n, const int& d): num(n),den(d){ this->simplify();}
     int getNum() const { return num;}
     int getDen() const { return den;}
     static LRational makeLiteral(const int& n, const int& d);
