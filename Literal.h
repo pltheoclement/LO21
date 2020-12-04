@@ -17,6 +17,7 @@ public:
 
     LiteralType getType(){ return type;}
     virtual std::string toString() = 0;
+    virtual ~Literal() {}
 };
 
 class LInteger : public Literal {
@@ -30,6 +31,7 @@ public:
     int getValue() const { return value;}
     static LInteger* makeLiteral(const int& i);
     std::string toString(){ return std::to_string(value);}
+    ~LInteger(){}
 };
 
 class LReal : public Literal {
@@ -43,6 +45,7 @@ public:
     double getValue() const { return value;}
     static LReal* makeLiteral(const double& d);
     std::string toString(){ return std::to_string(value);}
+    ~LReal(){}
 };
 
 class LRational : public Literal {
@@ -58,6 +61,7 @@ public:
     int getDen() const { return den;}
     static LRational* makeLiteral(const int& n, const int& d);
     std::string toString(){ return std::to_string(num)+'/'+std::to_string(den);}
+    ~LRational(){}
 };
 
 class LAtom : public Literal {
@@ -66,6 +70,7 @@ class LAtom : public Literal {
     std::string value;
 public:
     std::string getValue() const { return value;}
+    ~LAtom(){}
 };
 
 class LExpression : public LAtom {
@@ -75,6 +80,7 @@ class LExpression : public LAtom {
 public:
     std::string getValue() const { return value;}
     std::string toString(){ return '\''+value+'\'';}
+    ~LExpression(){}
 };
 
 class LProgram : public Literal {
@@ -84,6 +90,7 @@ public:
     std::vector<Literal> getLiterals() const;
     //LiteralIterator iter(){ return LiteralIterator(*this);}
     std::string toString();
+    ~LProgram(){}
 };
 
 /* class LiteralIterator{
