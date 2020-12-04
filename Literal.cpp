@@ -17,7 +17,7 @@ LiteralType Literal::isLiteral(const std::string& s){
     }
 }
 
-Literal Literal::makeLiteral(const std::string& s, LiteralType t){
+Literal* Literal::makeLiteral(const std::string& s, LiteralType t){
     switch(t){
         case linteger : return LInteger::makeLiteral(std::stoi(s));
         case lreal : return LReal::makeLiteral(std::stod(s));
@@ -34,19 +34,19 @@ Literal Literal::makeLiteral(const std::string& s, LiteralType t){
     }
 }
 
-LInteger LInteger::makeLiteral(const int& i){
+LInteger* LInteger::makeLiteral(const int& i){
     LInteger* it = new LInteger(i);
-    return *it;
+    return it;
 }
 
-LReal LReal::makeLiteral(const double& d){
+LReal* LReal::makeLiteral(const double& d){
     LReal* re = new LReal(d);
-    return *re;
+    return re;
 }
 
-LRational LRational::makeLiteral(const int& n, const int& d){
+LRational* LRational::makeLiteral(const int& n, const int& d){
     LRational* ra = new LRational(n,d);
-    return *ra;
+    return ra;
 }
 
 std::vector<Literal> LProgram::getLiterals() const {
