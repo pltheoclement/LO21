@@ -8,8 +8,6 @@
 
 #include "literal.h"
 
-class Operator; // prevents circular dependency
-
 class Stack{
     std::vector<std::shared_ptr<Literal>> storage;
 public:
@@ -31,7 +29,7 @@ public:
     void storeVariable(const std::string& name, const Literal& l);
     void forgetVariable(const std::string& name);
     void pushVariable(const std::string& name);
-    void evalLine(const std::string& s);
+    std::string evalLine(const std::string& s);
 };
 
 #endif

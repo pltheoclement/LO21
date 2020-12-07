@@ -1,3 +1,4 @@
+#include "operator.h"
 #include "computer.h"
 
 void Stack::push(const std::shared_ptr<Literal>& pl) {
@@ -50,7 +51,65 @@ void Computer::pushVariable(const std::string &name) {
     }
 }
 
-void Computer::evalLine(const std::string &s) {
-    // TODO
+std::string Computer::evalLine(const std::string &s) {
+
+    // Checking program integrity
+    int brackets = 0;
+    for (char c : s){
+        if (c == '[') brackets++;
+        if (c == ']') brackets--;
+        if (brackets < 0) {
+            message = "Wrong bracket order";
+            return s;
+        }
+    }
+    if (brackets > 0) {
+        message = "Too many opening brackets";
+        return s;
+    }
+    if (brackets < 0) {
+        message = "Too many closing brackets";
+        return s;
+    }
+
+    // String processing
+    std::string inst;
+    std::string line = s + ' ';
+    for (char c : s) {
+        if (c == ' ' && brackets == 0) {
+            if (!inst.empty()) {
+                if (Operator::isOperator(inst)) {
+                    if (!Operator::getOperator(inst).apply(stack)) {
+                        return line;
+                    }
+                } else {
+                    LiteralType lt = Literal::isLiteral(line);
+                    if (lt == lerror) {
+                        message = "No such operator or literal " + inst;
+                        return line;
+                    } else if (lt == latom) {
+                        if (variables.contains(inst)) {
+                            evalLine(variables.at(inst));
+                        } else {
+                            message = "No variable or program called " + inst;
+                            return line;
+                        }
+                    } else {
+                        stack.push(Literal::makeLiteral(line, lt));
+                    }
+                }
+            }
+            line = line.substr(inst.length(), line.length()-1);
+            inst = "";
+        } else {
+            if (c == '[') {
+                brackets++;
+            } else if (c == ']') {
+                brackets--;
+            }
+            inst += c;
+        }
+    }
+    return "";
 }
 
