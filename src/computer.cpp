@@ -1,6 +1,11 @@
 #include "operator.h"
 #include "computer.h"
 
+Stack &Stack::getInstance() {
+    static Stack instance;
+    return instance;
+}
+
 void Stack::push(const std::shared_ptr<Literal>& pl) {
     storage.push_back(pl);
 }
@@ -17,13 +22,9 @@ size_t Stack::size() const{
     return storage.size();
 }
 
-Computer *Computer::instance = nullptr;
-
 Computer &Computer::getInstance() {
-    if (instance == nullptr){
-        instance = new Computer;
-    }
-    return *instance;
+    static Computer instance;
+    return instance;
 }
 
 void Computer::storeVariable(const std::string &name, const Literal &l) {
@@ -44,7 +45,7 @@ void Computer::pushVariable(const std::string &name) {
         switch (lt) {
             case lerror: message = "The variable " + name + " is invalid"; break;
             case lprogram: evalLine(variables.at(name)); break;
-            default: stack.push(Literal::makeLiteral(variables.at(name), lt));
+            default: Stack::getInstance().push(Literal::makeLiteral(variables.at(name), lt));
         }
     } else {
         message = "There is no variable with name " + name;
@@ -79,7 +80,7 @@ std::string Computer::evalLine(const std::string &s) {
         if (c == ' ' && brackets == 0) {
             if (!inst.empty()) {
                 if (Operator::isOperator(inst)) {
-                    if (!Operator::getOperator(inst).apply(stack)) {
+                    if (!Operator::getOperator(inst).apply(Stack::getInstance())) {
                         return line;
                     }
                 } else {
@@ -95,7 +96,7 @@ std::string Computer::evalLine(const std::string &s) {
                             return line;
                         }
                     } else {
-                        stack.push(Literal::makeLiteral(line, lt));
+                        Stack::getInstance().push(Literal::makeLiteral(line, lt));
                     }
                 }
             }

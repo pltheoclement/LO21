@@ -10,8 +10,9 @@
 
 class Stack{
     std::vector<std::shared_ptr<Literal>> storage;
-public:
     Stack() = default;
+public:
+    static Stack& getInstance();
     void push(const std::shared_ptr<Literal>& pl);
     void pop();
     const std::shared_ptr<Literal>& top() const;
@@ -19,10 +20,8 @@ public:
 };
 
 class Computer{
-    static Computer *instance;
     std::map<std::string, std::string> variables;
     std::string message;
-    Stack stack;
     Computer() = default;
 public:
     static Computer& getInstance();
