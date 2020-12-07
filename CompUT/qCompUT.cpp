@@ -8,136 +8,155 @@ QCompUT::QCompUT(QWidget* father) : QWidget(father){
     viewStack = new QTableWidget(stack->getNbItemsToAffiche(),1);
     commande  = new QLineEdit;
 
-
-    //Déclaration de la couche Stack, viewStack et message avec ajout des widgets
-    QVBoxLayout* layout_Stack = new QVBoxLayout; layoutV.push_back(layout_Stack);
-    layout_Stack->addWidget(message); layout_Stack->addWidget(viewStack); layout_Stack->addWidget(commande);
+    tab = new QTabWidget(this);
+    QWidget* Principal = new QWidget;secondary_view["Principal"] = Principal;
+    QWidget* Variable = new QWidget; secondary_view["Variable"] = Variable;
+    QWidget* Program = new QWidget;  secondary_view["Program"] = Program;
+    QWidget* Settings = new QWidget; secondary_view["Settings"] = Settings;
 
     //Déclaration des boutons chiffres dans un vecteur
-    QPushButton* b1 = new QPushButton("1"); buttons_First_keyboard.push_back(b1); b1->setFixedSize(40,40);
-    QPushButton* b2 = new QPushButton("2"); buttons_First_keyboard.push_back(b2); b2->setFixedSize(40,40);
-    QPushButton* b3 = new QPushButton("3"); buttons_First_keyboard.push_back(b3); b3->setFixedSize(40,40);
-    QPushButton* b4 = new QPushButton("4"); buttons_First_keyboard.push_back(b4); b4->setFixedSize(40,40);
-    QPushButton* b5 = new QPushButton("5"); buttons_First_keyboard.push_back(b5); b5->setFixedSize(40,40);
-    QPushButton* b6 = new QPushButton("6"); buttons_First_keyboard.push_back(b6); b6->setFixedSize(40,40);
-    QPushButton* b7 = new QPushButton("7"); buttons_First_keyboard.push_back(b7); b7->setFixedSize(40,40);
-    QPushButton* b8 = new QPushButton("8"); buttons_First_keyboard.push_back(b8); b8->setFixedSize(40,40);
-    QPushButton* b9 = new QPushButton("9"); buttons_First_keyboard.push_back(b9); b9->setFixedSize(40,40);
-    QPushButton* b0 = new QPushButton("0"); buttons_First_keyboard.push_back(b0); b0->setFixedSize(150,40);
-    QPushButton* bPlus  = new QPushButton("+"); buttons_First_keyboard.push_back(bPlus);  bPlus->setFixedSize(40,40);
-    QPushButton* bMoins = new QPushButton("-"); buttons_First_keyboard.push_back(bMoins); bMoins->setFixedSize(40,40);
-    QPushButton* bMult  = new QPushButton("x"); buttons_First_keyboard.push_back(bMult);  bMult->setFixedSize(40,40);
-    QPushButton* bDiv   = new QPushButton("/"); buttons_First_keyboard.push_back(bDiv);   bDiv->setFixedSize(40,40);
-    QPushButton* bEqual = new QPushButton("="); buttons_First_keyboard.push_back(bEqual); bEqual->setFixedSize(40,40);
+    QPushButton* b1 = new QPushButton("1"); buttons_First_keyboard["b1"] = b1; buttons_First_keyboard["b1"]->setFixedSize(40,40);
+    QPushButton* b2 = new QPushButton("2"); buttons_First_keyboard["b2"] = b2; buttons_First_keyboard["b2"]->setFixedSize(40,40);
+    QPushButton* b3 = new QPushButton("3"); buttons_First_keyboard["b3"] = b3; buttons_First_keyboard["b3"]->setFixedSize(40,40);
+    QPushButton* b4 = new QPushButton("4"); buttons_First_keyboard["b4"] = b4; buttons_First_keyboard["b4"]->setFixedSize(40,40);
+    QPushButton* b5 = new QPushButton("5"); buttons_First_keyboard["b5"] = b5; buttons_First_keyboard["b5"]->setFixedSize(40,40);
+    QPushButton* b6 = new QPushButton("6"); buttons_First_keyboard["b6"] = b6; buttons_First_keyboard["b6"]->setFixedSize(40,40);
+    QPushButton* b7 = new QPushButton("7"); buttons_First_keyboard["b7"] = b7; buttons_First_keyboard["b7"]->setFixedSize(40,40);
+    QPushButton* b8 = new QPushButton("8"); buttons_First_keyboard["b8"] = b8; buttons_First_keyboard["b8"]->setFixedSize(40,40);
+    QPushButton* b9 = new QPushButton("9"); buttons_First_keyboard["b9"] = b9; buttons_First_keyboard["b9"]->setFixedSize(40,40);
+    QPushButton* b0 = new QPushButton("0"); buttons_First_keyboard["b0"] = b0; buttons_First_keyboard["b0"]->setFixedSize(40,40);
+    QPushButton* bPlus  = new QPushButton("+"); buttons_First_keyboard["plus"] = bPlus; buttons_First_keyboard["plus"]->setFixedSize(40,40);
+    QPushButton* bMoins = new QPushButton("-"); buttons_First_keyboard["moins"]= bMoins; buttons_First_keyboard["moins"]->setFixedSize(40,40);
+    QPushButton* bMult  = new QPushButton("*"); buttons_First_keyboard["mult"] = bMult; buttons_First_keyboard["mutl"]->setFixedSize(40,40);
+    QPushButton* bDiv   = new QPushButton("/"); buttons_First_keyboard["div"]  = bDiv; buttons_First_keyboard["div"]->setFixedSize(40,40);
+    QPushButton* bEqual = new QPushButton("="); buttons_First_keyboard["equal"]= bEqual; buttons_First_keyboard["equal"]->setFixedSize(40,40);
 
-    QPushButton* prog1 = new QPushButton(""); buttons_Second_keyboard.push_back(prog1); prog1->setFixedSize(60,40);
-    QPushButton* prog2 = new QPushButton(""); buttons_Second_keyboard.push_back(prog2); prog2->setFixedSize(60,40);
-    QPushButton* prog3 = new QPushButton(""); buttons_Second_keyboard.push_back(prog3); prog3->setFixedSize(60,40);
-    QPushButton* prog4 = new QPushButton(""); buttons_Second_keyboard.push_back(prog4); prog4->setFixedSize(60,40);
-    QPushButton* prog5 = new QPushButton(""); buttons_Second_keyboard.push_back(prog5); prog5->setFixedSize(60,40);
-    QPushButton* prog6 = new QPushButton(""); buttons_Second_keyboard.push_back(prog6); prog6->setFixedSize(60,40);
-    QPushButton* prog7 = new QPushButton(""); buttons_Second_keyboard.push_back(prog7); prog7->setFixedSize(60,40);
-    QPushButton* prog8 = new QPushButton(""); buttons_Second_keyboard.push_back(prog8); prog8->setFixedSize(60,40);
-    QPushButton* prog9 = new QPushButton(""); buttons_Second_keyboard.push_back(prog9); prog9->setFixedSize(60,40);
-    QPushButton* prog10 = new QPushButton(""); buttons_Second_keyboard.push_back(prog10); prog10->setFixedSize(60,40);
-    QPushButton* prog11 = new QPushButton(""); buttons_Second_keyboard.push_back(prog11); prog11->setFixedSize(60,40);
-    QPushButton* prog12 = new QPushButton(""); buttons_Second_keyboard.push_back(prog12); prog12->setFixedSize(60,40);
+    QPushButton* prog1 = new QPushButton(""); buttons_Second_keyboard["prog1"] = prog1; buttons_Second_keyboard["prog1"]->setFixedSize(60,40);
+    QPushButton* prog2 = new QPushButton(""); buttons_Second_keyboard["prog2"] = prog2; buttons_Second_keyboard["prog2"]->setFixedSize(60,40);
+    QPushButton* prog3 = new QPushButton(""); buttons_Second_keyboard["prog3"] = prog3; buttons_Second_keyboard["prog3"]->setFixedSize(60,40);
+    QPushButton* prog4 = new QPushButton(""); buttons_Second_keyboard["prog4"] = prog4; buttons_Second_keyboard["prog4"]->setFixedSize(60,40);
+    QPushButton* prog5 = new QPushButton(""); buttons_Second_keyboard["prog5"] = prog5; buttons_Second_keyboard["prog5"]->setFixedSize(60,40);
+    QPushButton* prog6 = new QPushButton(""); buttons_Second_keyboard["prog6"] = prog6; buttons_Second_keyboard["prog6"]->setFixedSize(60,40);
+    QPushButton* prog7 = new QPushButton(""); buttons_Second_keyboard["prog7"] = prog7; buttons_Second_keyboard["prog7"]->setFixedSize(60,40);
+    QPushButton* prog8 = new QPushButton(""); buttons_Second_keyboard["prog8"] = prog8; buttons_Second_keyboard["prog8"]->setFixedSize(60,40);
+    QPushButton* prog9 = new QPushButton(""); buttons_Second_keyboard["prog9"] = prog9; buttons_Second_keyboard["prog9"]->setFixedSize(60,40);
+    QPushButton* prog10 = new QPushButton(""); buttons_Second_keyboard["prog10"] = prog10; buttons_Second_keyboard["prog10"]->setFixedSize(60,40);
+    QPushButton* prog11 = new QPushButton(""); buttons_Second_keyboard["prog11"] = prog11; buttons_Second_keyboard["prog11"]->setFixedSize(60,40);
+    QPushButton* prog12 = new QPushButton(""); buttons_Second_keyboard["prog12"] = prog12; buttons_Second_keyboard["prog12"]->setFixedSize(60,40);
 
-    QPushButton* open_keyboard_one = new QPushButton("open"); buttons_Second_keyboard.push_back(open_keyboard_one); open_keyboard_one->setFixedSize(60,25);
-    QPushButton* close_keyboard_one = new QPushButton("close"); buttons_Second_keyboard.push_back(close_keyboard_one); close_keyboard_one->setFixedSize(60,25);
-    QPushButton* open_keyboard_two = new QPushButton("open"); buttons_Second_keyboard.push_back(open_keyboard_two); open_keyboard_two->setFixedSize(60,25);
-    QPushButton* close_keyboard_two = new QPushButton("close"); buttons_Second_keyboard.push_back(close_keyboard_two); close_keyboard_two->setFixedSize(60,25);
-
-
+    QPushButton* open_keyboard_one = new QPushButton("reduce"); buttons_First_keyboard["open_keyboard_one"] = open_keyboard_one; buttons_First_keyboard["open_keyboard_one"]->setFixedSize(40,40);
+    QPushButton* open_keyboard_two = new QPushButton("reduce"); buttons_Second_keyboard["open_keyboard_two"] = open_keyboard_two; buttons_Second_keyboard["open_keyboard_two"]->setFixedSize(40,40);
 
     //Déclaration des différents onglets
-    tab = new QTabWidget(this);
-    QWidget* Principal = new QWidget;   secondary_view.push_back(Principal);
-    QWidget* Variable = new QWidget;    secondary_view.push_back(Variable);
-    QWidget* Programme = new QWidget;   secondary_view.push_back(Programme);
-    QWidget* Calculateur = new QWidget; secondary_view.push_back(Calculateur);
-
-    //Création de la couche des chiffres avec plusieurs layouts horizontaux et avec ajout des windgets
-    QHBoxLayout* layout123 = new QHBoxLayout; layoutH.push_back(layout123);
-    layout123->addWidget(b1); layout123->addWidget(b2); layout123->addWidget(b3);
-    QHBoxLayout* layout456 = new QHBoxLayout; layoutH.push_back(layout456);
-    layout456->addWidget(b4); layout456->addWidget(b5); layout456->addWidget(b6);
-    QHBoxLayout* layout789 = new QHBoxLayout; layoutH.push_back(layout789);
-    layout789->addWidget(b7); layout789->addWidget(b8); layout789->addWidget(b9);
-    QHBoxLayout* layout0 = new QHBoxLayout; layoutH.push_back(layout0);
-    layout0->addWidget(b0);
-
-    //Création de la couche de tous les chiffres
-    QVBoxLayout* layout_Number = new QVBoxLayout; layoutV.push_back(layout_Number);
-    layout_Number->addLayout(layout123); layout_Number->addLayout(layout456); layout_Number->addLayout(layout789); layout_Number->addLayout(layout0);
-    //Création de la couche des opérateurs
-    QVBoxLayout* layout_Operator = new QVBoxLayout; layoutV.push_back(layout_Operator);
-    layout_Operator->addWidget(bPlus); layout_Operator->addWidget(bMoins); layout_Operator->addWidget(bMult); layout_Operator->addWidget(bDiv); layout_Operator->addWidget(bEqual);
-    //Bouton Open et close pour réduire le clavier 1
-    QHBoxLayout* layout_OpenClose_One = new QHBoxLayout; layoutH.push_back(layout_OpenClose_One);
-    layout_OpenClose_One->addWidget(open_keyboard_one);layout_OpenClose_One->addWidget(close_keyboard_one);
 
 
-    //Création de la couche pour le clavier N°1 + Open et Close
-    QHBoxLayout* layout_Key_One = new QHBoxLayout; layoutH.push_back(layout_Key_One);
-    layout_Key_One->addLayout(layout_Number); layout_Key_One->addLayout(layout_Operator);
-    QVBoxLayout* layout_Keyboard_One = new QVBoxLayout; layoutV.push_back(layout_Keyboard_One);
-    layout_Keyboard_One->addLayout(layout_OpenClose_One);layout_Keyboard_One->addLayout(layout_Key_One);
 
+/*------------------------------------------------------------------*/
+/*---------Création de layout HORIZONTAUX sous forme de Map---------*/
+/*------------------------------------------------------------------*/
+    QHBoxLayout* layout123 = new QHBoxLayout; layout_Horizontal["layout123"] = layout123;
+    QHBoxLayout* layout456 = new QHBoxLayout; layout_Horizontal["layout456"] = layout456;
+    QHBoxLayout* layout789 = new QHBoxLayout; layout_Horizontal["layout789"] = layout789;
+    QHBoxLayout* layout0 = new QHBoxLayout; layout_Horizontal["layout0"] = layout0;
+
+    QHBoxLayout* layout_key_one = new QHBoxLayout; layout_Horizontal["layout_key_one"] = layout_key_one;
 
     //Création des couches pour les programmes et variables
-    QHBoxLayout* layout_prog123 = new QHBoxLayout; layoutH.push_back(layout_prog123);
-    layout_prog123->addWidget(prog1); layout_prog123->addWidget(prog2); layout_prog123->addWidget(prog3);
-    QHBoxLayout* layout_prog456 = new QHBoxLayout; layoutH.push_back(layout_prog456);
-    layout_prog456->addWidget(prog4); layout_prog456->addWidget(prog5); layout_prog456->addWidget(prog6);
-    QHBoxLayout* layoutp_prog789 = new QHBoxLayout; layoutH.push_back(layoutp_prog789);
-    layoutp_prog789->addWidget(prog7); layoutp_prog789->addWidget(prog8); layoutp_prog789->addWidget(prog9);
-    QHBoxLayout* layoutp_prog1012 = new QHBoxLayout; layoutH.push_back(layoutp_prog1012);
-    layoutp_prog1012->addWidget(prog10); layoutp_prog1012->addWidget(prog11); layoutp_prog1012->addWidget(prog12);
-    //Bouton Open et close pour réduire le clavier 2
-    QHBoxLayout* layout_OpenClose_Two = new QHBoxLayout; layoutH.push_back(layout_OpenClose_Two);
-    layout_OpenClose_Two->addWidget(open_keyboard_two);layout_OpenClose_Two->addWidget(close_keyboard_two);
-
-    //Création de la couche du clavier N°2 + Open et Close
-    QVBoxLayout* layout_Key_Two = new QVBoxLayout; layoutV.push_back(layout_Key_Two);
-    layout_Key_Two->addLayout(layout_prog123); layout_Key_Two->addLayout(layout_prog456); layout_Key_Two->addLayout(layoutp_prog789);layout_Key_Two->addLayout(layoutp_prog1012);
-
-
-    QVBoxLayout* layout_Keyboard_Two = new QVBoxLayout; layoutV.push_back(layout_Keyboard_Two);
-    layout_Keyboard_Two->addLayout(layout_OpenClose_Two);layout_Keyboard_Two->addLayout(layout_Key_Two);
+    QHBoxLayout* layout_prog123 = new QHBoxLayout; layout_Horizontal["layout_prog123"] = layout_prog123;
+    QHBoxLayout* layout_prog456 = new QHBoxLayout; layout_Horizontal["layout_prog456"] = layout_prog456;
+    QHBoxLayout* layout_prog789 = new QHBoxLayout; layout_Horizontal["layout_prog789"] = layout_prog789;
+    QHBoxLayout* layout_prog1012 = new QHBoxLayout; layout_Horizontal["layout_prog1012"] = layout_prog1012;
 
     //Création de la couche avec le clavier N°1 et N°2
-    QHBoxLayout* layout_Keyboard_One_Two = new QHBoxLayout; layoutH.push_back(layout_Keyboard_One_Two);
-    layout_Keyboard_One_Two->addLayout(layout_Keyboard_One); layout_Keyboard_One_Two->addLayout(layout_Keyboard_Two);
-
-    //Rendre les bouton Open non visible car les clavier 1 et 2 sont ouvert à défaut
-    open_keyboard_one->hide();  open_keyboard_two->hide();
-
-
-    QPushButton* test = new QPushButton("test"); buttons_First_keyboard.push_back(test); test->setFixedSize(40,40);
-    QVBoxLayout* test2 = new QVBoxLayout; layoutV.push_back(test2);
-    test2->addWidget(test);
-
-
-    Principal->setLayout(layout_Keyboard_One_Two); tab->addTab(Principal, "Keyboard");
-    /*Variable->setLayout(test2);*/ tab->addTab(Variable, "Variable");
-    /*Programme->setLayout(NULL);*/ tab->addTab(Programme, "Program");
-    /*Calculateur->setLayout(NULL);*/ tab->addTab(Calculateur, "Settings");
-
-
+    QHBoxLayout* layout_keyboard_one_two = new QHBoxLayout; layout_Horizontal["layout_keyboard_one_two"] = layout_keyboard_one_two;
 
     //Création de la couche de l'affichage avec la couche du clavier N°1
-    QHBoxLayout* layout_Display_And_Keyboard_One = new QHBoxLayout; layoutH.push_back(layout_Display_And_Keyboard_One);
-    layout_Display_And_Keyboard_One->addLayout(layout_Stack); layout_Display_And_Keyboard_One->addWidget(tab);
+    QHBoxLayout* layout_display_and_keyboard = new QHBoxLayout; layout_Horizontal["layout_display_and_keyboard"] = layout_display_and_keyboard;
 
 
-    //Création de la couche générale qui englobe le tout
-    QVBoxLayout* layout_general = new QVBoxLayout; layoutV.push_back(layout_general);
-    layout_general->addLayout(layout_Display_And_Keyboard_One); layout_general->addLayout(layout_Keyboard_Two);
+/*------------------------------------------------------------------*/
+/*----------Création de layout VERTICAUX sous forme de Map----------*/
+/*------------------------------------------------------------------*/
+    //Déclaration de la couche Stack, viewStack et message avec ajout des widgets
+    QVBoxLayout* layout_stack = new QVBoxLayout; layout_Vertical["layout_stack"] = layout_stack;
+
+    //Création de la couche de tous les chiffres
+    QVBoxLayout* layout_number = new QVBoxLayout; layout_Vertical["layout_number"] = layout_number;
+    //Création de la couche de tous les opérateurs
+    QVBoxLayout* layout_operator = new QVBoxLayout; layout_Vertical["layout_operator"] = layout_operator;
+
+    //Création de la couche pour le clavier N°1 + Open et Close
+    QVBoxLayout* layout_keyboard_one = new QVBoxLayout; layout_Vertical["layout_keyboard_one"] = layout_keyboard_one;
+
+    //Création de la couche du clavier N°2 + Open et Close
+    QVBoxLayout* layout_key_two = new QVBoxLayout; layout_Vertical["layout_key_two"] = layout_key_two;
+    QVBoxLayout* layout_keyboard_two = new QVBoxLayout; layout_Vertical["layout_keyboard_two"] = layout_keyboard_two;
+
+    QVBoxLayout* layout_general = new QVBoxLayout; layout_Vertical["layout_general"] = layout_general;
+
+/*------------------------------------------------------------------*/
+/*---------------Initialisation des différents layout---------------*/
+/*------------------------------------------------------------------*/
+
+    layout_Vertical["layout_stack"]->addWidget(message);
+    layout_Vertical["layout_stack"]->addWidget(viewStack);
+    layout_Vertical["layout_stack"]->addWidget(commande);
+
+    layout_Horizontal["layout123"]->addWidget(buttons_First_keyboard["b1"]); layout_Horizontal["layout123"]->addWidget(buttons_First_keyboard["b2"]); layout_Horizontal["layout123"]->addWidget(buttons_First_keyboard["b3"]);
+    layout_Horizontal["layout456"]->addWidget(buttons_First_keyboard["b4"]); layout_Horizontal["layout456"]->addWidget(buttons_First_keyboard["b5"]); layout_Horizontal["layout456"]->addWidget(buttons_First_keyboard["b6"]);
+    layout_Horizontal["layout789"]->addWidget(buttons_First_keyboard["b7"]); layout_Horizontal["layout789"]->addWidget(buttons_First_keyboard["b8"]); layout_Horizontal["layout789"]->addWidget(buttons_First_keyboard["b9"]);
+    layout_Horizontal["layout0"]->addWidget(buttons_First_keyboard["b0"]);
+
+    layout_Vertical["layout_number"]->addLayout(layout_Horizontal["layout123"]);
+    layout_Vertical["layout_number"]->addLayout(layout_Horizontal["layout456"]);
+    layout_Vertical["layout_number"]->addLayout(layout_Horizontal["layout789"]);
+    layout_Vertical["layout_number"]->addLayout(layout_Horizontal["layout0"]);
+
+    layout_Vertical["layout_operator"]->addWidget(buttons_First_keyboard["plus"]);
+    layout_Vertical["layout_operator"]->addWidget(buttons_First_keyboard["moins"]);
+    layout_Vertical["layout_operator"]->addWidget(buttons_First_keyboard["mult"]);
+    layout_Vertical["layout_operator"]->addWidget(buttons_First_keyboard["div"]);
+    layout_Vertical["layout_operator"]->addWidget(buttons_First_keyboard["equal"]);
+
+    layout_Horizontal["layout_key_one"]->addLayout(layout_Vertical["layout_number"]); layout_Horizontal["layout_key_one"]->addLayout(layout_Vertical["layout_operator"]);
+
+    layout_Vertical["layout_keyboard_one"]->addWidget(buttons_First_keyboard["open_keyboard_one"]); layout_Vertical["layout_keyboard_one"]->addLayout(layout_Horizontal["layout_key_one"]);
+
+    layout_Horizontal["layout_prog123"]->addWidget(buttons_Second_keyboard["prog1"]);
+    layout_Horizontal["layout_prog123"]->addWidget(buttons_Second_keyboard["prog2"]);
+    layout_Horizontal["layout_prog123"]->addWidget(buttons_Second_keyboard["prog3"]);
+
+    layout_Horizontal["layout_prog456"]->addWidget(buttons_Second_keyboard["prog4"]);
+    layout_Horizontal["layout_prog456"]->addWidget(buttons_Second_keyboard["prog5"]);
+    layout_Horizontal["layout_prog456"]->addWidget(buttons_Second_keyboard["prog6"]);
+
+    layout_Horizontal["layout_prog789"]->addWidget(buttons_Second_keyboard["prog7"]);
+    layout_Horizontal["layout_prog789"]->addWidget(buttons_Second_keyboard["prog8"]);
+    layout_Horizontal["layout_prog789"]->addWidget(buttons_Second_keyboard["prog9"]);
+
+    layout_Horizontal["layout_prog1012"]->addWidget(buttons_Second_keyboard["prog10"]);
+    layout_Horizontal["layout_prog1012"]->addWidget(buttons_Second_keyboard["prog11"]);
+    layout_Horizontal["layout_prog1012"]->addWidget(buttons_Second_keyboard["prog12"]);
+
+    layout_Vertical["layout_key_two"]->addLayout(layout_Horizontal["layout_prog123"]); layout_Vertical["layout_key_two"]->addLayout(layout_Horizontal["layout_prog456"]);
+    layout_Vertical["layout_key_two"]->addLayout(layout_Horizontal["layout_prog789"]); layout_Vertical["layout_key_two"]->addLayout(layout_Horizontal["layout_prog1012"]);
+    layout_Vertical["layout_keyboard_two"]->addWidget(buttons_Second_keyboard["open_keyboard_two"]); layout_Vertical["layout_keyboard_two"]->addLayout(layout_Vertical["layout_keyboard_two"]);
+
+    layout_Horizontal["layout_keyboard_one_two"]->addLayout(layout_Vertical["layout_keyboard_one"]); layout_Horizontal["layout_keyboard_one_two"]->addLayout(layout_Vertical["layout_keyboard_two"]);
 
 
+    Principal->setLayout(layout_Horizontal["layout_keyboard_one_two"]); tab->addTab(secondary_view["Principal"], "Keyboard");
+    /*Variable->setLayout(NULL);*/ tab->addTab(secondary_view["Variable"], "Variable");
+    /*Program->setLayout(NULL);*/ tab->addTab(secondary_view["Program"], "Program");
+    /*Settings->setLayout(NULL);*/ tab->addTab(secondary_view["Settings"], "Settings");
 
-    setLayout(layout_general);
+    layout_Horizontal["layout_display_and_keyboard"]->addLayout(layout_Vertical["layout_stack"]); layout_Horizontal["layout_display_and_keyboard"]->addWidget(tab);
+
+
+/*------------------------------------------------------------------*/
+
+
+    setLayout(layout_Horizontal["layout_keyboard_one_two"]);
     setWindowTitle("Comp'UT");
 
     message->setReadOnly(true);
@@ -161,32 +180,25 @@ QCompUT::QCompUT(QWidget* father) : QWidget(father){
     viewStack->setVerticalHeaderLabels(labels);
 
 
-    connect(b1,SIGNAL(clicked()),this,SLOT(slot1()));
-    connect(b2,SIGNAL(clicked()),this,SLOT(slot2()));
-    connect(b3,SIGNAL(clicked()),this,SLOT(slot3()));
-    connect(b4,SIGNAL(clicked()),this,SLOT(slot4()));
-    connect(b5,SIGNAL(clicked()),this,SLOT(slot5()));
-    connect(b6,SIGNAL(clicked()),this,SLOT(slot6()));
-    connect(b7,SIGNAL(clicked()),this,SLOT(slot7()));
-    connect(b8,SIGNAL(clicked()),this,SLOT(slot8()));
-    connect(b9,SIGNAL(clicked()),this,SLOT(slot9()));
-    connect(b0,SIGNAL(clicked()),this,SLOT(slot0()));
+    connect(buttons_First_keyboard["b1"],SIGNAL(clicked()),this,SLOT(slot1()));
+    connect(buttons_First_keyboard["b2"],SIGNAL(clicked()),this,SLOT(slot2()));
+    connect(buttons_First_keyboard["b3"],SIGNAL(clicked()),this,SLOT(slot3()));
+    connect(buttons_First_keyboard["b4"],SIGNAL(clicked()),this,SLOT(slot4()));
+    connect(buttons_First_keyboard["b5"],SIGNAL(clicked()),this,SLOT(slot5()));
+    connect(buttons_First_keyboard["b6"],SIGNAL(clicked()),this,SLOT(slot6()));
+    connect(buttons_First_keyboard["b7"],SIGNAL(clicked()),this,SLOT(slot7()));
+    connect(buttons_First_keyboard["b8"],SIGNAL(clicked()),this,SLOT(slot8()));
+    connect(buttons_First_keyboard["b9"],SIGNAL(clicked()),this,SLOT(slot9()));
+    connect(buttons_First_keyboard["b0"],SIGNAL(clicked()),this,SLOT(slot0()));
 
-    connect(bPlus,SIGNAL(clicked()),this,SLOT(slotPlus()));
-    connect(bMoins,SIGNAL(clicked()),this,SLOT(slotMoins()));
-    connect(bMult,SIGNAL(clicked()),this,SLOT(slotMult()));
-    connect(bDiv,SIGNAL(clicked()),this,SLOT(slotDiv()));
-    connect(bEqual,SIGNAL(clicked()),this,SLOT(slotEqual()));
+    connect(buttons_First_keyboard["plus"],SIGNAL(clicked()),this,SLOT(slotPlus()));
+    connect(buttons_First_keyboard["moins"],SIGNAL(clicked()),this,SLOT(slotMoins()));
+    connect(buttons_First_keyboard["mult"],SIGNAL(clicked()),this,SLOT(slotMult()));
+    connect(buttons_First_keyboard["div"],SIGNAL(clicked()),this,SLOT(slotDiv()));
+    connect(buttons_First_keyboard["equal"],SIGNAL(clicked()),this,SLOT(slotEqual()));
 
-    connect(open_keyboard_one,SIGNAL(clicked()),this,SLOT(slotOpen1()));
-    connect(close_keyboard_one,SIGNAL(clicked()),this,SLOT(slotClose1()));
-    connect(open_keyboard_two,SIGNAL(clicked()),this,SLOT(slotOpen2()));
-    connect(close_keyboard_two,SIGNAL(clicked()),this,SLOT(slotClose2()));
-
-
-
-
-
+    connect(buttons_First_keyboard["open_keyboard_one"],SIGNAL(clicked()),this,SLOT(slotOpen1()));
+    connect(buttons_Second_keyboard["open_keyboard_two"],SIGNAL(clicked()),this,SLOT(slotOpen2()));
 
 
     //Focus a un composant
@@ -234,8 +246,13 @@ void QCompUT::slotDiv()  { text +="/"; commande->setText(text); }
 void QCompUT::slotEqual()  { QCompUT::getNextCommande(); }
 
 
-void QCompUT::slotClose1(){ }
 void QCompUT::slotOpen1(){ }
 void QCompUT::slotOpen2(){ }
-void QCompUT::slotClose2(){ }
+
+void QCompUT::affichage_Variable(){
+//    QPushButton* test = new QPushButton("test"); buttons_First_keyboard.push_back(test); test->setFixedSize(40,40);
+//    QVBoxLayout* test2 = new QVBoxLayout; layoutV.push_back(test2);
+//    test2->addWidget(test);
+}
+
 

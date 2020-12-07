@@ -11,6 +11,7 @@
 #include <QDebug>
 #include <QString>
 #include <vector>
+#include <QMap>
 #include "CompUT.h"
 
 using namespace std;
@@ -24,12 +25,16 @@ class QCompUT : public QWidget{
     QLineEdit* commande;
     QString text;
 
-
-    vector<QPushButton*> buttons_First_keyboard;
-    vector<QPushButton*> buttons_Second_keyboard;
-    vector<QVBoxLayout*> layoutV;
-    vector<QHBoxLayout*> layoutH;
-    vector<QWidget*> secondary_view;
+    map<string,QPushButton*> buttons_First_keyboard;
+    map<string,QPushButton*> buttons_Second_keyboard;
+    map<string,QVBoxLayout*> layout_Vertical;
+    map<string,QHBoxLayout*> layout_Horizontal;
+    map<string,QWidget*> secondary_view;
+//    vector<QPushButton*> buttons_First_keyboard;
+//    vector<QPushButton*> buttons_Second_keyboard;
+//    vector<QVBoxLayout*> layoutV;
+//    vector<QHBoxLayout*> layoutH;
+    //vector<QWidget*> secondary_view;
 
     QTabWidget *tab;
 
@@ -37,9 +42,10 @@ class QCompUT : public QWidget{
     Controleur* controleur;
 
 
-  public:
+public:
     explicit QCompUT(QWidget *father = 0);
-
+    void affichage_Variable();
+    //void Initialisation();
 
 
 public slots:
@@ -48,9 +54,8 @@ public slots:
     void slot1();void slot2();void slot3();void slot4();void slot5();void slot6();void slot7();void slot8();void slot9();void slot0();
     void slotPlus();void slotMoins();void slotMult();void slotDiv();void slotEqual();
     void slotOpen1();
-    void slotClose1();
     void slotOpen2();
-    void slotClose2();
+
 };
 
 
