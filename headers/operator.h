@@ -52,64 +52,40 @@ public :
 	virtual shared_ptr<Literal> operate(shared_ptr<Literal>* literals) = 0;
 };
 
-class OpAdd: public Operator{
-	unsigned int const arity = 2;
+class Num: public Operator{
+	unsigned int const arity = 1;
 public:
-	shared_ptr<Literal> operate(shared_ptr<Literal>* literals){
-		Literal s;
-		s = **literals[0] + **literals[1];
-		shared_ptr<Literal> res = make_shared<Literal>(s);
-		return res;
+	shared_ptr<LInteger> operate(shared_ptr<LRational>* literals){
+		if(literals[0] -> getType() == lrational){
+			shared_ptr<LInteger> res;
+			int numerateur = literals[0] -> getNum();
+			res = make_shared<LInteger>(numerateur);
+			return res;
+		}else
+			throw OperatorException("It's not a Rationnal");
 	}
 };
 
-class OpSub: public Operator{
-	unsigned int const arity = 2;
+class Den: public Operator{
+	unsigned int const arity = 1;
 public:
-	shared_ptr<Literal> operate(shared_ptr<Literal>* literals){
-		Literal s;
-		s = **literals[1] - **literals[0];
-		shared_ptr<Literal> res = make_shared<Literal>(s);
-		return res;
+	shared_ptr<LInteger> operate(shared_ptr<LRational>* literals){
+		if(literals[0] -> getType() == lrational){
+			shared_ptr<LInteger> res;
+			int numerateur = literals[0] -> getDen();
+			res = make_shared<LInteger>(numerateur);
+			return res;
+		}else
+			throw OperatorException("It's not a Rationnal");
 	}
 };
 
-class OpMul: public Operator{
+class Add: public Operator{
 	unsigned int const arity = 2;
 public:
-	shared_ptr<Literal> operate(shared_ptr<Literal>* literals){
-		Literal s;
-		s = **literals[1] * **literals[0];
-		shared_ptr<Literal> res = make_shared<Literal>(s);
-		return res;
+	shared_ptr<LInteger> operate(shared_ptr<Literal>){
+
 	}
 };
-
-class OpDivE: public Operator{
-	unsigned int const arity = 2;
-public:
-	shared_ptr<Literal> operate(shared_ptr<Literal>* literals){
-		Literal s;
-		s = **literals[1] / **literals[0];
-		shared_ptr<Literal> res = make_shared<Literal>(s);
-		return res;
-	}
-};
-
-class OpDiv: public Operator{
-	unsigned int const arity = 2;
-public:
-	shared_ptr<Literal> operate(shared_ptr<Literal>* literals){
-		Literal s;
-		LRational l1, l2;
-		l1(**literals[1]);
-		l2(**literals[0]);
-		s = l1 / l2;
-		shared_ptr<Literal> res = make_shared<Literal>(s);
-		return res;
-	}
-};
-
-
 
 #endif /* HEADERS_OPERATOR_H_ */

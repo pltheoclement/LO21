@@ -7,7 +7,7 @@
 
 #include <iostream>
 #include <string>
-#include "../headers/operator.h"
+#include "../headers/literal.h"
 
 using namespace std;
 
