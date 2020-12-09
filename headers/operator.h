@@ -24,68 +24,117 @@ public:
 	string getInfo() const { return info; }
 };
 
-class Operator{
-	unsigned int const arity;
-	static map<string, Operator*> operators;
+
+class AbstractBinaryOperation {
+	LiteralType a;
+	LiteralType b;
+public:
+	AbstractBinaryOperation(LiteralType litA, LiteralType litB);
+	virtual Literal* execution(Literal* A, Literal* B) = 0;
+	virtual ~AbstractBinaryOperation() = default;
+};
+
+class AbstractAdd : public AbstractBinaryOperation{
+
+};
+
+class AbstractMul : public AbstractBinaryOperation{
+
+};
+
+class AbstractDiv : public AbstractBinaryOperation{
+
+};
+
+class AddIntInt : public AbstractAdd {
+public:
+	Literal* execution(Literal* A, Literal* B){
+		LInteger* ret = new LInteger(1);
+		return ret;
+	}
+};
+
+class AddIntReal : public AbstractAdd {
+public:
+	Literal* execution(Literal* A, Literal* B){
+		LInteger* ret = new LInteger(1);
+		return ret;
+	}
+};
+
+class MulIntInt : public AbstractMul {
+public:
+	Literal* execution(Literal* A, Literal* B){
+		LInteger* ret = new LInteger(1);
+		return ret;
+	}
+};
+
+class MulRealInt : public AbstractMul {
+public:
+	Literal* execution(Literal* A, Literal* B){
+		LInteger* ret = new LInteger(1);
+		return ret;
+	}
+};
+
+class DivRealInt : public AbstractDiv {
+public:
+	Literal* execution(Literal* A, Literal* B){
+		LInteger* ret = new LInteger(1);
+		return ret;
+	}
+};
+
+class BinaryOperator {
+	std::string name;
+    std::map<pair<LiteralType,LiteralType>, AbstractBinaryOperation*> possibles;
+    //~BinaryOperator();
+    //BinaryOperator();
+
 public :
-	Operator(unsigned int a) : arity(a){}
-	unsigned int getArity(){return arity;}
-	static string isOperator(string s);
-	static Operator* getOperator(string s);
-	virtual ~Operator() = default;
-	virtual void apply(Stack &s){
-		shared_ptr<Literal> *literals = popLit(s);
-		shared_ptr<Literal> result;
-		result = operate(literals);
-		pushRes(s, result);
-	}
-	virtual shared_ptr<Literal>* popLit(Stack &s){
-		shared_ptr<Literal> *literals = new shared_ptr<Literal>[arity];
-		for(unsigned int i = 0; i < arity; i++){
-			literals[i] = s.pop();
-		}
-		return literals;
-	}
-	virtual void pushRes(Stack &s, shared_ptr<Literal> res){
-		s.push(res);
-	}
-	virtual shared_ptr<Literal> operate(shared_ptr<Literal>* literals) = 0;
+    void ajouterComportement(LiteralType A, LiteralType B, AbstractBinaryOperation* a) { possibles[make_pair(A,B)]=a; }
+
+    void execute() {
+
+    	Literal* elA;// le premier argument
+
+    	Literal* elB;// le deuxième
+
+        LiteralType A=elA->getType();
+
+        LiteralType B=elB->getType();
+
+        if (possibles.count(make_pair(A, B)) > 0) // existe bien dans ta map then possibles[make_pair(A,B)].execution(); // @suppress("Method cannot be resolved")
+        	possibles[make_pair(A,B)]->execution(elA, elB);
+        else
+        	throw OperatorException("erreur");//sinon gestion de l'erreur
+    }
 };
 
-class Num: public Operator{
-	unsigned int const arity = 1;
+class Add : public BinaryOperator {
+	std::string name = "add";
+	static std::unique_ptr<Add> instance;
 public:
-	shared_ptr<LInteger> operate(shared_ptr<LRational>* literals){
-		if(literals[0] -> getType() == lrational){
-			shared_ptr<LInteger> res;
-			int numerateur = literals[0] -> getNum();
-			res = make_shared<LInteger>(numerateur);
-			return res;
-		}else
-			throw OperatorException("It's not a Rationnal");
-	}
+	static Add& get();
+	static void free();
 };
 
-class Den: public Operator{
-	unsigned int const arity = 1;
+class Mul : public BinaryOperator {
+	std::string name = "mul";
+	static std::unique_ptr<Mul> instance;
 public:
-	shared_ptr<LInteger> operate(shared_ptr<LRational>* literals){
-		if(literals[0] -> getType() == lrational){
-			shared_ptr<LInteger> res;
-			int numerateur = literals[0] -> getDen();
-			res = make_shared<LInteger>(numerateur);
-			return res;
-		}else
-			throw OperatorException("It's not a Rationnal");
-	}
+	static Add& get();
+	static void free();
 };
 
-class Add: public Operator{
-	unsigned int const arity = 2;
+class Div : public BinaryOperator {
+	std::string name = "div";
+	static std::unique_ptr<Div> instance;
 public:
-	shared_ptr<LInteger> operate(shared_ptr<Literal>){
-
-	}
+	static Add& get();
+	static void free();
 };
+
 
 #endif /* HEADERS_OPERATOR_H_ */

@@ -12,23 +12,19 @@
 
 using namespace std;
 
-map<string, Operator*> Operator::operators = {
-		{"OpAdd", nullptr}
-};
+unique_ptr<Add> Add::instance = nullptr;
 
-string Operator::isOperator(string s){
-	if ( Operator::operators.find(s) != Operator::operators.end())
-		return s;
-	else
-		return "not found";
+Add& Add::get(){
+	if(instance == nullptr)
+		instance = make_unique<Add>();
+	return *instance;
 }
 
-Operator* Operator::getOperator(string s){
-	map<string, Operator*>::iterator it;
-	it = Operator::operators.find(s);
-	if(it == Operator::operators.end())
-		throw OperatorException("No operator with this name");
-	return it->second;
+void Add::free(){
+	instance == nullptr;
 }
 
+AbstractBinaryOperation::AbstractBinaryOperation(LiteralType litA, LiteralType litB): a(litA), b(litB){
+	Add::get().ajouterComportement(a, b, this);
+}
 

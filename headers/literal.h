@@ -32,8 +32,6 @@ public:
     static LInteger* makeLiteral(const int& i);
     std::string toString(){ return std::to_string(value);}
     ~LInteger(){}
-
-    LInteger
 };
 
 class LReal : public Literal {

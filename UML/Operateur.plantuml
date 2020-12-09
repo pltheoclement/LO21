@@ -1,0 +1,152 @@
+@startuml
+
+
+
+
+
+/' Objects '/
+
+abstract class AbstractAdd {
+}
+
+
+abstract class AbstractBinaryOperation {
+	+AbstractBinaryOperation(LiteralType litA, LiteralType litB)
+	+~AbstractBinaryOperation()
+	+{abstract} execution(Literal* A, Literal* B) : Literal*
+	-a : LiteralType
+	-b : LiteralType
+}
+
+
+abstract class AbstractDiv {
+}
+
+
+abstract class AbstractMul {
+}
+
+
+class Add {
+	+{static} get() : Add&
+	-{static} instance : static std::unique_ptr<Add>
+	-name : std::string
+	+{static} free() : void
+}
+
+
+class AddIntInt {
+	+execution(Literal* A, Literal* B) : Literal*
+}
+
+
+class AddIntReal {
+	+execution(Literal* A, Literal* B) : Literal*
+}
+
+
+class BinaryOperator {
+	-possibles : std::map<pair<LiteralType, LiteralType>, AbstractBinaryOperation*>
+	-name : std::string
+	+ajouterComportement(LiteralType A, LiteralType B, AbstractBinaryOperation* a) : void
+	+execute() : void
+}
+
+
+class Div {
+	+{static} get() : Add&
+	-{static} instance : static std::unique_ptr<Div>
+	-name : std::string
+	+{static} free() : void
+}
+
+
+class DivRealInt {
+	+execution(Literal* A, Literal* B) : Literal*
+}
+
+
+class Mul {
+	+{static} get() : Add&
+	-{static} instance : static std::unique_ptr<Mul>
+	-name : std::string
+	+{static} free() : void
+}
+
+
+class MulIntInt {
+	+execution(Literal* A, Literal* B) : Literal*
+}
+
+
+class MulRealInt {
+	+execution(Literal* A, Literal* B) : Literal*
+}
+
+
+class OperatorException {
+	+OperatorException(const string& str)
+	+getInfo() : string {query}
+	-info : string
+}
+
+
+
+
+
+/' Inheritance relationships '/
+
+AbstractAdd <|-- AddIntInt
+
+
+AbstractAdd <|-- AddIntReal
+
+
+AbstractBinaryOperation <|-- AbstractAdd
+
+
+AbstractBinaryOperation <|-- AbstractDiv
+
+
+AbstractBinaryOperation <|-- AbstractMul
+
+
+AbstractDiv <|-- DivRealInt
+
+
+AbstractMul <|-- MulIntInt
+
+
+AbstractMul <|-- MulRealInt
+
+
+BinaryOperator <|-- Add
+
+
+BinaryOperator <|-- Div
+
+
+BinaryOperator <|-- Mul
+
+
+
+
+
+/' Aggregation relationships '/
+
+Add *-- Add
+
+
+BinaryOperator o-- AbstractBinaryOperation
+
+
+Div *-- Div
+
+
+Mul *-- Mul
+
+
+
+
+
+@enduml
