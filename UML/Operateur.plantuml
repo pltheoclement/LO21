@@ -5,7 +5,9 @@
 
 
 /' Objects '/
+abstract class AbstractOperation {
 
+}
 abstract class AbstractAdd {
 }
 
@@ -16,6 +18,15 @@ abstract class AbstractBinaryOperation {
 	+{abstract} execution(Literal* A, Literal* B) : Literal*
 	-a : LiteralType
 	-b : LiteralType
+}
+
+abstract class AbstractTernaryOperation {
+	+AbstractBinaryOperation(LiteralType litA, LiteralType litB, , LiteralType litC)
+	+~AbstractBinaryOperation()
+	+{abstract} execution(Literal* A, Literal* B, , Literal* B) : Literal*
+	-a : LiteralType
+	-b : LiteralType
+	-c : LiteralType
 }
 
 
@@ -44,12 +55,14 @@ class AddIntReal {
 	+execution(Literal* A, Literal* B) : Literal*
 }
 
+abstract class Operator {
+	-name : std::string
+	+execute() : void
+}
 
 class BinaryOperator {
 	-possibles : std::map<pair<LiteralType, LiteralType>, AbstractBinaryOperation*>
-	-name : std::string
 	+ajouterComportement(LiteralType A, LiteralType B, AbstractBinaryOperation* a) : void
-	+execute() : void
 }
 
 
@@ -81,6 +94,11 @@ class MulIntInt {
 
 class MulRealInt {
 	+execution(Literal* A, Literal* B) : Literal*
+}
+
+class TernaryOperator {
+	-possibles : std::map<tuple<LiteralType, LiteralType, LiteralType>, AbstractBinaryOperation*>
+	+ajouterComportement(LiteralType A, LiteralType B, LiteralType C, AbstractBinaryOperation* a) : void
 }
 
 
@@ -125,10 +143,15 @@ BinaryOperator <|-- Add
 
 BinaryOperator <|-- Div
 
+Operator <|-- BinaryOperator
+
+Operator <|-- TernaryOperator
 
 BinaryOperator <|-- Mul
 
+AbstractOperation <|-- AbstractBinaryOperation
 
+AbstractOperation <|-- AbstractTernaryOperation
 
 
 
@@ -138,6 +161,8 @@ Add *-- Add
 
 
 BinaryOperator o-- AbstractBinaryOperation
+
+TernaryOperator o-- AbstractTernaryOperation
 
 
 Div *-- Div

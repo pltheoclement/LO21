@@ -24,8 +24,21 @@ public:
 	string getInfo() const { return info; }
 };
 
+class AbstractOperation {
 
-class AbstractBinaryOperation {
+};
+
+class AbstractTernaryOperation : public AbstractOperation {
+	LiteralType a;
+	LiteralType b;
+	LiteralType c;
+public:
+	AbstractTernaryOperation(LiteralType litA, LiteralType litB, LiteralType litC);
+	virtual Literal* execution(Literal* A, Literal* B, Literal* C) = 0;
+	virtual ~AbstractTernaryOperation() = default;
+};
+
+class AbstractBinaryOperation : public AbstractOperation {
 	LiteralType a;
 	LiteralType b;
 public:
@@ -86,13 +99,20 @@ public:
 	}
 };
 
-class BinaryOperator {
+class Operator {
 	std::string name;
+public:
+	virtual void execute() = 0;
+	virtual ~Operator(){};
+};
+
+class BinaryOperator : public Operator{
     std::map<pair<LiteralType,LiteralType>, AbstractBinaryOperation*> possibles;
-    //~BinaryOperator();
-    //BinaryOperator();
+
 
 public :
+    virtual ~BinaryOperator(){};
+    BinaryOperator(){};
     void ajouterComportement(LiteralType A, LiteralType B, AbstractBinaryOperation* a) { possibles[make_pair(A,B)]=a; }
 
     void execute() {
@@ -118,6 +138,7 @@ class Add : public BinaryOperator {
 public:
 	static Add& get();
 	static void free();
+	~Add(){};
 };
 
 class Mul : public BinaryOperator {
@@ -136,5 +157,32 @@ public:
 	static void free();
 };
 
+class TernaryOperator : public Operator{
+    std::map<tuple<LiteralType,LiteralType, LiteralType>, AbstractBinaryOperation*> possibles;
+    //~BinaryOperator();
+    //BinaryOperator();
 
+public :
+    void ajouterComportement(LiteralType A, LiteralType B, LiteralType C,AbstractBinaryOperation* a) { possibles[make_tuple(A,B, C)]=a; }
+
+    void execute() {
+
+    	Literal* elA;// le premier argument
+
+    	Literal* elB;// le deuxième
+
+    	Literal* elC;// le deuxième
+
+        LiteralType A=elA->getType();
+
+        LiteralType B=elB->getType();
+
+        LiteralType C=elC->getType();
+
+        if (possibles.count(std::make_tuple(A, B, C)) > 0) // existe bien dans ta map then possibles[make_tuple(A,B)].execution(); // @suppress("Method cannot be resolved")
+        	possibles[make_tuple(A,B, C)]->execution(elA, elB);
+        else
+        	throw OperatorException("erreur");//sinon gestion de l'erreur
+    }
+};
 #endif /* HEADERS_OPERATOR_H_ */
