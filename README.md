@@ -5,6 +5,7 @@
 * Théophane DURAND
 * Jules BOULET
 * Sosthène LEROY
+* Yicheng WANG
 
 ## Chargé de TD : 
 * Antoine JOUGLET
