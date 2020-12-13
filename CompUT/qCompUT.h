@@ -12,6 +12,8 @@
 #include <QString>
 #include <vector>
 #include <QMap>
+#include <QLabel>
+#include <QComboBox>
 #include "CompUT.h"
 
 using namespace std;
@@ -27,14 +29,13 @@ class QCompUT : public QWidget{
 
     map<string,QPushButton*> buttons_First_keyboard;
     map<string,QPushButton*> buttons_Second_keyboard;
+    map<string,QPushButton*> buttons_secondary_view;
     map<string,QVBoxLayout*> layout_Vertical;
     map<string,QHBoxLayout*> layout_Horizontal;
     map<string,QWidget*> secondary_view;
-//    vector<QPushButton*> buttons_First_keyboard;
-//    vector<QPushButton*> buttons_Second_keyboard;
-//    vector<QVBoxLayout*> layoutV;
-//    vector<QHBoxLayout*> layoutH;
-    //vector<QWidget*> secondary_view;
+    map<string,QLineEdit*> Line_Edit;
+    map<string,QLabel*> label;
+    map<string,QComboBox*> list;
 
     QTabWidget *tab;
 
@@ -44,8 +45,9 @@ class QCompUT : public QWidget{
 
 public:
     explicit QCompUT(QWidget *father = 0);
-    void affichage_Variable();
-    //void Initialisation();
+    void creation();
+    void Initialisation();
+    void Initialisation_Stack();
 
 
 public slots:
@@ -55,6 +57,8 @@ public slots:
     void slotPlus();void slotMoins();void slotMult();void slotDiv();void slotEqual();
     void slotOpen1();
     void slotOpen2();
+    void slotReduce1();
+    void slotReduce2();
 
 };
 
