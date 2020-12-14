@@ -204,6 +204,14 @@ public:
 	static void free();
 };
 
+class DivE : public BinaryOperator {
+	std::string name = "dive";
+	static std::unique_ptr<DivE> instance;
+public:
+	static DivE& get();
+	static void free();
+};
+
 class Sub : public BinaryOperator {
 	std::string name = "sub";
 	static std::unique_ptr<Sub> instance;
