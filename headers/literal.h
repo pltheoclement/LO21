@@ -5,7 +5,7 @@
 #include <vector>
 #include <memory>
 
-enum LiteralType {linteger,lrational,lreal,latom,lexpression,lprogram,other};
+enum LiteralType {linteger,lrational,lreal,latom,lexpression,lprogram,lerror,other};
 
 class Literal {
 
@@ -16,7 +16,7 @@ public:
     static Literal* makeLiteral(const std::string& s, LiteralType t);
 
     LiteralType getType(){ return type;}
-    virtual std::string toString() = 0;
+    virtual std::string toString() const= 0;
     virtual ~Literal() {}
 };
 
@@ -29,7 +29,7 @@ public:
     //LInteger(const LReal& r): value(int(r.getValue())){}
     //LInteger(const LRational& f): value(int(f.getNum()/f.getDen())){}
     int getValue() const { return value;}
-    static LInteger* makeLiteral(const int& i);
+    static std::shared_ptr<Literal> makeLiteral(const int& i);
     std::string toString(){ return std::to_string(value);}
     ~LInteger(){}
 };

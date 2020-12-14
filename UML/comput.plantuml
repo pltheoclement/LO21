@@ -99,11 +99,6 @@ interface Operator{
     +{static}isOperator(s: std::string): std::string
     +{static}getOperator(s: std::string): Operator
     +{static}{abstract}getInstance(): Operator
-    +{abstract}getArity(): unsigned int
-    +{abstract}apply(stack: Stack)
-    +{abstract}popLit(stack: Stack) : unique_ptr<Literal>[]
-    +{abstract}operate(literals: unique_ptr<Literal>[]) : unique_ptr<Literal>
-    +{abstract}pushRes(stack: Stack, result: unique_ptr<Literal>)
 }
 
 Operator <|-- OpAdd
