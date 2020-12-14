@@ -105,6 +105,15 @@ public:
 	virtual ~TypeOperator(){};
 };
 
+class Clear : public TypeOperator {
+	std::string name = "clear";
+	static std::unique_ptr<Clear> instance;
+	Clear() = default;
+public:
+	static Clear& get();
+	static void free();
+};
+
 
 class UnaryOperator : public TypeOperator{
 	std::map<LiteralType, AbstractUnaryOperation*> possibles;
@@ -142,6 +151,23 @@ public:
 	static void free();
 };
 
+class Dup : public UnaryOperator {
+	std::string name = "dup";
+	static std::unique_ptr<Dup> instance;
+	Dup() = default;
+public:
+	static Dup& get();
+	static void free();
+};
+
+class Drop : public UnaryOperator {
+	std::string name = "drop";
+	static std::unique_ptr<Drop> instance;
+	Drop() = default;
+public:
+	static Drop& get();
+	static void free();
+};
 
 class BinaryOperator : public TypeOperator{
     std::map<pair<LiteralType,LiteralType>, AbstractBinaryOperation*> possibles;
@@ -257,6 +283,16 @@ public:
 	static Ift& get();
 	static void free();
 };
+
+class Swap : public UnaryOperator {
+	std::string name = "swap";
+	static std::unique_ptr<Swap> instance;
+	Swap() = default;
+public:
+	static Swap& get();
+	static void free();
+};
+
 
 class TernaryOperator : public TypeOperator{
     std::map<tuple<LiteralType,LiteralType, LiteralType>, AbstractTernaryOperation*> possibles;
