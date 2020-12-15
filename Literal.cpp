@@ -17,7 +17,7 @@ LiteralType Literal::isLiteral(const std::string& s){
     }
 }
 
-Literal* Literal::makeLiteral(const std::string& s, LiteralType t){
+std::shared_ptr<Literal> Literal::makeLiteral(const std::string& s, LiteralType t){
     switch(t){
         case linteger : return LInteger::makeLiteral(std::stoi(s));
         case lreal : return LReal::makeLiteral(std::stod(s));
@@ -34,18 +34,18 @@ Literal* Literal::makeLiteral(const std::string& s, LiteralType t){
     }
 }
 
-LInteger* LInteger::makeLiteral(const int& i){
-    LInteger* it = new LInteger(i);
+std::shared_ptr<LInteger> LInteger::makeLiteral(const int& i){
+    auto it = std::make_shared<LInteger>(i);
     return it;
 }
 
-LReal* LReal::makeLiteral(const double& d){
-    LReal* re = new LReal(d);
+std::shared_ptr<LReal> LReal::makeLiteral(const double& d){
+    auto re = std::make_shared<LReal>(d);
     return re;
 }
 
-LRational* LRational::makeLiteral(const int& n, const int& d){
-    LRational* ra = new LRational(n,d);
+std::shared_ptr<LRational> LRational::makeLiteral(const int& n, const int& d){
+    auto ra = std::make_shared<LRational>(n,d);
     return ra;
 }
 
