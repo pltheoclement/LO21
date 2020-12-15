@@ -18,9 +18,10 @@ class Stack{
     Stack() = default;
 public:
     static Stack& getInstance(){}
-    void push(const std::shared_ptr<Literal>& pl){};
-    void pop(){};
-    const std::shared_ptr<Literal>& top() const{};
+    void push(const std::shared_ptr<Literal>& pl){}
+    void pop(){}
+    bool isEmpty(){}
+    const std::shared_ptr<Literal>& top() const{}
     size_t size() const;
 };
 

@@ -14,6 +14,7 @@
 
 using namespace std;
 
+
 unique_ptr<Operator> Operator::instance = nullptr;
 
 std::map<std::string, shared_ptr<TypeOperator>> Operator::operators = {};
@@ -28,6 +29,15 @@ void Operator::freeInstance(){
 	instance = nullptr;
 }
 
+void Operator::addOperator(std::string name, std::shared_ptr<TypeOperator> oper){
+	operators.insert(std::make_pair(name, oper));
+}
+
+void Operator::delOperator(std::string name){
+	if(operators.count(name))
+		operators.erase(name);
+}
+
 bool Operator::isOperator(std::string s){
 	return (operators.count(s) > 0);
 }
@@ -36,73 +46,30 @@ TypeOperator& Operator::getOperator(std::string s){
 	return *operators.at(s);
 }
 
-void UnaryOperator::apply(Stack& s){
-
-	const std::shared_ptr<Literal> elA = s.top();// le premier argument
-
-    LiteralType A=elA->getType();
-
-    if (possibles.count(A) > 0) {// existe bien dans ta map then possibles[make_pair(A,B)].execution(); // @suppress("Method cannot be resolved")
-    	possibles[A]->execution(elA);
-    	s.pop();
-    }
+/* Définition de l'opérateur CLEAR */
+shared_ptr<Clear> Clear::instance = nullptr;
+void Clear::apply(Stack& s){
+	while(s.isEmpty()){
+		s.pop();
+	}
 }
 
-void BinaryOperator::apply(Stack& s){
-
-	const std::shared_ptr<Literal> elA = s.top();// le premier argument
-
-	const std::shared_ptr<Literal> elB = s.top();// le deuxième
-
-    LiteralType A=elA->getType();
-
-    LiteralType B=elB->getType();
-
-    if (possibles.count(make_pair(A, B)) > 0) {// existe bien dans ta map then possibles[make_pair(A,B)].execution(); // @suppress("Method cannot be resolved")
-    	possibles[make_pair(A,B)]->execution(elA, elB);
-    	s.pop();
-    	s.pop();
-    }
-}
-
-void TernaryOperator::apply(Stack& s){
-
-	const std::shared_ptr<Literal> elA = s.top();// le premier argument
-
-	const std::shared_ptr<Literal> elB = s.top();// le deuxième
-
-	const std::shared_ptr<Literal> elC = s.top();
-
-    LiteralType A=elA->getType();
-
-    LiteralType B=elB->getType();
-
-    LiteralType C=elC->getType();
-
-    if (possibles.count(make_tuple(A, B, C)) > 0) {// existe bien dans ta map then possibles[make_pair(A,B)].execution(); // @suppress("Method cannot be resolved")
-    	possibles[make_tuple(A, B, C)]->execution(elA, elB, elC);
-    	s.pop();
-    	s.pop();
-    	s.pop();
-    }
-
-}
-
-unique_ptr<Add> Add::instance = nullptr;
-
-Add& Add::get(){
-	if(instance == nullptr)
-		instance = unique_ptr<Add>(new Add);
+Clear& Clear::get(){
+	if(instance == nullptr){
+		instance = shared_ptr<Clear>(new Clear);
+		Operator::addOperator(instance->name, instance);
+	}
 	return *instance;
 }
 
-void Add::free(){
-	instance = nullptr;
+void Clear::free(){
+	if(instance != nullptr){
+		Operator::delOperator(instance->name);
+		instance = nullptr;
+	}
 }
 
-AbstractBinaryOperation::AbstractBinaryOperation(LiteralType litA, LiteralType litB): a(litA), b(litB){
-	Add::get().ajouterComportement(a, b, this);
-}
+/* fin opérateur CLEAR */
 
 
 
