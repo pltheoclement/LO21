@@ -17,7 +17,7 @@
 #include "operator.h"
 
 class AbstractUnaryOperation : public AbstractOperation {
-	LiteralType a;
+	LiteralType typeA;
 public:
 	AbstractUnaryOperation() = default;
 	virtual void execution(const std::shared_ptr<Literal> A) = 0;
@@ -28,14 +28,76 @@ class AbstractNeg : public AbstractUnaryOperation{
 public:
 	AbstractNeg() = default;
 	~AbstractNeg() = default;
-
 };
 
 class NegInt : public AbstractNeg{
 	LiteralType typeA = linteger;
 public:
 	NegInt();
-	void execution(const std::shared_ptr<LInteger> A);
+	void execution(const std::shared_ptr<Literal> A);
+};
+
+class NegReal : public AbstractNeg{
+	LiteralType typeA = lreal;
+public:
+	NegReal();
+	void execution(const std::shared_ptr<Literal> A);
+};
+
+class NegRational : public AbstractNeg{
+	LiteralType typeA = lrational;
+public:
+	NegRational();
+	void execution(const std::shared_ptr<Literal> A);
+};
+
+
+class AbstractNot : public AbstractUnaryOperation{
+public:
+	AbstractNot() = default;
+	~AbstractNot() = default;
+};
+
+class NotInt : public AbstractNot{
+	LiteralType typeA = linteger;
+public:
+	NotInt();
+	void execution(const std::shared_ptr<Literal> A);
+};
+
+class NotReal : public AbstractNot{
+	LiteralType typeA = lreal;
+public:
+	NotReal();
+	void execution(const std::shared_ptr<Literal> A);
+};
+
+class NotRational : public AbstractNot{
+	LiteralType typeA = lrational;
+public:
+	NotRational();
+	void execution(const std::shared_ptr<Literal> A);
+};
+
+class NotProgram : public AbstractNot{
+	LiteralType typeA = lprogram;
+public:
+	NotProgram();
+	void execution(const std::shared_ptr<Literal> A);
+};
+
+class NotAtom : public AbstractNot{
+	LiteralType typeA = latom;
+public:
+	NotAtom();
+	void execution(const std::shared_ptr<Literal> A);
+};
+
+class NotExpression : public AbstractNot{
+	LiteralType typeA = lexpression;
+public:
+	NotExpression();
+	void execution(const std::shared_ptr<Literal> A);
 };
 
 class UnaryOperator : public TypeOperator{

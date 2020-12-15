@@ -8,10 +8,15 @@
 #include <iostream>
 #include <string>
 #include "../headers/literal.h"
+#include "../headers/stack.h"
+#include "../headers/operator.h"
+#include "../headers/unaryOperator.h"
 
 using namespace std;
 
 int main(){
+	shared_ptr<LInteger> lInt= make_shared<LInteger>(2);
+	NegInt a;
 
 }
 

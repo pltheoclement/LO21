@@ -49,7 +49,7 @@ public:
     LReal(const double& d): value(d){}
     LReal(const LInteger& i): value(double(i.getValue())){}
     double getValue() const { return value;}
-    static std::shared_ptr<LReal> makeLiteral(const double& d);
+    static const std::shared_ptr<LReal> makeLiteral(const double& d){}
     std::string toString(){ return std::to_string(value);}
     ~LReal(){}
 };
@@ -65,7 +65,7 @@ public:
     LRational(const LInteger& i): num(i.getValue()), den(1){}
     int getNum() const { return num;}
     int getDen() const { return den;}
-    static std::shared_ptr<LRational> makeLiteral(const int& n, const int& d);
+    static std::shared_ptr<LRational> makeLiteral(const int& n, const int& d){}
     std::string toString(){ return std::to_string(num)+'/'+std::to_string(den);}
     LInteger toLInteger(){ LInteger i(int(num/den)); return i;}
     LReal toLReal(){ LReal r(double(num/den)); return r;}
