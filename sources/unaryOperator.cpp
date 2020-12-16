@@ -45,7 +45,7 @@ void Neg::free(){
 
 /* Début NegInt */
 NegInt::NegInt(){
-	Neg::get().ajouterComportement(typeA, this);
+	Neg::get().addBehaviour(typeA, this);
 }
 void NegInt::execution(const shared_ptr<Literal> A){
 	Literal* litA = A.get();
@@ -59,7 +59,7 @@ void NegInt::execution(const shared_ptr<Literal> A){
 /* Fin NegInt */
 /* Début NegReal */
 NegReal::NegReal(){
-	Neg::get().ajouterComportement(typeA, this);
+	Neg::get().addBehaviour(typeA, this);
 }
 void NegReal::execution(const shared_ptr<Literal> A){
 	Literal* litA = A.get();
@@ -72,7 +72,7 @@ void NegReal::execution(const shared_ptr<Literal> A){
 /* Fin NegReal */
 /* Début NegRational */
 NegRational::NegRational(){
-	Neg::get().ajouterComportement(typeA, this);
+	Neg::get().addBehaviour(typeA, this);
 }
 void NegRational::execution(const shared_ptr<Literal> A){
 	Literal* litA = A.get();
@@ -106,69 +106,71 @@ void Not::free(){
 	}
 }
 
-/* Début NotInt */
-NotInt::NotInt(){
-	Not::get().ajouterComportement(typeA, this);
-}
-void NotInt::execution(const shared_ptr<Literal> A){
+void Not::apply(Stack& s){
+	const shared_ptr<Literal> A = s.top();
 	Literal* litA = A.get();
-	LInteger* lIntA = dynamic_cast<LInteger*>(litA);
-	int valeur = lIntA->getValue();
-	if(valeur == 1){
+	if(litA->getType() == linteger){
+		LInteger* lIntA = dynamic_cast<LInteger*>(litA);
+		int valeur = lIntA->getValue();
+		if(valeur == 1){
+				const shared_ptr<LInteger> newLit = LInteger::makeLiteral(1);
+				Stack::getInstance().push(newLit);
+			}
+			else{
+				const shared_ptr<LInteger> newLit = LInteger::makeLiteral(0);
+				Stack::getInstance().push(newLit);
+			}
+	}else{
 		const shared_ptr<LInteger> newLit = LInteger::makeLiteral(1);
 		Stack::getInstance().push(newLit);
 	}
-	else{
-		const shared_ptr<LInteger> newLit = LInteger::makeLiteral(0);
-		Stack::getInstance().push(newLit);
-	}
-
 }
-/* Fin NotInt */
-/* Début NotReal */
-NotReal::NotReal(){
-	Not::get().ajouterComportement(typeA, this);
-}
-void NotReal::execution(const shared_ptr<Literal> A){
-	const shared_ptr<LInteger> newLit = LInteger::makeLiteral(1);
-	Stack::getInstance().push(newLit);
-}
-/* Fin NotReal */
-/* Début NotRational */
-NotRational::NotRational(){
-	Not::get().ajouterComportement(typeA, this);
-}
-void NotRational::execution(const shared_ptr<Literal> A){
-	const shared_ptr<LInteger> newLit = LInteger::makeLiteral(1);
-	Stack::getInstance().push(newLit);
-}
-/* Fin NotRational */
-/* Début NotProgram */
-NotProgram::NotProgram(){
-	Not::get().ajouterComportement(typeA, this);
-}
-void NotProgram::execution(const shared_ptr<Literal> A){
-	const shared_ptr<LInteger> newLit = LInteger::makeLiteral(1);
-	Stack::getInstance().push(newLit);
-}
-/* Fin NotProgram */
-/* Début NotAtom */
-NotAtom::NotAtom(){
-	Not::get().ajouterComportement(typeA, this);
-}
-void NotAtom::execution(const shared_ptr<Literal> A){
-	const shared_ptr<LInteger> newLit = LInteger::makeLiteral(1);
-	Stack::getInstance().push(newLit);
-}
-/* Fin NotAtom */
-/* Début NotExpression */
-NotExpression::NotExpression(){
-	Not::get().ajouterComportement(typeA, this);
-}
-void NotExpression::execution(const shared_ptr<Literal> A){
-	const shared_ptr<LInteger> newLit = LInteger::makeLiteral(1);
-	Stack::getInstance().push(newLit);
-}
-/* Fin NotExpression */
-
 /* fin opérateur Not */
+
+/* Début Dup */
+shared_ptr<Dup> Dup::instance = nullptr;
+
+Dup& Dup::get(){
+	if(instance == nullptr){
+		instance = shared_ptr<Dup>(new Dup);
+		Operator::addOperator(instance->name, instance);
+	}
+	return *instance;
+}
+
+void Dup::free(){
+	if(instance != nullptr){
+		Operator::delOperator(instance->name);
+		instance = nullptr;
+	}
+}
+void Dup::apply(Stack& s){
+
+	const shared_ptr<Literal> elA = s.top();
+    LiteralType A=elA->getType();
+    Literal* litA = elA.get();
+    //s.push(Literal::makeLiteral(elA));
+}
+/* Fin Dup */
+
+/* Début Drop */
+shared_ptr<Drop> Drop::instance = nullptr;
+
+Drop& Drop::get(){
+	if(instance == nullptr){
+		instance = shared_ptr<Drop>(new Drop);
+		Operator::addOperator(instance->name, instance);
+	}
+	return *instance;
+}
+
+void Drop::free(){
+	if(instance != nullptr){
+		Operator::delOperator(instance->name);
+		instance = nullptr;
+	}
+}
+void Drop::apply(Stack& s){
+	s.pop();
+}
+/* Fin Drop */

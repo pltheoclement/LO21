@@ -52,9 +52,9 @@ public:
 5) Dans un fichier Header : Créer chacune des classes de l'opérateur qui implemente un comportement en fonction des types d'entrée. Ici on ne prendra que l'exemple de Add avec deux int. la classe  AddIntInt.
 
 ```
-class AddIntInt : public AbstractNeg{
+class AddIntInt : public AbstractAdd{
 	LiteralType typeA = linteger;
-  LiteralType typeB = linteger;
+	LiteralType typeB = linteger;
 public:
 	AddIntInt();
 	void execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
@@ -65,7 +65,7 @@ public:
 
 ```
 AddIntInt::AddIntInt(){
-	Add::get().ajouterComportement(typeA, typeB, this);  //On ajoute une entrée au Map de Add, qui permettra de trouver un objet de la classe AddIntInt si on recherche l'opérateur Add pour deux Int.
+	Add::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Add, qui permettra de trouver un objet de la classe AddIntInt si on recherche l'opérateur Add pour deux Int.
 }
 void AddIntInt::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un pointeur de Literal sur le shared_ptr
@@ -74,7 +74,7 @@ void AddIntInt::execution(const std::shared_ptr<Literal> A, const std::shared_pt
   LInteger* lIntB = dynamic_cast<LInteger*>(litB);
 	int valeurA = lIntA->getValue(); //On récupère la valeur de ce Literal
   int valeurB = lIntB->getValue();
-	const int newVal = valeutA + valeurB; //On effectue l'opération Add
+	const int newVal = valeurA + valeurB; //On effectue l'opération Add
 	const shared_ptr<LInteger> newLit = LInteger::makeLiteral(newVal); //On créé un const shared_ptr pour notre nouveau int
 	Stack::getInstance().push(newLit); //On pous notre Literal sur la Stack.
 }

@@ -15,8 +15,12 @@
 using namespace std;
 
 int main(){
-	shared_ptr<LInteger> lInt= make_shared<LInteger>(2);
-	NegInt a;
+	int a = 6;
+	int b = 4;
+	double ad = a;
+	double bd = b;
+	double C = ad / bd;
+	cout<<C;
 
 }
 

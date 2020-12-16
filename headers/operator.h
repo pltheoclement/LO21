@@ -30,8 +30,6 @@ class AbstractOperation {
 
 
 
-
-
 class TypeOperator {
 	std::string name;
 public:

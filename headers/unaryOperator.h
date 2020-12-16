@@ -51,61 +51,12 @@ public:
 	void execution(const std::shared_ptr<Literal> A);
 };
 
-
-class AbstractNot : public AbstractUnaryOperation{
-public:
-	AbstractNot() = default;
-	~AbstractNot() = default;
-};
-
-class NotInt : public AbstractNot{
-	LiteralType typeA = linteger;
-public:
-	NotInt();
-	void execution(const std::shared_ptr<Literal> A);
-};
-
-class NotReal : public AbstractNot{
-	LiteralType typeA = lreal;
-public:
-	NotReal();
-	void execution(const std::shared_ptr<Literal> A);
-};
-
-class NotRational : public AbstractNot{
-	LiteralType typeA = lrational;
-public:
-	NotRational();
-	void execution(const std::shared_ptr<Literal> A);
-};
-
-class NotProgram : public AbstractNot{
-	LiteralType typeA = lprogram;
-public:
-	NotProgram();
-	void execution(const std::shared_ptr<Literal> A);
-};
-
-class NotAtom : public AbstractNot{
-	LiteralType typeA = latom;
-public:
-	NotAtom();
-	void execution(const std::shared_ptr<Literal> A);
-};
-
-class NotExpression : public AbstractNot{
-	LiteralType typeA = lexpression;
-public:
-	NotExpression();
-	void execution(const std::shared_ptr<Literal> A);
-};
-
 class UnaryOperator : public TypeOperator{
 	std::map<LiteralType, AbstractUnaryOperation*> possibles;
 public :
     virtual ~UnaryOperator(){};
     UnaryOperator(){};
-    void ajouterComportement(LiteralType A, AbstractUnaryOperation* a) { possibles[A]=a; }
+    void addBehaviour(LiteralType A, AbstractUnaryOperation* a) { possibles[A]=a; }
     void apply(Stack& s);
 };
 
@@ -125,6 +76,7 @@ class Not : public UnaryOperator {
 public:
 	static Not& get();
 	static void free();
+	void apply(Stack& s);
 };
 
 class Eval : public UnaryOperator {
@@ -134,6 +86,7 @@ class Eval : public UnaryOperator {
 public:
 	static Eval& get();
 	static void free();
+
 };
 
 class Dup : public UnaryOperator {
@@ -143,6 +96,7 @@ class Dup : public UnaryOperator {
 public:
 	static Dup& get();
 	static void free();
+	void apply(Stack& s);
 };
 
 class Drop : public UnaryOperator {
@@ -152,6 +106,7 @@ class Drop : public UnaryOperator {
 public:
 	static Drop& get();
 	static void free();
+	void apply(Stack& s);
 };
 
 

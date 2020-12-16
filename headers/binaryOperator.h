@@ -18,34 +18,19 @@
 
 
 class AbstractBinaryOperation : public AbstractOperation {
-	LiteralType a;
-	LiteralType b;
+protected:
+	LiteralType typeA;
+	LiteralType typeB;
 public:
-	AbstractBinaryOperation(LiteralType litA, LiteralType litB);
+	AbstractBinaryOperation(){}
 	virtual void execution(std::shared_ptr<Literal> A, std::shared_ptr<Literal> B) = 0;
 	virtual ~AbstractBinaryOperation() = default;
-};
-
-class AbstractAdd : public AbstractBinaryOperation{
 };
 
 class AbstractMul : public AbstractBinaryOperation{
 };
 
 class AbstractDiv : public AbstractBinaryOperation{
-};
-
-
-class AddIntInt : public AbstractAdd {
-public:
-	void execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
-	}
-};
-
-class AddIntReal : public AbstractAdd {
-public:
-	void execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
-	}
 };
 
 class MulIntInt : public AbstractMul {
@@ -73,7 +58,7 @@ class BinaryOperator : public TypeOperator{
 public :
     virtual ~BinaryOperator(){};
     BinaryOperator(){};
-    void ajouterComportement(LiteralType A, LiteralType B, AbstractBinaryOperation* a) { possibles[std::make_pair(A,B)]=a; }
+    void addBehaviour(LiteralType A, LiteralType B, AbstractBinaryOperation* a) { possibles[std::make_pair(A,B)]=a; }
     void apply(Stack& s);
 };
 
@@ -85,6 +70,89 @@ public:
 	static Add& get();
 	static void free();
 };
+
+class AbstractAdd : public AbstractBinaryOperation{
+public:
+	AbstractAdd() = default;
+	~AbstractAdd() = default;
+};
+
+class AddIntInt : public AbstractAdd{
+protected:
+	LiteralType typeA = linteger;
+	LiteralType typeB = linteger;
+public:
+	AddIntInt();
+	void execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
+};
+
+class AddIntReal : public AbstractAdd{
+protected:
+	LiteralType typeA = linteger;
+	LiteralType typeB = lreal;
+public:
+	AddIntReal();
+	void execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
+};
+
+class AddRealInt : public AddIntReal{
+public:
+	AddRealInt();
+	void execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
+};
+
+class AddIntRational : public AbstractAdd{
+protected:
+	LiteralType typeA = linteger;
+	LiteralType typeB = lrational;
+public:
+	AddIntRational();
+	void execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
+};
+
+class AddRationalInt : public AddIntRational{
+public:
+	AddRationalInt();
+	void execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
+};
+
+class AddRationalRational : public AbstractAdd{
+protected:
+	LiteralType typeA = lrational;
+	LiteralType typeB = lrational;
+public:
+	AddRationalRational();
+	void execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
+};
+
+class AddRealReal : public AbstractAdd{
+protected:
+	LiteralType typeA = lreal;
+	LiteralType typeB = lreal;
+public:
+	AddRealReal();
+	void execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
+};
+
+class AddRealRational : public AbstractAdd{
+protected:
+	LiteralType typeA = lreal;
+	LiteralType typeB = lrational;
+public:
+	AddRealRational();
+	void execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
+};
+
+class AddRationalReal : public AddRealRational{
+public:
+	AddRationalReal();
+	void execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
+};
+
+
+
+
+
 
 class Mul : public BinaryOperator {
 	std::string name = "mul";
