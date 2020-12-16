@@ -27,30 +27,6 @@ public:
 	virtual ~AbstractBinaryOperation() = default;
 };
 
-class AbstractMul : public AbstractBinaryOperation{
-};
-
-class AbstractDiv : public AbstractBinaryOperation{
-};
-
-class MulIntInt : public AbstractMul {
-public:
-	void execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
-	}
-};
-
-class MulRealInt : public AbstractMul {
-public:
-	void execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
-	}
-};
-
-class DivRealInt : public AbstractDiv {
-public:
-	void execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
-	}
-};
-
 
 class BinaryOperator : public TypeOperator{
     std::map<std::pair<LiteralType,LiteralType>, AbstractBinaryOperation*> possibles;
@@ -157,32 +133,290 @@ public:
 class Mul : public BinaryOperator {
 	std::string name = "mul";
 	static std::shared_ptr<Mul> instance;
+	Mul() = default;
 public:
 	static Mul& get();
 	static void free();
 };
 
+class AbstractMul : public AbstractBinaryOperation{
+public:
+	AbstractMul() = default;
+	~AbstractMul() = default;
+};
+
+class MulIntInt : public AbstractMul{
+protected:
+	LiteralType typeA = linteger;
+	LiteralType typeB = linteger;
+public:
+	MulIntInt();
+	void execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
+};
+
+class MulIntReal : public AbstractMul{
+protected:
+	LiteralType typeA = linteger;
+	LiteralType typeB = lreal;
+public:
+	MulIntReal();
+	void execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
+};
+
+class MulRealInt : public MulIntReal{
+public:
+	MulRealInt();
+	void execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
+};
+
+class MulIntRational : public AbstractMul{
+protected:
+	LiteralType typeA = linteger;
+	LiteralType typeB = lrational;
+public:
+	MulIntRational();
+	void execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
+};
+
+class MulRationalInt : public MulIntRational{
+public:
+	MulRationalInt();
+	void execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
+};
+
+class MulRationalRational : public AbstractMul{
+protected:
+	LiteralType typeA = lrational;
+	LiteralType typeB = lrational;
+public:
+	MulRationalRational();
+	void execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
+};
+
+class MulRealReal : public AbstractMul{
+protected:
+	LiteralType typeA = lreal;
+	LiteralType typeB = lreal;
+public:
+	MulRealReal();
+	void execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
+};
+
+class MulRealRational : public AbstractMul{
+protected:
+	LiteralType typeA = lreal;
+	LiteralType typeB = lrational;
+public:
+	MulRealRational();
+	void execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
+};
+
+class MulRationalReal : public MulRealRational{
+public:
+	MulRationalReal();
+	void execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
+};
+
+
+class Sub : public BinaryOperator {
+	std::string name = "sub";
+	static std::shared_ptr<Sub> instance;
+	Sub() = default;
+public:
+	static Sub& get();
+	static void free();
+};
+
+class AbstractSub : public AbstractBinaryOperation{
+public:
+	AbstractSub() = default;
+	~AbstractSub() = default;
+};
+
+class SubIntInt : public AbstractSub{
+protected:
+	LiteralType typeA = linteger;
+	LiteralType typeB = linteger;
+public:
+	SubIntInt();
+	void execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
+};
+
+class SubIntReal : public AbstractSub{
+protected:
+	LiteralType typeA = linteger;
+	LiteralType typeB = lreal;
+public:
+	SubIntReal();
+	void execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
+};
+
+class SubRealInt : public AbstractSub{
+protected:
+	LiteralType typeA = lreal;
+	LiteralType typeB = linteger;
+public:
+	SubRealInt();
+	void execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
+};
+
+class SubIntRational : public AbstractSub{
+protected:
+	LiteralType typeA = linteger;
+	LiteralType typeB = lrational;
+public:
+	SubIntRational();
+	void execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
+};
+
+class SubRationalInt : public AbstractSub{
+protected:
+	LiteralType typeA = lrational;
+	LiteralType typeB = linteger;
+public:
+	SubRationalInt();
+	void execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
+};
+
+class SubRationalRational : public AbstractSub{
+protected:
+	LiteralType typeA = lrational;
+	LiteralType typeB = lrational;
+public:
+	SubRationalRational();
+	void execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
+};
+
+class SubRealReal : public AbstractSub{
+protected:
+	LiteralType typeA = lreal;
+	LiteralType typeB = lreal;
+public:
+	SubRealReal();
+	void execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
+};
+
+class SubRealRational : public AbstractSub{
+protected:
+	LiteralType typeA = lreal;
+	LiteralType typeB = lrational;
+public:
+	SubRealRational();
+	void execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
+};
+
+class SubRationalReal : public AbstractSub{
+protected:
+	LiteralType typeA = lrational;
+	LiteralType typeB = lreal;
+public:
+	SubRationalReal();
+	void execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
+};
+
 class Div : public BinaryOperator {
 	std::string name = "div";
 	static std::shared_ptr<Div> instance;
+	Div() = default;
 public:
 	static Div& get();
 	static void free();
 };
+
+class AbstractDiv : public AbstractBinaryOperation{
+public:
+	AbstractDiv() = default;
+	~AbstractDiv() = default;
+};
+
+class DivIntInt : public AbstractDiv{
+protected:
+	LiteralType typeA = linteger;
+	LiteralType typeB = linteger;
+public:
+	DivIntInt();
+	void execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
+};
+
+class DivIntReal : public AbstractDiv{
+protected:
+	LiteralType typeA = linteger;
+	LiteralType typeB = lreal;
+public:
+	DivIntReal();
+	void execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
+};
+
+class DivRealInt : public AbstractDiv{
+protected:
+	LiteralType typeA = lreal;
+	LiteralType typeB = linteger;
+public:
+	DivRealInt();
+	void execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
+};
+
+class DivIntRational : public AbstractDiv{
+protected:
+	LiteralType typeA = linteger;
+	LiteralType typeB = lrational;
+public:
+	DivIntRational();
+	void execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
+};
+
+class DivRationalInt : public AbstractDiv{
+protected:
+	LiteralType typeA = lrational;
+	LiteralType typeB = linteger;
+public:
+	DivRationalInt();
+	void execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
+};
+
+class DivRationalRational : public AbstractDiv{
+protected:
+	LiteralType typeA = lrational;
+	LiteralType typeB = lrational;
+public:
+	DivRationalRational();
+	void execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
+};
+
+class DivRealReal : public AbstractDiv{
+protected:
+	LiteralType typeA = lreal;
+	LiteralType typeB = lreal;
+public:
+	DivRealReal();
+	void execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
+};
+
+class DivRealRational : public AbstractDiv{
+protected:
+	LiteralType typeA = lreal;
+	LiteralType typeB = lrational;
+public:
+	DivRealRational();
+	void execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
+};
+
+class DivRationalReal : public AbstractDiv{
+protected:
+	LiteralType typeA = lrational;
+	LiteralType typeB = lreal;
+public:
+	DivRationalReal();
+	void execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
+};
+
+
 
 class DivE : public BinaryOperator {
 	std::string name = "dive";
 	static std::shared_ptr<DivE> instance;
 public:
 	static DivE& get();
-	static void free();
-};
-
-class Sub : public BinaryOperator {
-	std::string name = "sub";
-	static std::shared_ptr<Sub> instance;
-public:
-	static Sub& get();
 	static void free();
 };
 
