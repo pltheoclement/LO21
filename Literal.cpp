@@ -17,7 +17,7 @@ LiteralType Literal::isLiteral(const std::string& s){
     }
 }
 
-std::shared_ptr<Literal> Literal::makeLiteral(const std::string& s, LiteralType t){
+const std::shared_ptr<Literal> Literal::makeLiteral(const std::string& s, LiteralType t){
     switch(t){
         case linteger : return LInteger::makeLiteral(std::stoi(s));
         case lreal : return LReal::makeLiteral(std::stod(s));
@@ -34,18 +34,33 @@ std::shared_ptr<Literal> Literal::makeLiteral(const std::string& s, LiteralType 
     }
 }
 
-std::shared_ptr<LInteger> LInteger::makeLiteral(const int& i){
+const std::shared_ptr<LInteger> LInteger::makeLiteral(const int& i){
     auto it = std::make_shared<LInteger>(i);
     return it;
 }
 
-std::shared_ptr<LReal> LReal::makeLiteral(const double& d){
+const std::shared_ptr<LReal> LReal::makeLiteral(const double& d){
     auto re = std::make_shared<LReal>(d);
     return re;
 }
 
-std::shared_ptr<LRational> LRational::makeLiteral(const int& n, const int& d){
+const std::shared_ptr<LRational> LRational::makeLiteral(const int& n, const int& d){
     auto ra = std::make_shared<LRational>(n,d);
+    return ra;
+}
+
+const std::shared_ptr<Literal> LInteger::getCopy(){
+    auto it = std::make_shared<LInteger>(*this);
+    return it;
+}
+
+const std::shared_ptr<Literal> LReal::getCopy(){
+    auto re = std::make_shared<LReal>(*this);
+    return re;
+}
+
+const std::shared_ptr<Literal> LRational::getCopy(){
+    auto ra = std::make_shared<LRational>(*this);
     return ra;
 }
 
