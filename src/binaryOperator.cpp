@@ -9,14 +9,14 @@
 #include <string>
 #include <map>
 
-#include "../headers/operator.h"
-#include "../headers/binaryOperator.h"
-#include "../headers/stack.h"
-#include "../headers/literal.h"
+#include "../include/operator.h"
+#include "../include/binaryOperator.h"
+#include "../include/computer.h"
+#include "../include/literal.h"
 
 using namespace std;
 
-void BinaryOperator::apply(Stack& s){
+bool BinaryOperator::apply(Stack& s){
 
 	const std::shared_ptr<Literal> elA = s.top();// le premier argument
 
@@ -31,6 +31,9 @@ void BinaryOperator::apply(Stack& s){
     	s.pop();
     	s.pop();
     	s.push(res);
+    	return true;
+    }else{
+    	return false;
     }
 }
 

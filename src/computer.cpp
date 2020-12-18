@@ -32,7 +32,7 @@ void Computer::storeVariable(const std::string &name, const Literal &l) {
 }
 
 void Computer::forgetVariable(const std::string &name) {
-    if (variables.contains(name)) {
+    if (variables.count(name)) {
         variables.erase(name);
     } else {
         message = "There is no variable with name " + name;
@@ -40,7 +40,7 @@ void Computer::forgetVariable(const std::string &name) {
 }
 
 void Computer::pushVariable(const std::string &name) {
-    if (variables.contains(name)) {
+    if (variables.count(name)) {
         LiteralType lt = Literal::isLiteral(variables.at(name));
         switch (lt) {
             case lerror: message = "The variable " + name + " is invalid"; break;
@@ -89,7 +89,7 @@ std::string Computer::evalLine(const std::string &s) {
                         message = "No such operator or literal " + inst;
                         return line;
                     } else if (lt == latom) {
-                        if (variables.contains(inst)) {
+                        if (variables.count(inst)) {
                             evalLine(variables.at(inst));
                         } else {
                             message = "No variable or program called " + inst;

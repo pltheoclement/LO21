@@ -7,10 +7,10 @@
 
 #include <iostream>
 #include <string>
-#include "../headers/literal.h"
-#include "../headers/stack.h"
-#include "../headers/operator.h"
-#include "../headers/unaryOperator.h"
+#include "../include/literal.h"
+#include "../include/stack.h"
+#include "../include/operator.h"
+#include "../include/unaryOperator.h"
 
 using namespace std;
 

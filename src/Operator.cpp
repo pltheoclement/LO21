@@ -8,9 +8,9 @@
 #include <string>
 #include <map>
 
-#include "../headers/operator.h"
-#include "../headers/stack.h"
-#include "../headers/literal.h"
+#include "../include/operator.h"
+#include "../include/computer.h"
+#include "../include/literal.h"
 
 using namespace std;
 
@@ -48,10 +48,11 @@ TypeOperator& Operator::getOperator(std::string s){
 
 /* Définition de l'opérateur CLEAR */
 shared_ptr<Clear> Clear::instance = nullptr;
-void Clear::apply(Stack& s){
+bool Clear::apply(Stack& s){
 	while(s.size() != 0){
 		s.pop();
 	}
+	return true;
 }
 
 Clear& Clear::get(){
