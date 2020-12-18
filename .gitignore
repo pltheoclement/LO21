@@ -2,4 +2,4 @@ UML/*.sh
 .cproject
 .project
 .settings
-/Debug/
+Debug/
