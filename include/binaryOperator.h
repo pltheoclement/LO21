@@ -12,7 +12,7 @@
 #include <iostream>
 #include <memory>
 
-#include "stack.h"
+#include "computer.h"
 #include "literal.h"
 #include "operator.h"
 
@@ -35,7 +35,7 @@ public :
     virtual ~BinaryOperator(){};
     BinaryOperator(){};
     void addBehaviour(LiteralType A, LiteralType B, AbstractBinaryOperation* a) { possibles[std::make_pair(A,B)]=a; }
-    void apply(Stack& s);
+    bool apply(Stack& s);
 };
 
 class Add : public BinaryOperator {

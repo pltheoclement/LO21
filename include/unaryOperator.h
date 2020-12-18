@@ -12,7 +12,7 @@
 #include <iostream>
 #include <memory>
 
-#include "stack.h"
+#include "computer.h"
 #include "literal.h"
 #include "operator.h"
 
@@ -57,7 +57,7 @@ public :
     virtual ~UnaryOperator(){};
     UnaryOperator(){};
     void addBehaviour(LiteralType A, AbstractUnaryOperation* a) { possibles[A]=a; }
-    void apply(Stack& s);
+    bool apply(Stack& s);
 };
 
 class Neg : public UnaryOperator {
@@ -76,7 +76,7 @@ class Not : public UnaryOperator {
 public:
 	static Not& get();
 	static void free();
-	void apply(Stack& s);
+	bool apply(Stack& s);
 };
 
 class Eval : public UnaryOperator {
@@ -96,7 +96,7 @@ class Dup : public UnaryOperator {
 public:
 	static Dup& get();
 	static void free();
-	void apply(Stack& s);
+	bool apply(Stack& s);
 };
 
 class Drop : public UnaryOperator {
@@ -106,7 +106,7 @@ class Drop : public UnaryOperator {
 public:
 	static Drop& get();
 	static void free();
-	void apply(Stack& s);
+	bool apply(Stack& s);
 };
 
 

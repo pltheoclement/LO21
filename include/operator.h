@@ -12,10 +12,8 @@
 #include <iostream>
 #include <memory>
 
-#include "stack.h"
+#include "computer.h"
 #include "literal.h"
-
-//using namespace std;
 
 class OperatorException {
 	std::string info;
@@ -33,7 +31,7 @@ class AbstractOperation {
 class TypeOperator {
 	std::string name;
 public:
-	virtual void apply(Stack& s) = 0;
+	virtual bool apply(Stack& s) = 0;
 	virtual ~TypeOperator(){};
 };
 
@@ -42,7 +40,7 @@ class Clear : public TypeOperator {
 	static std::shared_ptr<Clear> instance;
 	Clear() = default;
 public:
-	void apply(Stack& s);
+	bool apply(Stack& s);
 	static Clear& get();
 	static void free();
 };

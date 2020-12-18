@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 #include <memory>
-enum LiteralType {linteger,lrational,lreal,latom,lexpression,lprogram,other};
+enum LiteralType {linteger,lrational,lreal,latom,lexpression,lprogram,lerror,other};
 
 class LiteralException {
     std::string info;

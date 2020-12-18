@@ -12,7 +12,7 @@
 #include <iostream>
 #include <memory>
 
-#include "stack.h"
+#include "computer.h"
 #include "literal.h"
 #include "operator.h"
 
@@ -35,7 +35,7 @@ public :
     virtual ~TernaryOperator(){}
     TernaryOperator(){}
     void ajouterComportement(LiteralType A, LiteralType B, LiteralType C, AbstractTernaryOperation* a) { possibles[std::make_tuple(A, B, C)]=a; }
-    void apply(Stack& s);
+    bool apply(Stack& s);
 };
 
 

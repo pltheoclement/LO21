@@ -8,10 +8,10 @@
 #include <string>
 #include <map>
 
-#include "../headers/operator.h"
-#include "../headers/unaryOperator.h"
-#include "../headers/stack.h"
-#include "../headers/literal.h"
+#include "../include/operator.h"
+#include "../include/unaryOperator.h"
+#include "../include/stack.h"
+#include "../include/literal.h"
 
 using namespace std;
 
