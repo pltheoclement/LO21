@@ -60,6 +60,9 @@ public slots:
     void slotReduce1();
     void slotReduce2();
 
+    void slotNewVariable(); void slotModifVariable(); void slotDeleteVariable();
+    void slotNewProg(); void slotModifProg(); void slotDeleteProg();
+
 };
 
 

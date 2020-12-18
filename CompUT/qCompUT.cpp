@@ -31,6 +31,14 @@ QCompUT::QCompUT(QWidget* father) : QWidget(father){
 
     connect(stack,SIGNAL(modificationEtat()),this,SLOT(refresh()));
     connect(commande,SIGNAL(returnPressed()),this,SLOT(getNextCommande()));
+
+    connect(buttons_secondary_view["new_var"],SIGNAL(clicked()),this,SLOT(slotNewVariable()));
+    connect(buttons_secondary_view["modif_var"],SIGNAL(clicked()),this,SLOT(slotModifVariable()));
+    connect(buttons_secondary_view["delete_var"],SIGNAL(clicked()),this,SLOT(slotDeleteVariable()));
+
+    connect(buttons_secondary_view["new_prog"],SIGNAL(clicked()),this,SLOT(slotNewProg()));
+    connect(buttons_secondary_view["modif_prog"],SIGNAL(clicked()),this,SLOT(slotModifProg()));
+    connect(buttons_secondary_view["delete_prog"],SIGNAL(clicked()),this,SLOT(slotDeleteProg()));
 }
 
 
@@ -81,15 +89,18 @@ void QCompUT::creation(){
     QPushButton* reduce_keyboard_two = new QPushButton("reduce"); buttons_Second_keyboard["reduce_keyboard_two"] = reduce_keyboard_two; buttons_Second_keyboard["reduce_keyboard_two"]->setFixedSize(200,30);
 
     //Création des différents boutons pour le claiver 2
-    QPushButton* prog1 = new QPushButton(""); buttons_Second_keyboard["prog1"] = prog1; buttons_Second_keyboard["prog1"]->setFixedSize(90,40);
-    QPushButton* prog2 = new QPushButton(""); buttons_Second_keyboard["prog2"] = prog2; buttons_Second_keyboard["prog2"]->setFixedSize(90,40);
-    QPushButton* prog3 = new QPushButton(""); buttons_Second_keyboard["prog3"] = prog3; buttons_Second_keyboard["prog3"]->setFixedSize(90,40);
-    QPushButton* prog4 = new QPushButton(""); buttons_Second_keyboard["prog4"] = prog4; buttons_Second_keyboard["prog4"]->setFixedSize(90,40);
-    QPushButton* prog5 = new QPushButton(""); buttons_Second_keyboard["prog5"] = prog5; buttons_Second_keyboard["prog5"]->setFixedSize(90,40);
-    QPushButton* prog6 = new QPushButton(""); buttons_Second_keyboard["prog6"] = prog6; buttons_Second_keyboard["prog6"]->setFixedSize(90,40);
-    QPushButton* prog7 = new QPushButton(""); buttons_Second_keyboard["prog7"] = prog7; buttons_Second_keyboard["prog7"]->setFixedSize(90,40);
-    QPushButton* prog8 = new QPushButton(""); buttons_Second_keyboard["prog8"] = prog8; buttons_Second_keyboard["prog8"]->setFixedSize(90,40);
-
+    QPushButton* var1 = new QPushButton; buttons_Second_keyboard["var1"] = var1; buttons_Second_keyboard["var1"]->setFixedSize(88,35);
+    QPushButton* var2 = new QPushButton; buttons_Second_keyboard["var2"] = var2; buttons_Second_keyboard["var2"]->setFixedSize(88,35);
+    QPushButton* var3 = new QPushButton; buttons_Second_keyboard["var3"] = var3; buttons_Second_keyboard["var3"]->setFixedSize(88,35);
+    QPushButton* var4 = new QPushButton; buttons_Second_keyboard["var4"] = var4; buttons_Second_keyboard["var4"]->setFixedSize(88,35);
+    QPushButton* var5 = new QPushButton; buttons_Second_keyboard["var5"] = var5; buttons_Second_keyboard["var5"]->setFixedSize(88,35);
+    QPushButton* var6 = new QPushButton; buttons_Second_keyboard["var6"] = var6; buttons_Second_keyboard["var6"]->setFixedSize(88,35);
+    QPushButton* prog1 = new QPushButton; buttons_Second_keyboard["prog1"] = prog1; buttons_Second_keyboard["prog1"]->setFixedSize(88,35);
+    QPushButton* prog2 = new QPushButton; buttons_Second_keyboard["prog2"] = prog2; buttons_Second_keyboard["prog2"]->setFixedSize(88,35);
+    QPushButton* prog3 = new QPushButton; buttons_Second_keyboard["prog3"] = prog3; buttons_Second_keyboard["prog3"]->setFixedSize(88,35);
+    QPushButton* prog4 = new QPushButton; buttons_Second_keyboard["prog4"] = prog4; buttons_Second_keyboard["prog4"]->setFixedSize(88,35);
+    QPushButton* prog5 = new QPushButton; buttons_Second_keyboard["prog5"] = prog5; buttons_Second_keyboard["prog5"]->setFixedSize(88,35);
+    QPushButton* prog6 = new QPushButton; buttons_Second_keyboard["prog6"] = prog6; buttons_Second_keyboard["prog6"]->setFixedSize(88,35);
     QPushButton* open_keyboard_one = new QPushButton("open"); buttons_First_keyboard["open_keyboard_one"] = open_keyboard_one; buttons_First_keyboard["open_keyboard_one"]->setFixedSize(200,30);
     QPushButton* open_keyboard_two = new QPushButton("open"); buttons_Second_keyboard["open_keyboard_two"] = open_keyboard_two; buttons_Second_keyboard["open_keyboard_two"]->setFixedSize(200,30);
 
@@ -114,11 +125,8 @@ void QCompUT::creation(){
 
     QHBoxLayout* layout_key_one = new QHBoxLayout; layout_Horizontal["layout_key_one"] = layout_key_one;
 
-    //Création des couches pour les programmes et variables
-    QHBoxLayout* layout_prog12 = new QHBoxLayout; layout_Horizontal["layout_prog12"] = layout_prog12;
-    QHBoxLayout* layout_prog34 = new QHBoxLayout; layout_Horizontal["layout_prog34"] = layout_prog34;
-    QHBoxLayout* layout_prog56 = new QHBoxLayout; layout_Horizontal["layout_prog56"] = layout_prog56;
-    QHBoxLayout* layout_prog78 = new QHBoxLayout; layout_Horizontal["layout_prog78"] = layout_prog78;
+    //Création de la couche pour les programmes et variables
+    QHBoxLayout* layout_var_prog = new QHBoxLayout; layout_Horizontal["layout_var_prog"] = layout_var_prog;
 
     //Création de la couche avec le clavier N°1 et N°2
     QHBoxLayout* layout_keyboard_one_two = new QHBoxLayout; layout_Horizontal["layout_keyboard_one_two"] = layout_keyboard_one_two;
@@ -150,7 +158,10 @@ void QCompUT::creation(){
     QVBoxLayout* layout_keyboard_one = new QVBoxLayout; layout_Vertical["layout_keyboard_one"] = layout_keyboard_one;
 
     //Création de la couche du clavier N°2 + Open et Close
-    QVBoxLayout* layout_key_two = new QVBoxLayout; layout_Vertical["layout_key_two"] = layout_key_two;
+    QVBoxLayout* layout_keyboard_var = new QVBoxLayout; layout_Vertical["layout_keyboard_var"] = layout_keyboard_var;
+    QVBoxLayout* layout_keyboard_prog = new QVBoxLayout; layout_Vertical["layout_keyboard_prog"] = layout_keyboard_prog;
+
+    //QVBoxLayout* layout_key_two = new QVBoxLayout; layout_Vertical["layout_key_two"] = layout_key_two;
     QVBoxLayout* layout_keyboard_two = new QVBoxLayout; layout_Vertical["layout_keyboard_two"] = layout_keyboard_two;
 
     QVBoxLayout* layout_general = new QVBoxLayout; layout_Vertical["layout_general"] = layout_general;
@@ -175,8 +186,8 @@ void QCompUT::creation(){
     QLabel* name_var_add = new QLabel("Entrer name of variable"); label["name_var_add"] = name_var_add;
     QLabel* value_var_add = new QLabel("Entrer value of variable"); label["value_var_add"] = value_var_add;
     QComboBox* list_add_var = new QComboBox; list["list_add_var"] = list_add_var; list["list_add_var"]->setFixedSize(130,35);
-    list["list_add_var"]->addItem("Position N°1"); list["list_add_var"]->addItem("Position N°3"); list["list_add_var"]->addItem("Position N°3"); list["list_add_var"]->addItem("Position N°4");
-    list["list_add_var"]->addItem("Position N°5"); list["list_add_var"]->addItem("Position N°6"); list["list_add_var"]->addItem("Position N°7"); list["list_add_var"]->addItem("Position N°8");
+    list["list_add_var"]->addItem("Position N°1"); list["list_add_var"]->addItem("Position N°3"); list["list_add_var"]->addItem("Position N°3");
+    list["list_add_var"]->addItem("Position N°4"); list["list_add_var"]->addItem("Position N°5"); list["list_add_var"]->addItem("Position N°6");
 
     QLineEdit* modif_name_var = new QLineEdit; Line_Edit["modif_name_var"] = modif_name_var; Line_Edit["modif_name_var"]->setFixedSize(200,20);
     QLineEdit* modif_edit_var = new QLineEdit; Line_Edit["modif_edit_var"] = modif_edit_var; Line_Edit["modif_edit_var"]->setFixedSize(200,20);
@@ -194,8 +205,8 @@ void QCompUT::creation(){
     QLabel* name_prog_add = new QLabel("Entrer name of program"); label["name_prog_add"] = name_prog_add; label["name_prog_add"]->setFixedSize(200,20);
     QLabel* value_prog_add = new QLabel("Entrer value of program"); label["value_prog_add"] = value_prog_add; label["value_prog_add"]->setFixedSize(200,20);
     QComboBox* list_add_prog = new QComboBox; list["list_add_prog"] = list_add_prog; list["list_add_prog"]->setFixedSize(130,35);
-    list["list_add_prog"]->addItem("Position N°1"); list["list_add_prog"]->addItem("Position N°3"); list["list_add_prog"]->addItem("Position N°3"); list["list_add_prog"]->addItem("Position N°4");
-    list["list_add_prog"]->addItem("Position N°5"); list["list_add_prog"]->addItem("Position N°6"); list["list_add_prog"]->addItem("Position N°7"); list["list_add_prog"]->addItem("Position N°8");
+    list["list_add_prog"]->addItem("Position N°1"); list["list_add_prog"]->addItem("Position N°3"); list["list_add_prog"]->addItem("Position N°3");
+    list["list_add_prog"]->addItem("Position N°4"); list["list_add_prog"]->addItem("Position N°5"); list["list_add_prog"]->addItem("Position N°6");
 
     QLineEdit* modif_name_prog = new QLineEdit; Line_Edit["modif_name_prog"] = modif_name_prog; Line_Edit["modif_name_prog"]->setFixedSize(200,20);
     QLineEdit* modif_edit_prog = new QLineEdit; Line_Edit["modif_edit_prog"] = modif_edit_prog; Line_Edit["modif_edit_prog"]->setFixedSize(200,20);
@@ -250,23 +261,19 @@ void QCompUT::Initialisation(){
 /**/    layout_Vertical["layout_keyboard_one"]->addWidget(buttons_First_keyboard["reduce_keyboard_one"]); layout_Vertical["layout_keyboard_one"]->addWidget(buttons_First_keyboard["open_keyboard_one"]);
 /**/    layout_Vertical["layout_keyboard_one"]->addLayout(layout_Horizontal["layout_key_one"]);
 /*-------------------------------------------------------------------------------------------------------------------------------------------*/
-/*------Initialisation de secon clavier------------------------------------------------------------------------------------------------------*/
-/**/    layout_Horizontal["layout_prog12"]->addWidget(buttons_Second_keyboard["prog1"]);
-/**/    layout_Horizontal["layout_prog12"]->addWidget(buttons_Second_keyboard["prog2"]);
+/*------Initialisation du second clavier------------------------------------------------------------------------------------------------------*/
+/**/    layout_Vertical["layout_keyboard_var"]->addWidget(buttons_Second_keyboard["var1"]); layout_Vertical["layout_keyboard_var"]->addWidget(buttons_Second_keyboard["var2"]);
+    layout_Vertical["layout_keyboard_var"]->addWidget(buttons_Second_keyboard["var3"]); layout_Vertical["layout_keyboard_var"]->addWidget(buttons_Second_keyboard["var4"]);
+    layout_Vertical["layout_keyboard_var"]->addWidget(buttons_Second_keyboard["var5"]); layout_Vertical["layout_keyboard_var"]->addWidget(buttons_Second_keyboard["var6"]);
+
+    layout_Vertical["layout_keyboard_prog"]->addWidget(buttons_Second_keyboard["prog1"]); layout_Vertical["layout_keyboard_prog"]->addWidget(buttons_Second_keyboard["prog2"]);
+    layout_Vertical["layout_keyboard_prog"]->addWidget(buttons_Second_keyboard["prog3"]); layout_Vertical["layout_keyboard_prog"]->addWidget(buttons_Second_keyboard["prog4"]);
+    layout_Vertical["layout_keyboard_prog"]->addWidget(buttons_Second_keyboard["prog5"]); layout_Vertical["layout_keyboard_prog"]->addWidget(buttons_Second_keyboard["prog6"]);
+
+    layout_Horizontal["layout_var_prog"]->addLayout(layout_Vertical["layout_keyboard_var"]); layout_Horizontal["layout_var_prog"]->addLayout(layout_Vertical["layout_keyboard_prog"]);
 /**/
-/**/    layout_Horizontal["layout_prog34"]->addWidget(buttons_Second_keyboard["prog3"]);
-/**/    layout_Horizontal["layout_prog34"]->addWidget(buttons_Second_keyboard["prog4"]);
-/**/
-/**/    layout_Horizontal["layout_prog56"]->addWidget(buttons_Second_keyboard["prog5"]);
-/**/    layout_Horizontal["layout_prog56"]->addWidget(buttons_Second_keyboard["prog6"]);
-/**/
-/**/    layout_Horizontal["layout_prog78"]->addWidget(buttons_Second_keyboard["prog7"]);
-/**/    layout_Horizontal["layout_prog78"]->addWidget(buttons_Second_keyboard["prog8"]);
-/**/
-/**/    layout_Vertical["layout_key_two"]->addLayout(layout_Horizontal["layout_prog12"]); layout_Vertical["layout_key_two"]->addLayout(layout_Horizontal["layout_prog34"]);
-/**/    layout_Vertical["layout_key_two"]->addLayout(layout_Horizontal["layout_prog56"]); layout_Vertical["layout_key_two"]->addLayout(layout_Horizontal["layout_prog78"]);
 /**/    layout_Vertical["layout_keyboard_two"]->addWidget(buttons_Second_keyboard["reduce_keyboard_two"]); layout_Vertical["layout_keyboard_two"]->addWidget(buttons_Second_keyboard["open_keyboard_two"]);
-/**/    layout_Vertical["layout_keyboard_two"]->addLayout(layout_Vertical["layout_key_two"]);
+/**/    layout_Vertical["layout_keyboard_two"]->addLayout(layout_Horizontal["layout_var_prog"]);
 /*-------------------------------------------------------------------------------------------------------------------------------------------*/
     //Layout de la vu secondaire Variable
     layout_Vertical["layoutV_add_var"]->addWidget(label["name_var_add"]);layout_Vertical["layoutV_add_var"]->addWidget(Line_Edit["add_name_var"]);
@@ -290,7 +297,7 @@ void QCompUT::Initialisation(){
     layout_Vertical["layout_var"]->addLayout(layout_Horizontal["layoutH_modif_var"]);
     layout_Vertical["layout_var"]->addLayout(layout_Horizontal["layoutH_del_var"]);
 
-    //Layout de la vu secondaire Variable
+    //Layout de la vu secondaire Program
     layout_Vertical["layoutV_add_prog"]->addWidget(label["name_prog_add"]);layout_Vertical["layoutV_add_prog"]->addWidget(Line_Edit["add_name_prog"]);
     layout_Vertical["layoutV_add_prog"]->addWidget(label["value_prog_add"]);layout_Vertical["layoutV_add_prog"]->addWidget(Line_Edit["add_edit_prog"]);
 
@@ -349,12 +356,6 @@ void QCompUT::Initialisation(){
     commande->setFocus(Qt::OtherFocusReason);
 }
 
-
-//void QCompUT::(){
-////    QPushButton* test = new QPushButton("test"); buttons_First_keyboard.push_back(test); test->setFixedSize(40,40);
-////    QVBoxLayout* test2 = new QVBoxLayout; layoutV.push_back(test2);
-////    test2->addWidget(test);
-//}
 
 
 void QCompUT::refresh(){
@@ -436,27 +437,97 @@ void QCompUT::slotOpen1(){
 void QCompUT::slotReduce2(){
     buttons_Second_keyboard["reduce_keyboard_two"]->hide();
     buttons_Second_keyboard["open_keyboard_two"]->show();
+    buttons_Second_keyboard["var1"]->hide();
+    buttons_Second_keyboard["var2"]->hide();
+    buttons_Second_keyboard["var3"]->hide();
+    buttons_Second_keyboard["var4"]->hide();
+    buttons_Second_keyboard["var5"]->hide();
+    buttons_Second_keyboard["var6"]->hide();
     buttons_Second_keyboard["prog1"]->hide();
     buttons_Second_keyboard["prog2"]->hide();
     buttons_Second_keyboard["prog3"]->hide();
     buttons_Second_keyboard["prog4"]->hide();
     buttons_Second_keyboard["prog5"]->hide();
     buttons_Second_keyboard["prog6"]->hide();
-    buttons_Second_keyboard["prog7"]->hide();
-    buttons_Second_keyboard["prog8"]->hide();
+
 }
 
 void QCompUT::slotOpen2(){
     buttons_Second_keyboard["reduce_keyboard_two"]->show();
     buttons_Second_keyboard["open_keyboard_two"]->hide();
+    buttons_Second_keyboard["var1"]->show();
+    buttons_Second_keyboard["var2"]->show();
+    buttons_Second_keyboard["var3"]->show();
+    buttons_Second_keyboard["var4"]->show();
+    buttons_Second_keyboard["var5"]->show();
+    buttons_Second_keyboard["var6"]->show();
     buttons_Second_keyboard["prog1"]->show();
     buttons_Second_keyboard["prog2"]->show();
     buttons_Second_keyboard["prog3"]->show();
     buttons_Second_keyboard["prog4"]->show();
     buttons_Second_keyboard["prog5"]->show();
     buttons_Second_keyboard["prog6"]->show();
-    buttons_Second_keyboard["prog7"]->show();
-    buttons_Second_keyboard["prog8"]->show();
+}
+
+
+
+void QCompUT::slotNewVariable(){
+     //Pour eviter d'avoir de créer un objet sans non ni valeur
+    if (Line_Edit["add_name_var"]->text().isEmpty()) return;
+    if (Line_Edit["add_edit_var"]->text().isEmpty()) return;
+
+    QString name = Line_Edit["add_name_var"]->text();
+    QString edit = Line_Edit["add_edit_var"]->text();
+    buttons_Second_keyboard["var1"]->setText(name);
+
+    list["list_modif_var"]->addItem(name); list["list_delete_var"]->addItem(name);
+
+    Line_Edit["add_name_var"]->setText(""); Line_Edit["add_edit_var"]->setText("");
+
+}
+void QCompUT::slotModifVariable(){
+    if (list["list_modif_var"]->currentText() == NULL) return;
+
+}
+
+void QCompUT::slotDeleteVariable(){
+    if (list["list_delete_var"]->currentText() == NULL) return;
+
+    list["list_modif_var"]->removeItem(list["list_delete_var"]->currentIndex());
+    list["list_delete_var"]->removeItem(list["list_delete_var"]->currentIndex());
+}
+
+
+
+
+
+
+
+
+void QCompUT::slotNewProg(){
+    //Pour eviter d'avoir de créer un objet sans non ni valeur
+    if (Line_Edit["add_name_prog"]->text().isEmpty()) return;
+    if (Line_Edit["add_edit_prog"]->text().isEmpty()) return;
+
+   QString name = Line_Edit["add_name_prog"]->text();
+   QString edit = Line_Edit["add_edit_prog"]->text();
+   buttons_Second_keyboard["prog1"]->setText(name);
+
+   list["list_modif_prog"]->addItem(name);
+   list["list_delete_prog"]->addItem(name);
+
+   Line_Edit["add_name_prog"]->setText(""); Line_Edit["add_edit_prog"]->setText("");
+}
+
+void QCompUT::slotModifProg(){
+    if (list["list_modif_prog"]->currentText() == NULL) return;
+}
+
+void QCompUT::slotDeleteProg(){
+    if (list["list_delete_prog"]->currentText() == NULL) return;
+
+    list["list_modif_prog"]->removeItem(list["list_delete_prog"]->currentIndex());
+    list["list_delete_prog"]->removeItem(list["list_delete_prog"]->currentIndex());
 }
 
 
