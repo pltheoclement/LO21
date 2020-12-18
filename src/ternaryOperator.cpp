@@ -8,14 +8,14 @@
 #include <string>
 #include <map>
 
-#include "../headers/operator.h"
-#include "../headers/ternaryOperator.h"
-#include "../headers/stack.h"
-#include "../headers/literal.h"
+#include "../include/operator.h"
+#include "../include/ternaryOperator.h"
+#include "../include/computer.h"
+#include "../include/literal.h"
 
 using namespace std;
 
-void TernaryOperator::apply(Stack& s){
+bool TernaryOperator::apply(Stack& s){
 
 	const std::shared_ptr<Literal> elA = s.top();// le premier argument
 
@@ -34,6 +34,9 @@ void TernaryOperator::apply(Stack& s){
     	s.pop();
     	s.pop();
     	s.pop();
+    	return true;
+    }else{
+    	return false;
     }
 }
 
