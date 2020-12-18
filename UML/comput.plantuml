@@ -1,5 +1,4 @@
-Diagramme de classe
-```plantuml
+
 @startuml
 
 class Computer{
@@ -92,43 +91,242 @@ class LiteralIterator{
     +done(): bool
 }
 
-interface Operator{
-    -{static}operators: std::map<std::string, Operator>
-    -name: std::string
-    -arity: unsiged int
-    +{static}isOperator(s: std::string): std::string
-    +{static}getOperator(s: std::string): Operator
-    +{static}{abstract}getInstance(): Operator
+/' Objects '/
+
+abstract class AbstractAdd {
+	+AbstractAdd()
+	+~AbstractAdd()
 }
 
-Operator <|-- OpAdd
-'Operator <|-- OpSub
-'Operator <|-- OpMul
-'Operator <|-- OpDiv
-'Operator <|-- OpDivI
-'Operator <|-- OpMod
-'Operator <|-- OpNeg
-'
-Operator <|-- OpEq
-'Operator <|-- OpNEq
-'Operator <|-- OpSup
-'Operator <|-- OpInf
-'Operator <|-- OpSupE
-'Operator <|-- OpInfE
-'Operator <|-- OpAnd
-'Operator <|-- OpOr
-'Operator <|-- OpNot
-'
-Operator <|-- OpEval
-'
-Operator <|-- OpDup
-'Operator <|-- OpDrop
-'Operator <|-- OpSwap
-'Operator <|-- OpClear
-'
-Operator <|-- OpIfT
-'
-Operator <|-- OpSto
-'Operator <|-- OpForget
+
+abstract class AbstractBinaryOperation {
+	+AbstractBinaryOperation()
+	+~AbstractBinaryOperation()
+	#typeA : LiteralType
+	#typeB : LiteralType
+	+{abstract} execution(std::shared_ptr<Literal> A, std::shared_ptr<Literal> B) : std::shared_ptr<Literal>
+}
+
+
+abstract class AbstractMul {
+	+AbstractMul()
+	+~AbstractMul()
+}
+
+
+abstract class AbstractNeg {
+	+AbstractNeg()
+	+~AbstractNeg()
+}
+
+
+class AbstractOperation {
+}
+
+
+abstract class AbstractUnaryOperation {
+	+AbstractUnaryOperation()
+	+~AbstractUnaryOperation()
+	-typeA : LiteralType
+	+{abstract} execution(const std::shared_ptr<Literal> A) : std::shared_ptr<Literal>
+}
+
+
+class Add {
+	-Add()
+	+{static} get() : Add&
+	-{static} instance : static std::shared_ptr<Add>
+	-name : std::string
+	+{static} free() : void
+}
+
+
+class AddIntInt {
+	+AddIntInt()
+	#typeA : LiteralType
+	#typeB : LiteralType
+	+execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B) : std::shared_ptr<Literal>
+}
+
+
+class AddIntReal {
+	+AddIntReal()
+	#typeA : LiteralType
+	#typeB : LiteralType
+	+execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B) : std::shared_ptr<Literal>
+}
+
+
+class BinaryOperator {
+	+BinaryOperator()
+	+~BinaryOperator()
+	-possibles : std::map<std::pair<LiteralType, LiteralType>, AbstractBinaryOperation*>
+	+addBehaviour(LiteralType A, LiteralType B, AbstractBinaryOperation* a) : void
+	+apply(Stack& s) : void
+}
+
+
+class Clear {
+	-Clear()
+	+{static} get() : Clear&
+	-{static} instance : static std::shared_ptr<Clear>
+	-name : std::string
+	+apply(Stack& s) : void
+	+{static} free() : void
+}
+
+
+class Mul {
+	-Mul()
+	+{static} get() : Mul&
+	-{static} instance : static std::shared_ptr<Mul>
+	-name : std::string
+	+{static} free() : void
+}
+
+
+class MulIntInt {
+	+MulIntInt()
+	#typeA : LiteralType
+	#typeB : LiteralType
+	+execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B) : std::shared_ptr<Literal>
+}
+
+
+class MulIntReal {
+	+MulIntReal()
+	#typeA : LiteralType
+	#typeB : LiteralType
+	+execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B) : std::shared_ptr<Literal>
+}
+
+
+class Neg {
+	-Neg()
+	+{static} get() : Neg&
+	-{static} instance : static std::shared_ptr<Neg>
+	-name : std::string
+	+{static} free() : void
+}
+
+
+class NegInt {
+	+NegInt()
+	-typeA : LiteralType
+	+execution(const std::shared_ptr<Literal> A) : std::shared_ptr<Literal>
+}
+
+
+class NegReal {
+	+NegReal()
+	-typeA : LiteralType
+	+execution(const std::shared_ptr<Literal> A) : std::shared_ptr<Literal>
+}
+
+
+class Operator {
+	-Operator()
+	+{static} getInstance() : Operator&
+	+{static} getOperator(std::string s) : TypeOperator&
+	+{static} isOperator(std::string s) : bool
+	-{static} operators : static std::map<std::string, std::shared_ptr<TypeOperator>>
+	-{static} instance : static std::unique_ptr<Operator>
+	+{static} addOperator(std::string name, std::shared_ptr<TypeOperator> o) : void
+	+{static} delOperator(std::string name) : void
+	+{static} freeInstance() : void
+}
+
+
+class OperatorException {
+	+OperatorException(const std::string& str)
+	+getInfo() : std::string {query}
+	-info : std::string
+}
+
+
+abstract class TypeOperator {
+	+~TypeOperator()
+	-name : std::string
+	+{abstract} apply(Stack& s) : void
+}
+
+
+class UnaryOperator {
+	+UnaryOperator()
+	+~UnaryOperator()
+	-possibles : std::map<LiteralType, AbstractUnaryOperation*>
+	+addBehaviour(LiteralType A, AbstractUnaryOperation* a) : void
+	+apply(Stack& s) : void
+}
+
+
+
+
+
+/' Inheritance relationships '/
+
+AbstractAdd <|-- AddIntInt
+
+
+AbstractAdd <|-- AddIntReal
+
+
+AbstractBinaryOperation <|-- AbstractAdd
+
+
+AbstractBinaryOperation <|-- AbstractMul
+
+
+AbstractMul <|-- MulIntInt
+
+
+AbstractMul <|-- MulIntReal
+
+
+AbstractNeg <|-- NegInt
+
+
+AbstractNeg <|-- NegReal
+
+
+AbstractOperation <|-- AbstractBinaryOperation
+
+
+AbstractOperation <|-- AbstractUnaryOperation
+
+
+AbstractUnaryOperation <|-- AbstractNeg
+
+
+BinaryOperator <|-- Add
+
+
+BinaryOperator <|-- Mul
+
+
+TypeOperator <|-- BinaryOperator
+
+
+TypeOperator <|-- Clear
+
+
+TypeOperator <|-- UnaryOperator
+
+
+UnaryOperator <|-- Neg
+
+
+
+
+
+/' Aggregation relationships '/
+
+Neg o-- AbstractNeg
+
+Mul o-- AbstractMul
+
+Add o-- AbstractAdd
+
+Operator *-- TypeOperator
+
 @enduml
-```

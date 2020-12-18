@@ -20,7 +20,7 @@ class AbstractUnaryOperation : public AbstractOperation {
 	LiteralType typeA;
 public:
 	AbstractUnaryOperation() = default;
-	virtual void execution(const std::shared_ptr<Literal> A) = 0;
+	virtual const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A) = 0;
 	virtual ~AbstractUnaryOperation() = default;
 };
 
@@ -34,21 +34,21 @@ class NegInt : public AbstractNeg{
 	LiteralType typeA = linteger;
 public:
 	NegInt();
-	void execution(const std::shared_ptr<Literal> A);
+	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A);
 };
 
 class NegReal : public AbstractNeg{
 	LiteralType typeA = lreal;
 public:
 	NegReal();
-	void execution(const std::shared_ptr<Literal> A);
+	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A);
 };
 
 class NegRational : public AbstractNeg{
 	LiteralType typeA = lrational;
 public:
 	NegRational();
-	void execution(const std::shared_ptr<Literal> A);
+	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A);
 };
 
 class UnaryOperator : public TypeOperator{

@@ -49,7 +49,7 @@ TypeOperator& Operator::getOperator(std::string s){
 /* Définition de l'opérateur CLEAR */
 shared_ptr<Clear> Clear::instance = nullptr;
 void Clear::apply(Stack& s){
-	while(s.isEmpty()){
+	while(s.size() != 0){
 		s.pop();
 	}
 }

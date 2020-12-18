@@ -27,9 +27,10 @@ void BinaryOperator::apply(Stack& s){
     LiteralType B=elB->getType();
 
     if (possibles.count(make_pair(A, B)) > 0) {// existe bien dans ta map then possibles[make_pair(A,B)].execution(); // @suppress("Method cannot be resolved")
-    	possibles[make_pair(A,B)]->execution(elA, elB);
+    	const shared_ptr<Literal> res = possibles[make_pair(A,B)]->execution(elA, elB);
     	s.pop();
     	s.pop();
+    	s.push(res);
     }
 }
 
@@ -55,7 +56,7 @@ void Add::free(){
 AddIntInt::AddIntInt(){
 	Add::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Add, qui permettra de trouver un objet de la classe AddIntInt si on recherche l'opérateur Add pour deux Int.
 }
-void AddIntInt::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
+const std::shared_ptr<Literal> AddIntInt::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un pointeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
 	LInteger* lIntA = dynamic_cast<LInteger*>(litA); //On cast ce pointeur en LInteger
@@ -64,14 +65,14 @@ void AddIntInt::execution(const std::shared_ptr<Literal> A, const std::shared_pt
 	int valeurB = lIntB->getValue();
 	const int newVal = valeurA + valeurB; //On effectue l'opération Add
 	const shared_ptr<LInteger> newLit = LInteger::makeLiteral(newVal); //On créé un const shared_ptr pour notre nouveau int
-	Stack::getInstance().push(newLit); //On pous notre Literal sur la Stack.
+	return newLit; //On pous notre Literal sur la Stack.
 }
 /* Fin AddIntInt */
 /* Début AddIntReal */
 AddIntReal::AddIntReal(){
 	Add::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Add, qui permettra de trouver un objet de la classe AddIntReal si on recherche l'opérateur Add pour deux Int.
 }
-void AddIntReal::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
+const std::shared_ptr<Literal> AddIntReal::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un pointeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
 	LInteger* lIntA = dynamic_cast<LInteger*>(litA); //On cast ce pointeur en LInteger
@@ -80,22 +81,22 @@ void AddIntReal::execution(const std::shared_ptr<Literal> A, const std::shared_p
 	double valeurB = lDoubleB->getValue();
 	const double newVal = valeurA + valeurB; //On effectue l'opération Add
 	const shared_ptr<LReal> newLit = LReal::makeLiteral(newVal); //On créé un const shared_ptr pour notre nouveau int
-	Stack::getInstance().push(newLit); //On pous notre Literal sur la Stack.
+	return newLit; //On pous notre Literal sur la Stack.
 }
 /* Fin AddIntReal */
 /* Début AddRealInt */
 AddRealInt::AddRealInt(){
 	Add::get().addBehaviour(typeB, typeA, this);  //On ajoute une entrée au Map de Add, qui permettra de trouver un objet de la classe AddRealInt si on recherche l'opérateur Add pour deux Int.
 }
-void AddRealInt::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
-	AddIntReal::execution(B, A);
+const std::shared_ptr<Literal> AddRealInt::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
+	return (AddIntReal::execution(B, A));
 }
 /* Fin AddRealInt */
 /* Début AddIntRational */
 AddIntRational::AddIntRational(){
 	Add::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Add, qui permettra de trouver un objet de la classe AddIntRational si on recherche l'opérateur Add pour deux Int.
 }
-void AddIntRational::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
+const std::shared_ptr<Literal> AddIntRational::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un pointeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
 	LInteger* lIntA = dynamic_cast<LInteger*>(litA); //On cast ce pointeur en LInteger
@@ -105,22 +106,22 @@ void AddIntRational::execution(const std::shared_ptr<Literal> A, const std::shar
 	int valeurBden = lRatB->getDen();
 	const int newNum = valeurA * valeurBden + valeurBnum; //On effectue l'opération Add
 	const shared_ptr<LRational> newLit = LRational::makeLiteral(newNum, valeurBden); //On créé un const shared_ptr pour notre nouveau int
-	Stack::getInstance().push(newLit); //On pous notre Literal sur la Stack.
+	return newLit; //On pous notre Literal sur la Stack.
 }
 /* Fin AddIntRational */
 /* Début AddRationalInt */
 AddRationalInt::AddRationalInt(){
 	Add::get().addBehaviour(typeB, typeA, this);  //On ajoute une entrée au Map de Add, qui permettra de trouver un objet de la classe AddRationalInt si on recherche l'opérateur Add pour deux Int.
 }
-void AddRationalInt::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
-	AddIntRational::execution(B, A);
+const std::shared_ptr<Literal> AddRationalInt::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
+	return AddIntRational::execution(B, A);
 }
 /* Fin AddRationalInt */
 /* Début AddRationalRational */
 AddRationalRational::AddRationalRational(){
 	Add::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Add, qui permettra de trouver un objet de la classe AddRationalRational si on recherche l'opérateur Add pour deux Int.
 }
-void AddRationalRational::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
+const std::shared_ptr<Literal> AddRationalRational::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un pointeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
 	LRational* lIntA = dynamic_cast<LRational*>(litA); //On cast ce pointeur en lrational
@@ -132,14 +133,14 @@ void AddRationalRational::execution(const std::shared_ptr<Literal> A, const std:
 	const int newNum = valeurAnum * valeurBden + valeurBnum * valeurAden; //On effectue l'opération Add
 	const int newDen = valeurBden * valeurAden;
 	const shared_ptr<LRational> newLit = LRational::makeLiteral(newNum, newDen); //On créé un const shared_ptr pour notre nouveau int
-	Stack::getInstance().push(newLit); //On pous notre Literal sur la Stack.
+	return newLit; //On pous notre Literal sur la Stack.
 }
 /* Fin AddRationalRational */
 /* Début AddRealReal */
 AddRealReal::AddRealReal(){
 	Add::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Add, qui permettra de trouver un objet de la classe AddRealReal si on recherche l'opérateur Add pour deux Int.
 }
-void AddRealReal::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
+const std::shared_ptr<Literal> AddRealReal::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un podoubleeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
 	LReal* lIntA = dynamic_cast<LReal*>(litA); //On cast ce podoubleeur en LReal
@@ -148,14 +149,14 @@ void AddRealReal::execution(const std::shared_ptr<Literal> A, const std::shared_
 	double valeurB = lIntB->getValue();
 	const double newVal = valeurA + valeurB; //On effectue l'opération Add
 	const shared_ptr<LReal> newLit = LReal::makeLiteral(newVal); //On créé un const shared_ptr pour notre nouveau double
-	Stack::getInstance().push(newLit); //On pous notre Literal sur la Stack.
+	return newLit; //On pous notre Literal sur la Stack.
 }
 /* Fin AddRealReal */
 /* Début AddRealRational */
 AddRealRational::AddRealRational(){
 	Add::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Add, qui permettra de trouver un objet de la classe AddRealRational si on recherche l'opérateur Add pour deux Int.
 }
-void AddRealRational::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
+const std::shared_ptr<Literal> AddRealRational::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un podoubleeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
 	LReal* lIntA = dynamic_cast<LReal*>(litA); //On cast ce podoubleeur en LReal
@@ -165,15 +166,15 @@ void AddRealRational::execution(const std::shared_ptr<Literal> A, const std::sha
 	double valeurBden = lIntB->getDen();
 	const double newVal = valeurA + (valeurBnum / valeurBden); //On effectue l'opération Add
 	const shared_ptr<LReal> newLit = LReal::makeLiteral(newVal); //On créé un const shared_ptr pour notre nouveau double
-	Stack::getInstance().push(newLit); //On pous notre Literal sur la Stack.
+	return newLit; //On pous notre Literal sur la Stack.
 }
 /* Fin AddRealRational */
 /* Début AddRationalReal */
 AddRationalReal::AddRationalReal(){
 	Add::get().addBehaviour(typeB, typeA, this);  //On ajoute une entrée au Map de Add, qui permettra de trouver un objet de la classe AddRealInt si on recherche l'opérateur Add pour deux Int.
 }
-void AddRationalReal::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
-	AddRealRational::execution(B, A);
+const std::shared_ptr<Literal> AddRationalReal::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
+	return AddRealRational::execution(B, A);
 }
 /* Fin AddRationalReal */
 /* Fin Add */
@@ -201,7 +202,7 @@ void Mul::free(){
 MulIntInt::MulIntInt(){
 	Mul::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Mul, qui permettra de trouver un objet de la classe MulIntInt si on recherche l'opérateur Mul pour deux Int.
 }
-void MulIntInt::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
+const std::shared_ptr<Literal> MulIntInt::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un pointeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
 	LInteger* lIntA = dynamic_cast<LInteger*>(litA); //On cast ce pointeur en LInteger
@@ -210,14 +211,14 @@ void MulIntInt::execution(const std::shared_ptr<Literal> A, const std::shared_pt
 	int valeurB = lIntB->getValue();
 	const int newVal = valeurA * valeurB; //On effectue l'opération Mul
 	const shared_ptr<LInteger> newLit = LInteger::makeLiteral(newVal); //On créé un const shared_ptr pour notre nouveau int
-	Stack::getInstance().push(newLit); //On pous notre Literal sur la Stack.
+	return newLit; //On pous notre Literal sur la Stack.
 }
 /* Fin MulIntInt */
 /* Début MulIntReal */
 MulIntReal::MulIntReal(){
 	Mul::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Mul, qui permettra de trouver un objet de la classe MulIntReal si on recherche l'opérateur Mul pour deux Int.
 }
-void MulIntReal::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
+const std::shared_ptr<Literal> MulIntReal::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un pointeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
 	LInteger* lIntA = dynamic_cast<LInteger*>(litA); //On cast ce pointeur en LInteger
@@ -226,22 +227,22 @@ void MulIntReal::execution(const std::shared_ptr<Literal> A, const std::shared_p
 	double valeurB = lDoubleB->getValue();
 	const double newVal = valeurA * valeurB; //On effectue l'opération Mul
 	const shared_ptr<LReal> newLit = LReal::makeLiteral(newVal); //On créé un const shared_ptr pour notre nouveau int
-	Stack::getInstance().push(newLit); //On pous notre Literal sur la Stack.
+	return newLit; //On pous notre Literal sur la Stack.
 }
 /* Fin MulIntReal */
 /* Début MulRealInt */
 MulRealInt::MulRealInt(){
 	Mul::get().addBehaviour(typeB, typeA, this);  //On ajoute une entrée au Map de Mul, qui permettra de trouver un objet de la classe MulRealInt si on recherche l'opérateur Mul pour deux Int.
 }
-void MulRealInt::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
-	MulIntReal::execution(B, A);
+const std::shared_ptr<Literal> MulRealInt::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
+	return MulIntReal::execution(B, A);
 }
 /* Fin MulRealInt */
 /* Début MulIntRational */
 MulIntRational::MulIntRational(){
 	Mul::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Mul, qui permettra de trouver un objet de la classe MulIntRational si on recherche l'opérateur Mul pour deux Int.
 }
-void MulIntRational::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
+const std::shared_ptr<Literal> MulIntRational::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un pointeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
 	LInteger* lIntA = dynamic_cast<LInteger*>(litA); //On cast ce pointeur en LInteger
@@ -251,22 +252,22 @@ void MulIntRational::execution(const std::shared_ptr<Literal> A, const std::shar
 	int valeurBden = lRatB->getDen();
 	const int newNum = valeurA * valeurBnum; //On effectue l'opération Mul
 	const shared_ptr<LRational> newLit = LRational::makeLiteral(newNum, valeurBden); //On créé un const shared_ptr pour notre nouveau int
-	Stack::getInstance().push(newLit); //On pous notre Literal sur la Stack.
+	return newLit; //On pous notre Literal sur la Stack.
 }
 /* Fin MulIntRational */
 /* Début MulRationalInt */
 MulRationalInt::MulRationalInt(){
-	Mul::get().addBehaviour(typeB, typeA, this);  //On ajoute une entrée au Map de Mul, qui permettra de trouver un objet de la classe MulRationalInt si on recherche l'opérateur Mul pour deux Int.
+		Mul::get().addBehaviour(typeB, typeA, this);  //On ajoute une entrée au Map de Mul, qui permettra de trouver un objet de la classe MulRationalInt si on recherche l'opérateur Mul pour deux Int.
 }
-void MulRationalInt::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
-	MulIntRational::execution(B, A);
+const std::shared_ptr<Literal> MulRationalInt::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
+	return MulIntRational::execution(B, A);
 }
 /* Fin MulRationalInt */
 /* Début MulRationalRational */
 MulRationalRational::MulRationalRational(){
 	Mul::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Mul, qui permettra de trouver un objet de la classe MulRationalRational si on recherche l'opérateur Mul pour deux Int.
 }
-void MulRationalRational::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
+const std::shared_ptr<Literal> MulRationalRational::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un pointeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
 	LRational* lIntA = dynamic_cast<LRational*>(litA); //On cast ce pointeur en lrational
@@ -278,14 +279,14 @@ void MulRationalRational::execution(const std::shared_ptr<Literal> A, const std:
 	const int newNum = valeurAnum * valeurBnum; //On effectue l'opération Mul
 	const int newDen = valeurBden * valeurAden;
 	const shared_ptr<LRational> newLit = LRational::makeLiteral(newNum, newDen); //On créé un const shared_ptr pour notre nouveau int
-	Stack::getInstance().push(newLit); //On pous notre Literal sur la Stack.
+	return newLit; //On pous notre Literal sur la Stack.
 }
 /* Fin MulRationalRational */
 /* Début MulRealReal */
 MulRealReal::MulRealReal(){
 	Mul::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Mul, qui permettra de trouver un objet de la classe MulRealReal si on recherche l'opérateur Mul pour deux Int.
 }
-void MulRealReal::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
+const std::shared_ptr<Literal> MulRealReal::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un podoubleeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
 	LReal* lIntA = dynamic_cast<LReal*>(litA); //On cast ce podoubleeur en LReal
@@ -294,14 +295,14 @@ void MulRealReal::execution(const std::shared_ptr<Literal> A, const std::shared_
 	double valeurB = lIntB->getValue();
 	const double newVal = valeurA * valeurB; //On effectue l'opération Mul
 	const shared_ptr<LReal> newLit = LReal::makeLiteral(newVal); //On créé un const shared_ptr pour notre nouveau double
-	Stack::getInstance().push(newLit); //On pous notre Literal sur la Stack.
+	return newLit; //On pous notre Literal sur la Stack.
 }
 /* Fin MulRealReal */
 /* Début MulRealRational */
 MulRealRational::MulRealRational(){
 	Mul::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Mul, qui permettra de trouver un objet de la classe MulRealRational si on recherche l'opérateur Mul pour deux Int.
 }
-void MulRealRational::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
+const std::shared_ptr<Literal> MulRealRational::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un podoubleeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
 	LReal* lIntA = dynamic_cast<LReal*>(litA); //On cast ce podoubleeur en LReal
@@ -311,15 +312,15 @@ void MulRealRational::execution(const std::shared_ptr<Literal> A, const std::sha
 	double valeurBden = lIntB->getDen();
 	const double newVal = valeurA * (valeurBnum / valeurBden); //On effectue l'opération Mul
 	const shared_ptr<LReal> newLit = LReal::makeLiteral(newVal); //On créé un const shared_ptr pour notre nouveau double
-	Stack::getInstance().push(newLit); //On pous notre Literal sur la Stack.
+	return newLit; //On pous notre Literal sur la Stack.
 }
 /* Fin MulRealRational */
 /* Début MulRationalReal */
 MulRationalReal::MulRationalReal(){
 	Mul::get().addBehaviour(typeB, typeA, this);  //On ajoute une entrée au Map de Mul, qui permettra de trouver un objet de la classe MulRealInt si on recherche l'opérateur Mul pour deux Int.
 }
-void MulRationalReal::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
-	MulRealRational::execution(B, A);
+const std::shared_ptr<Literal> MulRationalReal::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
+	return MulRealRational::execution(B, A);
 }
 /* Fin MulRationalReal */
 /* Fin Mul */
@@ -346,7 +347,7 @@ void Sub::free(){
 SubIntInt::SubIntInt(){
 	Sub::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Sub, qui permettra de trouver un objet de la classe SubIntInt si on recherche l'opérateur Sub pour deux Int.
 }
-void SubIntInt::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
+const std::shared_ptr<Literal> SubIntInt::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un pointeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
 	LInteger* lIntA = dynamic_cast<LInteger*>(litA); //On cast ce pointeur en LInteger
@@ -355,14 +356,14 @@ void SubIntInt::execution(const std::shared_ptr<Literal> A, const std::shared_pt
 	int valeurB = lIntB->getValue();
 	const int newVal = valeurB - valeurA; //On effectue l'opération Sub
 	const shared_ptr<LInteger> newLit = LInteger::makeLiteral(newVal); //On créé un const shared_ptr pour notre nouveau int
-	Stack::getInstance().push(newLit); //On pous notre Literal sur la Stack.
+	return newLit; //On pous notre Literal sur la Stack.
 }
 /* Fin SubIntInt */
 /* Début SubIntReal */
 SubIntReal::SubIntReal(){
 	Sub::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Sub, qui permettra de trouver un objet de la classe SubIntReal si on recherche l'opérateur Sub pour deux Int.
 }
-void SubIntReal::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
+const std::shared_ptr<Literal> SubIntReal::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un pointeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
 	LInteger* lIntA = dynamic_cast<LInteger*>(litA); //On cast ce pointeur en LInteger
@@ -371,14 +372,14 @@ void SubIntReal::execution(const std::shared_ptr<Literal> A, const std::shared_p
 	double valeurB = lDoubleB->getValue();
 	const double newVal = valeurB - valeurA; //On effectue l'opération Sub
 	const shared_ptr<LReal> newLit = LReal::makeLiteral(newVal); //On créé un const shared_ptr pour notre nouveau int
-	Stack::getInstance().push(newLit); //On pous notre Literal sur la Stack.
+	return newLit; //On pous notre Literal sur la Stack.
 }
 /* Fin SubIntReal */
 /* Début SubRealInt */
 SubRealInt::SubRealInt(){
 	Sub::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Sub, qui permettra de trouver un objet de la classe SubRealInt si on recherche l'opérateur Sub pour deux Int.
 }
-void SubRealInt::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
+const std::shared_ptr<Literal> SubRealInt::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un pointeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
 	LReal* ldoubleA = dynamic_cast<LReal*>(litA); //On cast ce pointeur en LInteger
@@ -387,7 +388,7 @@ void SubRealInt::execution(const std::shared_ptr<Literal> A, const std::shared_p
 	int valeurB = lintB->getValue();
 	const double newVal = valeurB - valeurA; //On effectue l'opération Sub
 	const shared_ptr<LReal> newLit = LReal::makeLiteral(newVal); //On créé un const shared_ptr pour notre nouveau int
-	Stack::getInstance().push(newLit); //On pous notre Literal sur la Stack.
+	return newLit; //On pous notre Literal sur la Stack.
 }
 
 /* Fin SubRealInt */
@@ -395,7 +396,7 @@ void SubRealInt::execution(const std::shared_ptr<Literal> A, const std::shared_p
 SubIntRational::SubIntRational(){
 	Sub::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Sub, qui permettra de trouver un objet de la classe SubIntRational si on recherche l'opérateur Sub pour deux Int.
 }
-void SubIntRational::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
+const std::shared_ptr<Literal> SubIntRational::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un pointeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
 	LInteger* lIntA = dynamic_cast<LInteger*>(litA); //On cast ce pointeur en LInteger
@@ -405,14 +406,14 @@ void SubIntRational::execution(const std::shared_ptr<Literal> A, const std::shar
 	int valeurBden = lRatB->getDen();
 	const int newNum = valeurBnum - (valeurA * valeurBden); //On effectue l'opération Sub
 	const shared_ptr<LRational> newLit = LRational::makeLiteral(newNum, valeurBden); //On créé un const shared_ptr pour notre nouveau int
-	Stack::getInstance().push(newLit); //On pous notre Literal sur la Stack.
+	return newLit; //On pous notre Literal sur la Stack.
 }
 /* Fin SubIntRational */
 /* Début SubRationalInt */
 SubRationalInt::SubRationalInt(){
 	Sub::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Sub, qui permettra de trouver un objet de la classe SubRationalInt si on recherche l'opérateur Sub pour deux Int.
 }
-void SubRationalInt::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
+const std::shared_ptr<Literal> SubRationalInt::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un pointeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
 	LRational* lRatA = dynamic_cast<LRational*>(litA); //On cast ce pointeur en LInteger
@@ -422,14 +423,14 @@ void SubRationalInt::execution(const std::shared_ptr<Literal> A, const std::shar
 	int valeurAden = lRatA->getDen();
 	const int newNum = (valeurB * valeurAden) - valeurAnum; //On effectue l'opération Sub
 	const shared_ptr<LRational> newLit = LRational::makeLiteral(newNum, valeurAden); //On créé un const shared_ptr pour notre nouveau int
-	Stack::getInstance().push(newLit); //On pous notre Literal sur la Stack.
+	return newLit; //On pous notre Literal sur la Stack.
 }
 /* Fin SubRationalInt */
 /* Début SubRationalRational */
 SubRationalRational::SubRationalRational(){
 	Sub::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Sub, qui permettra de trouver un objet de la classe SubRationalRational si on recherche l'opérateur Sub pour deux Int.
 }
-void SubRationalRational::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
+const std::shared_ptr<Literal> SubRationalRational::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un pointeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
 	LRational* lIntA = dynamic_cast<LRational*>(litA); //On cast ce pointeur en lrational
@@ -441,14 +442,14 @@ void SubRationalRational::execution(const std::shared_ptr<Literal> A, const std:
 	const int newNum = valeurAden * valeurBnum - valeurAnum * valeurBden; //On effectue l'opération Sub
 	const int newDen = valeurBden * valeurAden;
 	const shared_ptr<LRational> newLit = LRational::makeLiteral(newNum, newDen); //On créé un const shared_ptr pour notre nouveau int
-	Stack::getInstance().push(newLit); //On pous notre Literal sur la Stack.
+	return newLit; //On pous notre Literal sur la Stack.
 }
 /* Fin SubRationalRational */
 /* Début SubRealReal */
 SubRealReal::SubRealReal(){
 	Sub::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Sub, qui permettra de trouver un objet de la classe SubRealReal si on recherche l'opérateur Sub pour deux Int.
 }
-void SubRealReal::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
+const std::shared_ptr<Literal> SubRealReal::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un podoubleeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
 	LReal* lIntA = dynamic_cast<LReal*>(litA); //On cast ce podoubleeur en LReal
@@ -457,14 +458,14 @@ void SubRealReal::execution(const std::shared_ptr<Literal> A, const std::shared_
 	double valeurB = lIntB->getValue();
 	const double newVal = valeurB - valeurA; //On effectue l'opération Sub
 	const shared_ptr<LReal> newLit = LReal::makeLiteral(newVal); //On créé un const shared_ptr pour notre nouveau double
-	Stack::getInstance().push(newLit); //On pous notre Literal sur la Stack.
+	return newLit; //On pous notre Literal sur la Stack.
 }
 /* Fin SubRealReal */
 /* Début SubRealRational */
 SubRealRational::SubRealRational(){
 	Sub::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Sub, qui permettra de trouver un objet de la classe SubRealRational si on recherche l'opérateur Sub pour deux Int.
 }
-void SubRealRational::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
+const std::shared_ptr<Literal> SubRealRational::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un podoubleeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
 	LReal* lIntA = dynamic_cast<LReal*>(litA); //On cast ce podoubleeur en LReal
@@ -474,14 +475,14 @@ void SubRealRational::execution(const std::shared_ptr<Literal> A, const std::sha
 	double valeurBden = lIntB->getDen();
 	const double newVal = (valeurBnum / valeurBden) - valeurA; //On effectue l'opération Sub
 	const shared_ptr<LReal> newLit = LReal::makeLiteral(newVal); //On créé un const shared_ptr pour notre nouveau double
-	Stack::getInstance().push(newLit); //On pous notre Literal sur la Stack.
+	return newLit; //On pous notre Literal sur la Stack.
 }
 /* Fin SubRealRational */
 /* Début SubRationalReal */
 SubRationalReal::SubRationalReal(){
 	Sub::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Sub, qui permettra de trouver un objet de la classe SubRealInt si on recherche l'opérateur Sub pour deux Int.
 }
-void SubRationalReal::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
+const std::shared_ptr<Literal> SubRationalReal::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un podoubleeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
 	LRational* lRatA = dynamic_cast<LRational*>(litA); //On cast ce podoubleeur en LReal
@@ -491,7 +492,7 @@ void SubRationalReal::execution(const std::shared_ptr<Literal> A, const std::sha
 	double valeurAden = lRatA->getDen();
 	const double newVal = valeurB - (valeurAnum / valeurAden); //On effectue l'opération Sub
 	const shared_ptr<LReal> newLit = LReal::makeLiteral(newVal); //On créé un const shared_ptr pour notre nouveau double
-	Stack::getInstance().push(newLit); //On pous notre Literal sur la Stack.
+	return newLit; //On pous notre Literal sur la Stack.
 }
 /* Fin SubRationalReal */
 /* Fin Sub */
@@ -518,7 +519,7 @@ void Div::free(){
 DivIntInt::DivIntInt(){
 	Div::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Div, qui permettra de trouver un objet de la classe DivIntInt si on recherche l'opérateur Div pour deux Int.
 }
-void DivIntInt::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
+const std::shared_ptr<Literal> DivIntInt::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un pointeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
 	LInteger* lIntA = dynamic_cast<LInteger*>(litA); //On cast ce pointeur en LInteger
@@ -527,14 +528,14 @@ void DivIntInt::execution(const std::shared_ptr<Literal> A, const std::shared_pt
 	double valeurB = lIntB->getValue();
 	const int newVal = valeurB / valeurA; //On effectue l'opération Div
 	const shared_ptr<LReal> newLit = LReal::makeLiteral(newVal); //On créé un const shared_ptr pour notre nouveau int
-	Stack::getInstance().push(newLit); //On pous notre Literal sur la Stack.
+	return newLit; //On pous notre Literal sur la Stack.
 }
 /* Fin DivIntInt */
 /* Début DivIntReal */
 DivIntReal::DivIntReal(){
 	Div::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Div, qui permettra de trouver un objet de la classe DivIntReal si on recherche l'opérateur Div pour deux Int.
 }
-void DivIntReal::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
+const std::shared_ptr<Literal> DivIntReal::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un pointeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
 	LInteger* lIntA = dynamic_cast<LInteger*>(litA); //On cast ce pointeur en LInteger
@@ -543,14 +544,14 @@ void DivIntReal::execution(const std::shared_ptr<Literal> A, const std::shared_p
 	double valeurB = lDoubleB->getValue();
 	const double newVal = valeurB / valeurA; //On effectue l'opération Div
 	const shared_ptr<LReal> newLit = LReal::makeLiteral(newVal); //On créé un const shared_ptr pour notre nouveau int
-	Stack::getInstance().push(newLit); //On pous notre Literal sur la Stack.
+	return newLit; //On pous notre Literal sur la Stack.
 }
 /* Fin DivIntReal */
 /* Début DivRealInt */
 DivRealInt::DivRealInt(){
 	Div::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Div, qui permettra de trouver un objet de la classe DivRealInt si on recherche l'opérateur Div pour deux Int.
 }
-void DivRealInt::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
+const std::shared_ptr<Literal> DivRealInt::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un pointeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
 	LReal* ldoubleA = dynamic_cast<LReal*>(litA); //On cast ce pointeur en LInteger
@@ -559,7 +560,7 @@ void DivRealInt::execution(const std::shared_ptr<Literal> A, const std::shared_p
 	double valeurB = lintB->getValue();
 	const double newVal = valeurB / valeurA; //On effectue l'opération Div
 	const shared_ptr<LReal> newLit = LReal::makeLiteral(newVal); //On créé un const shared_ptr pour notre nouveau int
-	Stack::getInstance().push(newLit); //On pous notre Literal sur la Stack.
+	return newLit; //On pous notre Literal sur la Stack.
 }
 
 /* Fin DivRealInt */
@@ -567,7 +568,7 @@ void DivRealInt::execution(const std::shared_ptr<Literal> A, const std::shared_p
 DivIntRational::DivIntRational(){
 	Div::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Div, qui permettra de trouver un objet de la classe DivIntRational si on recherche l'opérateur Div pour deux Int.
 }
-void DivIntRational::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
+const std::shared_ptr<Literal> DivIntRational::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un pointeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
 	LInteger* lIntA = dynamic_cast<LInteger*>(litA); //On cast ce pointeur en LInteger
@@ -577,14 +578,14 @@ void DivIntRational::execution(const std::shared_ptr<Literal> A, const std::shar
 	int valeurBden = lRatB->getDen();
 	const int newNum = (valeurBden * valeurA); //On effectue l'opération Div
 	const shared_ptr<LRational> newLit = LRational::makeLiteral(newNum, valeurBnum); //On créé un const shared_ptr pour notre nouveau int
-	Stack::getInstance().push(newLit); //On pous notre Literal sur la Stack.
+	return newLit; //On pous notre Literal sur la Stack.
 }
 /* Fin DivIntRational */
 /* Début DivRationalInt */
 DivRationalInt::DivRationalInt(){
 	Div::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Div, qui permettra de trouver un objet de la classe DivRationalInt si on recherche l'opérateur Div pour deux Int.
 }
-void DivRationalInt::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
+const std::shared_ptr<Literal> DivRationalInt::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un pointeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
 	LRational* lRatA = dynamic_cast<LRational*>(litA); //On cast ce pointeur en LInteger
@@ -594,14 +595,14 @@ void DivRationalInt::execution(const std::shared_ptr<Literal> A, const std::shar
 	int valeurAden = lRatA->getDen();
 	const int newNum = (valeurB * valeurAden); //On effectue l'opération Div
 	const shared_ptr<LRational> newLit = LRational::makeLiteral(newNum, valeurAnum); //On créé un const shared_ptr pour notre nouveau int
-	Stack::getInstance().push(newLit); //On pous notre Literal sur la Stack.
+	return newLit; //On pous notre Literal sur la Stack.
 }
 /* Fin DivRationalInt */
 /* Début DivRationalRational */
 DivRationalRational::DivRationalRational(){
 	Div::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Div, qui permettra de trouver un objet de la classe DivRationalRational si on recherche l'opérateur Div pour deux Int.
 }
-void DivRationalRational::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
+const std::shared_ptr<Literal> DivRationalRational::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un pointeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
 	LRational* lIntA = dynamic_cast<LRational*>(litA); //On cast ce pointeur en lrational
@@ -613,14 +614,14 @@ void DivRationalRational::execution(const std::shared_ptr<Literal> A, const std:
 	const int newNum = valeurAnum * valeurBden; //On effectue l'opération Div
 	const int newDen = valeurBnum * valeurAden;
 	const shared_ptr<LRational> newLit = LRational::makeLiteral(newNum, newDen); //On créé un const shared_ptr pour notre nouveau int
-	Stack::getInstance().push(newLit); //On pous notre Literal sur la Stack.
+	return newLit; //On pous notre Literal sur la Stack.
 }
 /* Fin DivRationalRational */
 /* Début DivRealReal */
 DivRealReal::DivRealReal(){
 	Div::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Div, qui permettra de trouver un objet de la classe DivRealReal si on recherche l'opérateur Div pour deux Int.
 }
-void DivRealReal::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
+const std::shared_ptr<Literal> DivRealReal::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un podoubleeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
 	LReal* lIntA = dynamic_cast<LReal*>(litA); //On cast ce podoubleeur en LReal
@@ -629,14 +630,14 @@ void DivRealReal::execution(const std::shared_ptr<Literal> A, const std::shared_
 	double valeurB = lIntB->getValue();
 	const double newVal = valeurB / valeurA; //On effectue l'opération Div
 	const shared_ptr<LReal> newLit = LReal::makeLiteral(newVal); //On créé un const shared_ptr pour notre nouveau double
-	Stack::getInstance().push(newLit); //On pous notre Literal sur la Stack.
+	return newLit; //On pous notre Literal sur la Stack.
 }
 /* Fin DivRealReal */
 /* Début DivRealRational */
 DivRealRational::DivRealRational(){
 	Div::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Div, qui permettra de trouver un objet de la classe DivRealRational si on recherche l'opérateur Div pour deux Int.
 }
-void DivRealRational::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
+const std::shared_ptr<Literal> DivRealRational::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un podoubleeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
 	LReal* lIntA = dynamic_cast<LReal*>(litA); //On cast ce podoubleeur en LReal
@@ -646,14 +647,14 @@ void DivRealRational::execution(const std::shared_ptr<Literal> A, const std::sha
 	double valeurBden = lIntB->getDen();
 	const double newVal = (valeurBnum / valeurBden) / valeurA; //On effectue l'opération Div
 	const shared_ptr<LReal> newLit = LReal::makeLiteral(newVal); //On créé un const shared_ptr pour notre nouveau double
-	Stack::getInstance().push(newLit); //On pous notre Literal sur la Stack.
+	return newLit; //On pous notre Literal sur la Stack.
 }
 /* Fin DivRealRational */
 /* Début DivRationalReal */
 DivRationalReal::DivRationalReal(){
 	Div::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Div, qui permettra de trouver un objet de la classe DivRealInt si on recherche l'opérateur Div pour deux Int.
 }
-void DivRationalReal::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
+const std::shared_ptr<Literal> DivRationalReal::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un podoubleeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
 	LRational* lRatA = dynamic_cast<LRational*>(litA); //On cast ce podoubleeur en LReal
@@ -663,7 +664,7 @@ void DivRationalReal::execution(const std::shared_ptr<Literal> A, const std::sha
 	double valeurAden = lRatA->getDen();
 	const double newVal = valeurB / (valeurAnum / valeurAden); //On effectue l'opération Div
 	const shared_ptr<LReal> newLit = LReal::makeLiteral(newVal); //On créé un const shared_ptr pour notre nouveau double
-	Stack::getInstance().push(newLit); //On pous notre Literal sur la Stack.
+	return newLit; //On pous notre Literal sur la Stack.
 }
 /* Fin DivRationalReal */
 /* Fin Div */
