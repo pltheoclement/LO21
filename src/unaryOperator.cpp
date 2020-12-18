@@ -10,12 +10,12 @@
 
 #include "../include/operator.h"
 #include "../include/unaryOperator.h"
-#include "../include/stack.h"
+#include "../include/computer.h"
 #include "../include/literal.h"
 
 using namespace std;
 
-void UnaryOperator::apply(Stack& s){
+bool UnaryOperator::apply(Stack& s){
 
 	const shared_ptr<Literal> elA = s.top();// le premier argument
     LiteralType A=elA->getType();
@@ -23,6 +23,9 @@ void UnaryOperator::apply(Stack& s){
     	s.pop();
     	const shared_ptr<Literal> res = possibles[A]->execution(elA);
     	s.push(res);
+    	return true;
+    }else{
+    	return false;
     }
 }
 
@@ -92,22 +95,9 @@ const shared_ptr<Literal> NegRational::execution(const shared_ptr<Literal> A){
 /* Début opérateur Not */
 shared_ptr<Not> Not::instance = nullptr;
 
-Not& Not::get(){
-	if(instance == nullptr){
-		instance = shared_ptr<Not>(new Not);
-		Operator::addOperator(instance->name, instance);
-	}
-	return *instance;
-}
 
-void Not::free(){
-	if(instance != nullptr){
-		Operator::delOperator(instance->name);
-		instance = nullptr;
-	}
-}
 
-void Not::apply(Stack& s){
+bool Not::apply(Stack& s){
 	const shared_ptr<Literal> A = s.top();
 	Literal* litA = A.get();
 	if(litA->getType() == linteger){
@@ -124,6 +114,22 @@ void Not::apply(Stack& s){
 	}else{
 		const shared_ptr<LInteger> newLit = LInteger::makeLiteral(1);
 		s.push(newLit);
+	}
+	return true;
+}
+
+Not& Not::get(){
+	if(instance == nullptr){
+		instance = shared_ptr<Not>(new Not);
+		Operator::addOperator(instance->name, instance);
+	}
+	return *instance;
+}
+
+void Not::free(){
+	if(instance != nullptr){
+		Operator::delOperator(instance->name);
+		instance = nullptr;
 	}
 }
 /* fin opérateur Not */
@@ -145,12 +151,13 @@ void Dup::free(){
 		instance = nullptr;
 	}
 }
-void Dup::apply(Stack& s){
+bool Dup::apply(Stack& s){
 
 	const shared_ptr<Literal> elA = s.top();
     LiteralType A=elA->getType();
     Literal* litA = elA.get();
     //s.push(Literal::makeLiteral(elA));
+    return true;
 }
 /* Fin Dup */
 
@@ -171,7 +178,8 @@ void Drop::free(){
 		instance = nullptr;
 	}
 }
-void Drop::apply(Stack& s){
+bool Drop::apply(Stack& s){
 	s.pop();
+	return true;
 }
 /* Fin Drop */

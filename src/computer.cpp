@@ -1,5 +1,5 @@
-#include "operator.h"
-#include "computer.h"
+#include "../include/operator.h"
+#include "../include/computer.h"
 
 Stack &Stack::getInstance() {
     static Stack instance;

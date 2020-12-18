@@ -4,7 +4,8 @@
 #include <string>
 #include <vector>
 #include <memory>
-enum LiteralType {linteger,lrational,lreal,latom,lexpression,lprogram,lerror,other};
+
+enum LiteralType {linteger,lrational,lreal,latom,lexpression,lprogram,lerror, other};
 
 class LiteralException {
     std::string info;
@@ -19,10 +20,11 @@ class Literal {
 public:
 
     static LiteralType isLiteral(const std::string& s);
-    static std::shared_ptr<Literal> makeLiteral(const std::string& s, LiteralType t);
+    static const std::shared_ptr<Literal> makeLiteral(const std::string& s, LiteralType t);
 
     LiteralType getType(){ return type;}
-    virtual std::string toString() = 0;
+    virtual const std::shared_ptr<Literal> getCopy() = 0;
+    virtual std::string toString() const = 0;
     virtual ~Literal() {}
 };
 
@@ -33,11 +35,9 @@ class LInteger : public Literal {
 public:
     LInteger(const int& i): value(i){}
     int getValue() const { return value;}
-    const std::shared_ptr<LInteger> operator=(const std::shared_ptr<LInteger>){
-    	return std::make_shared<LInteger>(this->value);
-    }
-    static const std::shared_ptr<LInteger> makeLiteral(const int& i){}
-    std::string toString(){ return std::to_string(value);}
+    static const std::shared_ptr<LInteger> makeLiteral(const int& i);
+    const std::shared_ptr<Literal> getCopy();
+    std::string toString() const { return std::to_string(value);}
     ~LInteger(){}
 };
 
@@ -49,8 +49,9 @@ public:
     LReal(const double& d): value(d){}
     LReal(const LInteger& i): value(double(i.getValue())){}
     double getValue() const { return value;}
-    static const std::shared_ptr<LReal> makeLiteral(const double& d){}
-    std::string toString(){ return std::to_string(value);}
+    static const std::shared_ptr<LReal> makeLiteral(const double& d);
+    const std::shared_ptr<Literal> getCopy();
+    std::string toString() const { return std::to_string(value);}
     ~LReal(){}
 };
 
@@ -65,8 +66,9 @@ public:
     LRational(const LInteger& i): num(i.getValue()), den(1){}
     int getNum() const { return num;}
     int getDen() const { return den;}
-    static std::shared_ptr<LRational> makeLiteral(const int& n, const int& d){}
-    std::string toString(){ return std::to_string(num)+'/'+std::to_string(den);}
+    static const std::shared_ptr<LRational> makeLiteral(const int& n, const int& d);
+    const std::shared_ptr<Literal> getCopy();
+    std::string toString()  const { return std::to_string(num)+'/'+std::to_string(den);}
     LInteger toLInteger(){ LInteger i(int(num/den)); return i;}
     LReal toLReal(){ LReal r(double(num/den)); return r;}
     ~LRational(){}
@@ -87,7 +89,7 @@ class LExpression : public LAtom {
     std::string value;
 public:
     std::string getValue() const { return value;}
-    std::string toString(){ return '\''+value+'\'';}
+    std::string toString() const { return '\''+value+'\'';}
     ~LExpression(){}
 };
 
@@ -113,4 +115,3 @@ public:
 }; */
 
 #endif
-

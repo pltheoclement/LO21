@@ -1,4 +1,8 @@
-#include "Literal.h"
+#include <iostream>
+#include <string>
+#include <vector>
+#include <memory>
+#include "../include/literal.h"
 
 LiteralType Literal::isLiteral(const std::string& s){
     if (s[0] >= 48 && s[0] <= 57){

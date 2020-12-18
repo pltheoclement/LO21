@@ -65,6 +65,7 @@ class Neg : public UnaryOperator {
 	static std::shared_ptr<Neg> instance;
 	Neg() = default;
 public:
+	bool apply();
 	static Neg& get();
 	static void free();
 };
