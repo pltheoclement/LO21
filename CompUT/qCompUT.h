@@ -10,10 +10,12 @@
 #include <QHeaderView>
 #include <QDebug>
 #include <QString>
-#include <vector>
 #include <QMap>
+#include <QVector>
 #include <QLabel>
 #include <QComboBox>
+#include <tuple>
+#include <QPair>
 #include "CompUT.h"
 
 using namespace std;
@@ -27,15 +29,26 @@ class QCompUT : public QWidget{
     QLineEdit* commande;
     QString text;
 
-    map<string,QPushButton*> buttons_First_keyboard;
-    map<string,QPushButton*> buttons_Second_keyboard;
-    map<string,QPushButton*> buttons_secondary_view;
-    map<string,QVBoxLayout*> layout_Vertical;
-    map<string,QHBoxLayout*> layout_Horizontal;
-    map<string,QWidget*> secondary_view;
-    map<string,QLineEdit*> Line_Edit;
-    map<string,QLabel*> label;
-    map<string,QComboBox*> list;
+
+
+    //map<tuple<QString,QString>,QPushButton*> buttons_var;
+    //pair<tuple<QString,QString>,QPushButton*> bt_var;
+    //tuple<QString,QString>t;
+
+    map<QString,QPushButton*> buttons_First_keyboard;
+    map<QString,QPushButton*> buttons_Second_keyboard;
+    map<QString,QPushButton*> buttons_secondary_view;
+    map<QString,QPushButton*> buttons_var;
+    map<QString,QPushButton*> buttons_prog;
+    map<QString,QVBoxLayout*> layout_Vertical;
+    map<QString,QHBoxLayout*> layout_Horizontal;
+    map<QString,QWidget*> secondary_view;
+    map<QString,QLineEdit*> Line_Edit;
+    map<QString,QLabel*> label;
+    map<QString,QComboBox*> list;
+    map<QString,QTableWidget*> table;
+    QVector<QTableWidgetItem *>listeItemsVar;
+    QVector<QTableWidgetItem *>listeItemsProg;
 
     QTabWidget *tab;
 
@@ -62,6 +75,9 @@ public slots:
 
     void slotNewVariable(); void slotModifVariable(); void slotDeleteVariable();
     void slotNewProg(); void slotModifProg(); void slotDeleteProg();
+
+    void slotVariable();
+    void slotProgram();
 
 };
 
