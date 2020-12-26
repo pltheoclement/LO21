@@ -1,4 +1,4 @@
-#include "Literal.h"
+#include "literal.h"
 
 LiteralType Literal::isLiteral(const std::string& s){
     if (s[0] >= 48 && s[0] <= 57){
@@ -17,7 +17,7 @@ LiteralType Literal::isLiteral(const std::string& s){
     }
 }
 
-const std::shared_ptr<Literal> Literal::makeLiteral(const std::string& s, LiteralType t){
+std::shared_ptr<Literal> Literal::makeLiteral(const std::string& s, LiteralType t){
     switch(t){
         case linteger : return LInteger::makeLiteral(std::stoi(s));
         case lreal : return LReal::makeLiteral(std::stod(s));
@@ -44,34 +44,28 @@ const std::shared_ptr<LReal> LReal::makeLiteral(const double& d){
     return re;
 }
 
-const std::shared_ptr<LRational> LRational::makeLiteral(const int& n, const int& d){
+std::shared_ptr<LRational> LRational::makeLiteral(const int& n, const int& d){
     auto ra = std::make_shared<LRational>(n,d);
     return ra;
 }
 
-const std::shared_ptr<Literal> LInteger::getCopy(){
-    auto it = std::make_shared<LInteger>(*this);
-    return it;
-}
+//std::shared_ptr<Literal> LInteger::getCopy(){
+//    auto it = std::make_shared<LInteger>(*this);
+//    return it;
+//}
+//
+//std::shared_ptr<Literal> LReal::getCopy(){
+//    auto re = std::make_shared<LReal>(*this);
+//    return re;
+//}
+//
+//std::shared_ptr<Literal> LRational::getCopy(){
+//    auto ra = std::make_shared<LRational>(*this);
+//    return ra;
+//}
 
-const std::shared_ptr<Literal> LReal::getCopy(){
-    auto re = std::make_shared<LReal>(*this);
-    return re;
-}
-
-const std::shared_ptr<Literal> LRational::getCopy(){
-    auto ra = std::make_shared<LRational>(*this);
-    return ra;
-}
-
-std::vector<Literal> LProgram::getLiterals() const {
-
-}
-std::string LProgram::toString(){
-    std::string s = "[";
-    for(size_t i=0; i<this->getLiterals().size(); i++) s += " " + this->getLiterals()[i].toString() ;
-    s += " ]";
-    return s;
+std::string LProgram::toString() const {
+    return program;
 }
 
 void LRational::simplify(){
