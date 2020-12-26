@@ -15,9 +15,10 @@
 using namespace std;
 
 int main(){
-	int a = 6 == 6;
-	cout<< a;
-
+	Computer c = Computer::getInstance();
+	const string a = "1 1 +";
+	c.evalLine(a);
+	cout << Stack::getInstance().top()->toString();
 }
 
 
