@@ -10,6 +10,10 @@ std::vector<std::shared_ptr<Literal>>::const_reverse_iterator Stack::iterator() 
     return storage.crbegin();
 }
 
+std::vector<std::shared_ptr<Literal>>::const_reverse_iterator Stack::end() const {
+    return storage.crend();
+}
+
 void Stack::push(const std::shared_ptr<Literal>& pl) {
     storage.push_back(pl);
 }

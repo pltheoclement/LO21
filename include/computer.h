@@ -14,6 +14,7 @@ class Stack{
 public:
     static Stack& getInstance();
     std::vector<std::shared_ptr<Literal>>::const_reverse_iterator iterator() const;
+    std::vector<std::shared_ptr<Literal>>::const_reverse_iterator end() const;
     void push(const std::shared_ptr<Literal>& pl);
     void pop();
     const std::shared_ptr<Literal>& top() const;
