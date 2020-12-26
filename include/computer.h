@@ -25,10 +25,10 @@ class Computer{
     Computer() = default;
 public:
     static Computer& getInstance();
+    std::string getMessage() const;
     void storeVariable(const std::string& name, const Literal& l);
     void forgetVariable(const std::string& name);
     void pushVariable(const std::string& name);
     std::string evalLine(const std::string& s);
 };
-
 #endif
