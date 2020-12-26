@@ -61,6 +61,7 @@ void Add::free(){
 AddIntInt::AddIntInt(){
 	Add::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Add, qui permettra de trouver un objet de la classe AddIntInt si on recherche l'opérateur Add pour deux Int.
 }
+
 const std::shared_ptr<Literal> AddIntInt::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un pointeur de Literal sur le shared_ptr
 	Literal* litB = B.get();

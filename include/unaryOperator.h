@@ -110,14 +110,4 @@ public:
 	bool apply(Stack& s);
 };
 
-
-class Swap : public UnaryOperator {
-	std::string name = "swap";
-	static std::shared_ptr<Swap> instance;
-	Swap() = default;
-public:
-	static Swap& get();
-	static void free();
-};
-
 #endif
