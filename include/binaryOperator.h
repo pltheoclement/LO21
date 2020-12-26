@@ -1058,7 +1058,7 @@ public:
 
 class Swap : public BinaryOperator {
 	std::string name = "Swap";
-	static std::shared_ptr<Or> instance;
+	static std::shared_ptr<Swap> instance;
 	Swap() = default;
 public:
 	static Swap& get();
