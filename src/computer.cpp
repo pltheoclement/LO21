@@ -27,6 +27,10 @@ Computer &Computer::getInstance() {
     return instance;
 }
 
+std::string Computer::getMessage() const {
+    return message;
+}
+
 void Computer::storeVariable(const std::string &name, const Literal &l) {
     variables.at(name) = l.toString();
 }
