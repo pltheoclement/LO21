@@ -8,9 +8,10 @@
 #include <string>
 #include <map>
 
-#include "operator.h"
-#include "unaryOperator.h"
-#include "literal.h"
+#include "../include/operator.h"
+#include "../include/unaryOperator.h"
+#include "../include/computer.h"
+#include "../include/literal.h"
 
 using namespace std;
 
@@ -22,7 +23,9 @@ bool UnaryOperator::apply(Stack& s){
     	s.pop();
     	const shared_ptr<Literal> res = possibles[A]->execution(elA);
     	s.push(res);
-        return true;
+    	return true;
+    }else{
+    	return false;
     }
     return false;
 }
@@ -93,20 +96,7 @@ const shared_ptr<Literal> NegRational::execution(const shared_ptr<Literal> A){
 /* Début opérateur Not */
 shared_ptr<Not> Not::instance = nullptr;
 
-Not& Not::get(){
-	if(instance == nullptr){
-		instance = shared_ptr<Not>(new Not);
-		Operator::addOperator(instance->name, instance);
-	}
-	return *instance;
-}
 
-void Not::free(){
-	if(instance != nullptr){
-		Operator::delOperator(instance->name);
-		instance = nullptr;
-	}
-}
 
 bool Not::apply(Stack& s){
 	const shared_ptr<Literal> A = s.top();
@@ -127,6 +117,21 @@ bool Not::apply(Stack& s){
 		s.push(newLit);
 	}
 	return true;
+}
+
+Not& Not::get(){
+	if(instance == nullptr){
+		instance = shared_ptr<Not>(new Not);
+		Operator::addOperator(instance->name, instance);
+	}
+	return *instance;
+}
+
+void Not::free(){
+	if(instance != nullptr){
+		Operator::delOperator(instance->name);
+		instance = nullptr;
+	}
 }
 /* fin opérateur Not */
 
@@ -150,7 +155,6 @@ void Dup::free(){
 bool Dup::apply(Stack& s){
 
 	const shared_ptr<Literal> elA = s.top();
-    Literal* litA = elA.get();
     const shared_ptr<Literal> newLit = elA->getCopy();
     s.push(newLit);
     return true;
@@ -179,3 +183,5 @@ bool Drop::apply(Stack& s){
     return true;
 }
 /* Fin Drop */
+
+

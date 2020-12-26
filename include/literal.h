@@ -4,7 +4,8 @@
 #include <string>
 #include <vector>
 #include <memory>
-enum LiteralType {linteger,lrational,lreal,latom,lexpression,lprogram,lerror,other};
+
+enum LiteralType {linteger,lrational,lreal,latom,lexpression,lprogram,lerror, other};
 
 class LiteralException {
     std::string info;
@@ -19,7 +20,7 @@ class Literal {
 public:
 
     static LiteralType isLiteral(const std::string& s);
-    static std::shared_ptr<Literal> makeLiteral(const std::string& s, LiteralType t);
+    static const std::shared_ptr<Literal> makeLiteral(const std::string& s, LiteralType t);
 
     LiteralType getType(){ return type;}
     virtual std::string toString() const = 0;
@@ -115,4 +116,3 @@ public:
 }; */
 
 #endif
-

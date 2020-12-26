@@ -7,20 +7,18 @@
 
 #include <iostream>
 #include <string>
-#include "literal.h"
-#include "operator.h"
-#include "unaryOperator.h"
+#include "../include/literal.h"
+#include "../include/computer.h"
+#include "../include/operator.h"
+#include "../include/unaryOperator.h"
 
 using namespace std;
 
 int main(){
-	int a = 6;
-	int b = 4;
-	double ad = a;
-	double bd = b;
-	double C = ad / bd;
-	cout<<C;
-
+	Computer c = Computer::getInstance();
+	const string a = "1 1 +";
+	c.evalLine(a);
+	cout << Stack::getInstance().top()->toString();
 }
 
 
