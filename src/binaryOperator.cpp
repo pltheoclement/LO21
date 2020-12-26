@@ -19,8 +19,10 @@ using namespace std;
 bool BinaryOperator::apply(Stack& s){
 
 	const std::shared_ptr<Literal> elA = s.top();// le premier argument
+	s.pop();
 
 	const std::shared_ptr<Literal> elB = s.top();// le deuxième
+	s.pop();
 
     LiteralType A=elA->getType();
 
@@ -28,11 +30,11 @@ bool BinaryOperator::apply(Stack& s){
 
     if (possibles.count(make_pair(A, B)) > 0) {// existe bien dans ta map then possibles[make_pair(A,B)].execution(); // @suppress("Method cannot be resolved")
     	const shared_ptr<Literal> res = possibles[make_pair(A,B)]->execution(elA, elB);
-    	s.pop();
-    	s.pop();
     	s.push(res);
     	return true;
     }else{
+    	s.push(elA);
+    	s.push(elB);
     	return false;
     }
 }
@@ -1776,22 +1778,24 @@ shared_ptr<And> And::instance = nullptr;
 
 bool And::apply(Stack& s){
 	const shared_ptr<Literal> A = s.top();
-  const shared_ptr<Literal> B = s.top();
+	s.pop();
+	const shared_ptr<Literal> B = s.top();
+	s.pop();
 	Literal* litA = A.get();
-  Literal* litB = B.get();
+	Literal* litB = B.get();
 	if(litA->getType() == linteger && litB->getType() == linteger){
 		LInteger* lIntA = dynamic_cast<LInteger*>(litA);
-    LInteger* lIntB = dynamic_cast<LInteger*>(litB);
+		LInteger* lIntB = dynamic_cast<LInteger*>(litB);
 		int valeurA = lIntA->getValue();
-    int valeurB = lIntB->getValue();
-    if(valeurA == 1 && valeurB == 1){
-				const shared_ptr<LInteger> newLit = LInteger::makeLiteral(1);
-				s.push(newLit);
-			}
-			else{
-				const shared_ptr<LInteger> newLit = LInteger::makeLiteral(0);
-				s.push(newLit);
-			}
+		int valeurB = lIntB->getValue();
+		if(valeurA == 1 && valeurB == 1){
+			const shared_ptr<LInteger> newLit = LInteger::makeLiteral(1);
+			s.push(newLit);
+		}
+		else{
+			const shared_ptr<LInteger> newLit = LInteger::makeLiteral(0);
+			s.push(newLit);
+		}
 	}else{
 		const shared_ptr<LInteger> newLit = LInteger::makeLiteral(1);
 		s.push(newLit);
@@ -1820,22 +1824,24 @@ shared_ptr<Or> Or::instance = nullptr;
 
 bool Or::apply(Stack& s){
 	const shared_ptr<Literal> A = s.top();
-  const shared_ptr<Literal> B = s.top();
+	s.pop();
+	const shared_ptr<Literal> B = s.top();
+	s.pop();
 	Literal* litA = A.get();
-  Literal* litB = B.get();
+	Literal* litB = B.get();
 	if(litA->getType() == linteger && litB->getType() == linteger){
 		LInteger* lIntA = dynamic_cast<LInteger*>(litA);
-    LInteger* lIntB = dynamic_cast<LInteger*>(litB);
+		LInteger* lIntB = dynamic_cast<LInteger*>(litB);
 		int valeurA = lIntA->getValue();
-    int valeurB = lIntB->getValue();
-    if(valeurA == 1 || valeurB == 1){
-				const shared_ptr<LInteger> newLit = LInteger::makeLiteral(1);
-				s.push(newLit);
-			}
-			else{
-				const shared_ptr<LInteger> newLit = LInteger::makeLiteral(0);
-				s.push(newLit);
-			}
+		int valeurB = lIntB->getValue();
+		if(valeurA == 1 || valeurB == 1){
+			const shared_ptr<LInteger> newLit = LInteger::makeLiteral(1);
+			s.push(newLit);
+		}
+		else{
+			const shared_ptr<LInteger> newLit = LInteger::makeLiteral(0);
+			s.push(newLit);
+		}
 	}else{
 		const shared_ptr<LInteger> newLit = LInteger::makeLiteral(1);
 		s.push(newLit);
@@ -1864,11 +1870,11 @@ shared_ptr<Swap> Swap::instance = nullptr;
 
 bool Swap::apply(Stack& s){
 	const shared_ptr<Literal> A = s.top();
-  s.pop();
-  const shared_ptr<Literal> B = s.top();
 	s.pop();
-  s.push(B);
-  s.push(A);
+	const shared_ptr<Literal> B = s.top();
+	s.pop();
+	s.push(B);
+	s.push(A);
 	return true;
 }
 

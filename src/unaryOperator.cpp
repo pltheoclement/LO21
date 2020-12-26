@@ -154,9 +154,9 @@ void Dup::free(){
 bool Dup::apply(Stack& s){
 
 	const shared_ptr<Literal> elA = s.top();
-    LiteralType A=elA->getType();
     Literal* litA = elA.get();
-    //s.push(Literal::makeLiteral(elA));
+    const shared_ptr<Literal> newLit = elA->getCopy();
+    s.push(newLit);
     return true;
 }
 /* Fin Dup */
