@@ -15,12 +15,8 @@
 using namespace std;
 
 int main(){
-	int a = 6;
-	int b = 4;
-	double ad = a;
-	double bd = b;
-	double C = ad / bd;
-	cout<<C;
+	int a = 6 == 6;
+	cout<< a;
 
 }
 
