@@ -6,7 +6,7 @@ Stack &Stack::getInstance() {
     return instance;
 }
 
-std::vector<Literal>::const_reverse_iterator Stack::iterator() const{
+std::vector<std::shared_ptr<Literal>>::const_reverse_iterator Stack::iterator() const{
     return storage.crbegin();
 }
 
