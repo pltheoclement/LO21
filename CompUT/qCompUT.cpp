@@ -2,7 +2,10 @@
 
 QCompUT::QCompUT(QWidget* father) : QWidget(father){
 
+    Nbr_Line_Stack = new QSpinBox;
+    Nbr_Line_Stack->setRange(0,1000); Nbr_Line_Stack->setSingleStep(1); Nbr_Line_Stack->setValue(7);
     Initialisation_Stack(); //Initilisation de la pile
+
     creation(); //Création des différents composant utiliser pour l'interface de l'application
     Initialisation(); //Initialisation des différents composants
 
@@ -29,7 +32,7 @@ QCompUT::QCompUT(QWidget* father) : QWidget(father){
     connect(buttons_Second_keyboard["reduce_keyboard_two"],SIGNAL(clicked()),this,SLOT(slotReduce2()));
     connect(buttons_Second_keyboard["open_keyboard_two"],SIGNAL(clicked()),this,SLOT(slotOpen2()));
 
-    connect(stack,SIGNAL(modificationEtat()),this,SLOT(refresh()));
+    connect(&Stack::getInstance(),SIGNAL(modificationEtat()),this,SLOT(refresh()));
     connect(commande,SIGNAL(returnPressed()),this,SLOT(getNextCommande()));
 
     connect(buttons_secondary_view["new_var"],SIGNAL(clicked()),this,SLOT(slotNewVariable()));
@@ -40,27 +43,39 @@ QCompUT::QCompUT(QWidget* father) : QWidget(father){
     connect(buttons_secondary_view["modif_prog"],SIGNAL(clicked()),this,SLOT(slotModifProg()));
     connect(buttons_secondary_view["delete_prog"],SIGNAL(clicked()),this,SLOT(slotDeleteProg()));
 
+    connect(Nbr_Line_Stack,SIGNAL(valueChanged(int)),this,SLOT(slot_Nbr_Line_view_Stack()));
+
+    connect(&Stack::getInstance(),SIGNAL(modificationEtat()),this,SLOT(refresh()));
 }
 
 
 void QCompUT::Initialisation_Stack(){
-    stack = new Stack;
-    controleur = new Controleur(ExpressionManager::getInstance(), *stack);
+
+
+
+     Nbr_Line = Nbr_Line_Stack->text().toInt();
+
+//    stack = new Stack;
+//    controleur = new Controleur(ExpressionManager::getInstance(), *stack);
+
+    //Stack::getInstance();
+    //Stack::getInstance();
+    //Computer computer = Computer::getInstance();
 
     message   = new QLineEdit;
-    viewStack = new QTableWidget(stack->getNbItemsToAffiche(),1);
+    viewStack = new QTableWidget(Nbr_Line,1);
     commande  = new QLineEdit;
 
     //viewStack->setStyleSheet("color: white");
     viewStack->horizontalHeader()->setVisible(false);
     //Ajuster la taille des colone
     viewStack->horizontalHeader()->setStretchLastSection(true);
-    viewStack->setFixedHeight(stack->getNbItemsToAffiche()*viewStack->rowHeight(0)+2);
+    viewStack->setFixedHeight(Nbr_Line*viewStack->rowHeight(0)+2);
     //Vérouiller l'écriture au clavier dans le tableau
     viewStack->setEditTriggers(QAbstractItemView::NoEditTriggers);
     //Affichage inverse indice tableau
     QStringList labels;
-    for(size_t i=stack->getNbItemsToAffiche(); i>0; i--){
+    for(size_t i=Nbr_Line; i>0; i--){
         QString str = QString::number(i);
         str+=" :";
         labels << str;
@@ -146,15 +161,9 @@ void QCompUT::creation(){
     //Création de la couche pour le clavier N°1 + Open et Close
     QVBoxLayout* layout_keyboard_one = new QVBoxLayout; layout_Vertical["layout_keyboard_one"] = layout_keyboard_one;
 
-    //Création de la couche du clavier N°2 + Open et Close
-//    QVBoxLayout* layout_keyboard_var = new QVBoxLayout; layout_Vertical["layout_keyboard_var"] = layout_keyboard_var;
-//    QVBoxLayout* layout_keyboard_prog = new QVBoxLayout; layout_Vertical["layout_keyboard_prog"] = layout_keyboard_prog;
-
     //QVBoxLayout* layout_key_two = new QVBoxLayout; layout_Vertical["layout_key_two"] = layout_key_two;
     QVBoxLayout* layout_keyboard_two = new QVBoxLayout; layout_Vertical["layout_keyboard_two"] = layout_keyboard_two;
-
     QVBoxLayout* layout_general = new QVBoxLayout; layout_Vertical["layout_general"] = layout_general;
-
 
     //création des couches verticales pour la vue secondaire variable
     QVBoxLayout* layoutV_add_var = new QVBoxLayout; layout_Vertical["layoutV_add_var"] = layoutV_add_var;
@@ -167,6 +176,8 @@ void QCompUT::creation(){
     QVBoxLayout* layoutV_modif_prog = new QVBoxLayout; layout_Vertical["layoutV_modif_prog"] = layoutV_modif_prog;
     QVBoxLayout* layout_prog = new QVBoxLayout; layout_Vertical["layout_prog"] = layout_prog;
     QVBoxLayout* layout_Program = new QVBoxLayout; layout_Vertical["layout_Program"] = layout_Program;
+
+    QVBoxLayout* Layout_Setting = new QVBoxLayout; layout_Vertical["Layout_Setting"] = Layout_Setting;
 
     /*-------------------------------------------------------------------------------------------------------------------------------------------*/
     /*--Création des Widget pour la vue secondaire Variable--------------------------------------------------------------------------------------*/
@@ -216,9 +227,12 @@ void QCompUT::creation(){
     table["table_prog"]->horizontalHeader()->hide();
     table["table_prog"]->verticalHeader()->hide();
 
+    /*--------------------------------------------------------------------------------------------------------------------------------------------*/
+    /*--Création du Spinbox pour le vue secondaire Setting----------------------------------------------------------------------------------------*/
 
-    /*-------------------------------------------------------------------------------------------------------------------------------------------*/
-    /*--Création des 4 onglets au niveau des claviers--------------------------------------------------------------------------------------------*/
+
+    /*--------------------------------------------------------------------------------------------------------------------------------------------*/
+    /*--Création des 4 onglets au niveau des claviers---------------------------------------------------------------------------------------------*/
     tab = new QTabWidget(this); tab->setFixedSize(550,300);
     QWidget* Principal = new QWidget;secondary_view["Principal"] = Principal;
     QWidget* Variable = new QWidget; secondary_view["Variable"] = Variable;
@@ -322,11 +336,13 @@ void QCompUT::Initialisation(){
     //Initialisation de la couche avec les 2 claviers
     layout_Horizontal["layout_keyboard_one_two"]->addLayout(layout_Vertical["layout_keyboard_one"]); layout_Horizontal["layout_keyboard_one_two"]->addLayout(layout_Vertical["layout_keyboard_two"]);
 
+    layout_Vertical["Layout_Setting"]->addWidget(Nbr_Line_Stack);
+
     //Initialisation des 4 onglets, dont 3 sont secondaires
     secondary_view["Principal"]->setLayout(layout_Horizontal["layout_keyboard_one_two"]); tab->addTab(secondary_view["Principal"], "Keyboard");
     secondary_view["Variable"]->setLayout(layout_Vertical["layout_var"]); tab->addTab(secondary_view["Variable"], "Variable");
     secondary_view["Program"]->setLayout(layout_Vertical["layout_prog"]); tab->addTab(secondary_view["Program"], "Program");
-    /*Settings->setLayout(NULL);*/ tab->addTab(secondary_view["Settings"], "Settings");
+    secondary_view["Settings"]->setLayout(layout_Vertical["Layout_Setting"]); tab->addTab(secondary_view["Settings"], "Settings");
 
     //Initialisation de l'affichage totale de l'application
     layout_Horizontal["layout_display_and_keyboard"]->addLayout(layout_Vertical["layout_stack"]); layout_Horizontal["layout_display_and_keyboard"]->addWidget(tab);
@@ -343,6 +359,7 @@ void QCompUT::Initialisation(){
     layout_Vertical["layout_keyboard_two"]->setAlignment(Qt::AlignTop);
     layout_Horizontal["layout_keyboard_one_two"]->setAlignment(Qt::AlignLeft);
 
+
     //Taille fixé, non modifiable
     setFixedSize(900,350);
 
@@ -352,19 +369,25 @@ void QCompUT::Initialisation(){
 
 
 void QCompUT::refresh(){
-    message->setText(stack->getMessage());
-    for(size_t i=0; i<stack->getNbItemsToAffiche(); i++)
+
+    //message->setText(stack->getMessage());
+    message->setText(QString::fromStdString(Computer::getInstance().getMessage()));
+
+    for(size_t i=0; i<Nbr_Line; i++)
         viewStack->item(i,0)->setText("");
+
    size_t nb=0;
-    for(Stack::iterator it=stack->begin(); it!=stack->end() && nb<stack->getNbItemsToAffiche(); ++it){
-        viewStack->item(stack->getNbItemsToAffiche()-nb-1,0)->setText((*it).toString());
+    for(auto it=Stack::getInstance().iterator(); it!=Stack::getInstance().end() && nb<Nbr_Line; ++it){
+        viewStack->item(Nbr_Line-nb-1,0)->setText(QString::fromStdString((*it)->toString()));
         nb++;
     }
 }
 
 void QCompUT::getNextCommande(){
     QString c=commande->text();
-    controleur->commande(c);
+    //computer->commande(c);
+    Computer::getInstance().evalLine(c.toStdString());
+    refresh();
     commande->clear();
     text ="";
 }
@@ -444,13 +467,15 @@ void QCompUT::slotOpen2(){
 
 
 void QCompUT::slotNewVariable(){
+
      //Pour eviter d'avoir de créer un objet sans non ni valeur
     if (Line_Edit["add_name_var"]->text().isEmpty()) return;
     if (Line_Edit["add_edit_var"]->text().isEmpty()) return;
 
 /*--Varibale pour récupérer le nom créer pour l'utiliser sur le clavier--------------*/
     QString name_var = Line_Edit["add_name_var"]->text();
-    //QString value_var = Line_Edit["add_value_var"]->text();
+    QString value_var = Line_Edit["add_edit_var"]->text();
+
 /*-----------------------------------------------------------------------------------*/
 
     QWidget* pWidget_var = new QWidget();
@@ -470,6 +495,8 @@ void QCompUT::slotNewVariable(){
     list["list_modif_var"]->addItem(name_var); list["list_delete_var"]->addItem(name_var);
     Line_Edit["add_name_var"]->setText(""); Line_Edit["add_edit_var"]->setText("");
 
+    Computer::getInstance().storeVariable(name_var.toStdString(),*Literal::makeLiteral(value_var.toStdString(), Literal::isLiteral(value_var.toStdString())));
+qDebug() << "test";
     connect(buttons_var[name_var],SIGNAL(clicked()),this,SLOT(slotVariable()));
 
 /*
@@ -589,11 +616,16 @@ void QCompUT::slotDeleteProg(){
 
 void QCompUT::slotVariable(){
  //sender();
- text +="1"; commande->setText(text);
+ text +="1";
+ commande->setText(text);
 }
 
 void QCompUT::slotProgram(){
  text +="1"; commande->setText(text);
+}
+
+void QCompUT::slot_Nbr_Line_view_Stack(){
+    Initialisation_Stack();
 }
 
 

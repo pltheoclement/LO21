@@ -14,9 +14,13 @@
 #include <QVector>
 #include <QLabel>
 #include <QComboBox>
-#include <tuple>
-#include <QPair>
-#include "CompUT.h"
+#include <QSpinBox>
+#include <QObject>
+#include <QDebug>
+#include <algorithm>
+
+//#include "CompUT.h"
+#include "include/computer.h"
 
 using namespace std;
 
@@ -28,8 +32,7 @@ class QCompUT : public QWidget{
     QTableWidget* viewStack;
     QLineEdit* commande;
     QString text;
-
-
+    size_t Nbr_Line;
 
     //map<tuple<QString,QString>,QPushButton*> buttons_var;
     //pair<tuple<QString,QString>,QPushButton*> bt_var;
@@ -52,8 +55,11 @@ class QCompUT : public QWidget{
 
     QTabWidget *tab;
 
-    Stack* stack;
-    Controleur* controleur;
+    //Stack stack;
+    //Computer computer;
+
+
+    QSpinBox* Nbr_Line_Stack;
 
 
 public:
@@ -78,6 +84,8 @@ public slots:
 
     void slotVariable();
     void slotProgram();
+
+    void slot_Nbr_Line_view_Stack();
 
 };
 
