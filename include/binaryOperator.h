@@ -45,6 +45,7 @@ class Add : public BinaryOperator {
 public:
 	static Add& get();
 	static void free();
+	bool apply(Stack& s);
 };
 
 class AbstractAdd : public AbstractBinaryOperation{

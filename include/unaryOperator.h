@@ -65,10 +65,12 @@ class Neg : public UnaryOperator {
 	static std::shared_ptr<Neg> instance;
 	Neg() = default;
 public:
-	bool apply();
+	//bool apply(Stack& s);
 	static Neg& get();
 	static void free();
 };
+
+
 
 class Not : public UnaryOperator {
 	std::string name = "not";

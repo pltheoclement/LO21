@@ -42,6 +42,11 @@ bool BinaryOperator::apply(Stack& s){
 /* Début Add */
 shared_ptr<Add> Add::instance = nullptr;
 
+bool Add::apply(Stack& s){
+	cout << "Bonjour";
+	return BinaryOperator::apply(s);
+}
+
 Add& Add::get(){
 	if(instance == nullptr){
 		instance = shared_ptr<Add>(new Add);
@@ -705,7 +710,7 @@ const std::shared_ptr<Literal> ModIntInt::execution(const std::shared_ptr<Litera
 	int valeurA = lIntA->getValue(); //On récupère la valeur de ce Literal
 	int valeurB = lIntB->getValue();
 	const int newVal = valeurB % valeurA; //On effectue l'opération Mod
-	const shared_ptr<LReal> newLit = LReal::makeLiteral(newVal); //On créé un const shared_ptr pour notre nouveau int
+	const shared_ptr<LInteger> newLit = LInteger::makeLiteral(newVal); //On créé un const shared_ptr pour notre nouveau int
 	return newLit; //On pous notre Literal sur la Stack.
 }
 /* Fin ModIntInt */

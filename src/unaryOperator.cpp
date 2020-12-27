@@ -104,14 +104,14 @@ bool Not::apply(Stack& s){
 	if(litA->getType() == linteger){
 		LInteger* lIntA = dynamic_cast<LInteger*>(litA);
 		int valeur = lIntA->getValue();
-		if(valeur == 1){
-				const shared_ptr<LInteger> newLit = LInteger::makeLiteral(1);
-				s.push(newLit);
-			}
-			else{
-				const shared_ptr<LInteger> newLit = LInteger::makeLiteral(0);
-				s.push(newLit);
-			}
+		if(valeur == 0){
+			const shared_ptr<LInteger> newLit = LInteger::makeLiteral(1);
+			s.push(newLit);
+		}
+		else{
+			const shared_ptr<LInteger> newLit = LInteger::makeLiteral(0);
+			s.push(newLit);
+		}
 	}else{
 		const shared_ptr<LInteger> newLit = LInteger::makeLiteral(1);
 		s.push(newLit);

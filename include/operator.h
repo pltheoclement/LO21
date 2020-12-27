@@ -43,10 +43,6 @@ public:
 	static void free();
 };
 
-
-
-
-
 class Operator{
 	static std::map<std::string, std::shared_ptr<TypeOperator>> operators;
 	static std::unique_ptr<Operator> instance;
