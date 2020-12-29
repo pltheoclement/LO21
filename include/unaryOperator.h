@@ -61,7 +61,7 @@ public :
 };
 
 class Neg : public UnaryOperator {
-	std::string name = "neg";
+	std::string name = "NEG";
 	static std::shared_ptr<Neg> instance;
 	Neg() = default;
 public:
@@ -71,7 +71,7 @@ public:
 
 
 class Not : public UnaryOperator {
-	std::string name = "not";
+	std::string name = "NOT";
 	static std::shared_ptr<Not> instance;
 	Not() = default;
 public:
@@ -81,7 +81,7 @@ public:
 };
 
 class Eval : public UnaryOperator {
-	std::string name = "eval";
+	std::string name = "EVAL";
 	static std::shared_ptr<Eval> instance;
 	Eval() = default;
 public:
@@ -92,7 +92,7 @@ public:
 };
 
 class Dup : public UnaryOperator {
-	std::string name = "dup";
+	std::string name = "DUP";
 	static std::shared_ptr<Dup> instance;
 	Dup() = default;
 public:
@@ -102,7 +102,7 @@ public:
 };
 
 class Drop : public UnaryOperator {
-	std::string name = "drop";
+	std::string name = "DROP";
 	static std::shared_ptr<Drop> instance;
 	Drop() = default;
 public:

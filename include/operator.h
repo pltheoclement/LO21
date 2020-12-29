@@ -34,7 +34,7 @@ public:
 };
 
 class Clear : public TypeOperator {
-	std::string name = "clear";
+	std::string name = "CLEAR";
 	static std::shared_ptr<Clear> instance;
 	Clear() = default;
 public:
