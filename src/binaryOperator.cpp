@@ -16,6 +16,11 @@
 
 using namespace std;
 
+
+void BinaryOperator::addBehaviour(LiteralType A, LiteralType B, AbstractBinaryOperation* a) {
+	possibles[std::make_pair(A,B)]=a;
+}
+
 bool BinaryOperator::apply(Stack& s){
 
 	const std::shared_ptr<Literal> elA = s.top();// le premier argument
@@ -29,7 +34,10 @@ bool BinaryOperator::apply(Stack& s){
     LiteralType B=elB->getType();
 
     if (possibles.count(make_pair(A, B)) > 0) {// existe bien dans ta map then possibles[make_pair(A,B)].execution(); // @suppress("Method cannot be resolved")
-    	const shared_ptr<Literal> res = possibles[make_pair(A,B)]->execution(elA, elB);
+    	auto opp = possibles.at(std::pair<LiteralType, LiteralType>(A,B));
+    	cout<<"coucou";
+    	cout.flush();
+    	const shared_ptr<Literal> res = opp->execution(elA, elB);
     	s.push(res);
     	return true;
     }else{
@@ -41,11 +49,6 @@ bool BinaryOperator::apply(Stack& s){
 
 /* Début Add */
 shared_ptr<Add> Add::instance = nullptr;
-
-bool Add::apply(Stack& s){
-	cout << "Bonjour";
-	return BinaryOperator::apply(s);
-}
 
 Add& Add::get(){
 	if(instance == nullptr){

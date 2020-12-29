@@ -13,9 +13,9 @@
 #include "../include/binaryOperator.h"
 #include "../include/computer.h"
 #include "../include/literal.h"
-/*
 
-void creationOperators(){
+
+/*void creationOperators(){
 	Clear::get();
 
 	NegInt negInt;
@@ -139,8 +139,8 @@ void creationOperators(){
 	Or::get();
 
 	Swap::get();
-}
-*/
+}*/
+
 void destructionOperators(){
 	Clear::free();
 	Neg::free();

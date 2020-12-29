@@ -30,7 +30,7 @@ class TypeOperator {
 	std::string name;
 public:
 	virtual bool apply(Stack& s) = 0;
-	virtual ~TypeOperator(){};
+	virtual ~TypeOperator();
 };
 
 class Clear : public TypeOperator {

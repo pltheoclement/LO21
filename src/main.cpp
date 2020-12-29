@@ -140,28 +140,31 @@ void creationOperators(){
 }
 
 int main(){
-	Stack s = Stack::getInstance();
+	//Stack s = Stack::getInstance();
 	creationOperators();
 	Computer c = Computer::getInstance();
 	const shared_ptr<Literal> l1 = LInteger::makeLiteral(19);
 	const shared_ptr<Literal> l2 = LInteger::makeLiteral(10);
-	s.push(l1);
-	s.push(l2);
+	Stack::getInstance().push(l1);
+	Stack::getInstance().push(l2);
 
-	Operator o = Operator::getInstance();
-	TypeOperator& add = o.getOperator("add");
-	add.apply(s);
+	//Operator o = Operator::getInstance();
+	Operator::getInstance().getOperator("add").apply(Stack::getInstance());
 
-	/*//AddIntInt opp;
-	Not opp = Not::get();
-	opp.apply(s);
-	const shared_ptr<Literal> l3 = s.top();
-	//const shared_ptr<Literal> l3 = opp.execution(l1);
+	//AddIntInt opp;
+	//Not opp = Not::get();
+	//opp.apply(s);
+	//AbstractBinaryOperation* f = &opp;
+	const shared_ptr<Literal> l3 = Stack::getInstance().top();
+	//const shared_ptr<Literal> l3 = f->execution(l1, l2);
+	Literal* litA = l3.get();
+	LInteger* lIntA = dynamic_cast<LInteger*>(litA);
+	cout << lIntA->getValue();
+	/*c.evalLine("1");
+	c.evalLine("neg");
+	//c.evalLine("not");
+	const shared_ptr<Literal> l3 = Stack::getInstance().top();
 	Literal* litA = l3.get();
 	LInteger* lIntA = dynamic_cast<LInteger*>(litA);
 	cout << lIntA->getValue();*/
-
-
 }
-
-

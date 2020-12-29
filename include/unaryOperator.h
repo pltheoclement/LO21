@@ -54,9 +54,9 @@ public:
 class UnaryOperator : public TypeOperator{
 	std::map<LiteralType, AbstractUnaryOperation*> possibles;
 public :
-    virtual ~UnaryOperator(){};
+    virtual ~UnaryOperator();
     UnaryOperator(){};
-    void addBehaviour(LiteralType A, AbstractUnaryOperation* a) { possibles[A]=a; }
+    void addBehaviour(LiteralType A, AbstractUnaryOperation* a);
     bool apply(Stack& s);
 };
 
@@ -65,11 +65,9 @@ class Neg : public UnaryOperator {
 	static std::shared_ptr<Neg> instance;
 	Neg() = default;
 public:
-	//bool apply(Stack& s);
 	static Neg& get();
 	static void free();
 };
-
 
 
 class Not : public UnaryOperator {
@@ -89,6 +87,7 @@ class Eval : public UnaryOperator {
 public:
 	static Eval& get();
 	static void free();
+	bool apply(Stack& s);
 
 };
 

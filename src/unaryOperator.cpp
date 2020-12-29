@@ -15,6 +15,10 @@
 
 using namespace std;
 
+void UnaryOperator::addBehaviour(LiteralType A, AbstractUnaryOperation* a) {
+	possibles[A]=a;
+}
+
 bool UnaryOperator::apply(Stack& s){
 
 	const shared_ptr<Literal> elA = s.top();// le premier argument
@@ -29,6 +33,8 @@ bool UnaryOperator::apply(Stack& s){
     }
     return false;
 }
+
+UnaryOperator::~UnaryOperator(){}
 
 /* Début opérateur NEG */
 shared_ptr<Neg> Neg::instance = nullptr;
@@ -184,4 +190,31 @@ bool Drop::apply(Stack& s){
 }
 /* Fin Drop */
 
+/* Début Eval */
+shared_ptr<Eval> Eval::instance = nullptr;
+
+Eval& Eval::get(){
+	if(instance == nullptr){
+		instance = shared_ptr<Eval>(new Eval);
+		Operator::addOperator(instance->name, instance);
+	}
+	return *instance;
+}
+
+void Eval::free(){
+	if(instance != nullptr){
+		Operator::delOperator(instance->name);
+		instance = nullptr;
+	}
+}
+
+bool Eval::apply(Stack& s){
+	const shared_ptr<Literal> elA = s.top();
+	Literal* litA = elA.get();
+	LExpression* lexpA = dynamic_cast<LExpression*>(litA);
+	const string var = lexpA->getValue();
+	Computer::getInstance().pushVariable(var);
+    return true;
+}
+/* Fin Drop */
 

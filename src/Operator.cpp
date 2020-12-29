@@ -46,6 +46,8 @@ TypeOperator& Operator::getOperator(std::string s){
 	return *operators.at(s);
 }
 
+TypeOperator::~TypeOperator(){}
+
 /* Définition de l'opérateur CLEAR */
 shared_ptr<Clear> Clear::instance = nullptr;
 bool Clear::apply(Stack& s){

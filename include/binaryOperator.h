@@ -34,7 +34,7 @@ class BinaryOperator : public TypeOperator{
 public :
     virtual ~BinaryOperator(){};
     BinaryOperator(){};
-    void addBehaviour(LiteralType A, LiteralType B, AbstractBinaryOperation* a) { possibles[std::make_pair(A,B)]=a; }
+    void addBehaviour(LiteralType A, LiteralType B, AbstractBinaryOperation* a);
     bool apply(Stack& s);
 };
 
@@ -45,7 +45,6 @@ class Add : public BinaryOperator {
 public:
 	static Add& get();
 	static void free();
-	bool apply(Stack& s);
 };
 
 class AbstractAdd : public AbstractBinaryOperation{

@@ -10,6 +10,10 @@ std::vector<std::shared_ptr<Literal>>::const_reverse_iterator Stack::iterator() 
     return storage.crbegin();
 }
 
+std::vector<std::shared_ptr<Literal>>::const_reverse_iterator Stack::end() const {
+    return storage.crend();
+}
+
 void Stack::push(const std::shared_ptr<Literal>& pl) {
     storage.push_back(pl);
 }
@@ -84,7 +88,7 @@ std::string Computer::evalLine(const std::string &s) {
     // String processing
     std::string inst;
     std::string line = s + ' ';
-    for (char c : s) {
+    for (char c : (s + ' ')) {
         if (c == ' ' && brackets == 0) {
             if (!inst.empty()) {
                 if (Operator::isOperator(inst)) {
@@ -92,7 +96,7 @@ std::string Computer::evalLine(const std::string &s) {
                         return line;
                     }
                 } else {
-                    LiteralType lt = Literal::isLiteral(line);
+                    LiteralType lt = Literal::isLiteral(inst);
                     if (lt == lerror) {
                         message = "No such operator or literal " + inst;
                         return line;
@@ -104,7 +108,7 @@ std::string Computer::evalLine(const std::string &s) {
                             return line;
                         }
                     } else {
-                        Stack::getInstance().push(Literal::makeLiteral(line, lt));
+                        Stack::getInstance().push(Literal::makeLiteral(inst, lt));
                     }
                 }
             }
