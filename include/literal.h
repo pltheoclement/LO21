@@ -4,7 +4,6 @@
 #include <string>
 #include <vector>
 #include <memory>
-
 enum LiteralType {linteger,lrational,lreal,latom,lexpression,lprogram,lerror, other};
 
 class LiteralException {

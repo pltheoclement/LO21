@@ -39,7 +39,7 @@ public :
 };
 
 class Add : public BinaryOperator {
-	std::string name = "add";
+	std::string name = "+";
 	static std::shared_ptr<Add> instance;
 	Add() = default;
 public:
@@ -131,7 +131,7 @@ public:
 
 
 class Mul : public BinaryOperator {
-	std::string name = "mul";
+	std::string name = "*";
 	static std::shared_ptr<Mul> instance;
 	Mul() = default;
 public:
@@ -219,7 +219,7 @@ public:
 
 
 class Sub : public BinaryOperator {
-	std::string name = "sub";
+	std::string name = "-";
 	static std::shared_ptr<Sub> instance;
 	Sub() = default;
 public:
@@ -315,7 +315,7 @@ public:
 };
 
 class Div : public BinaryOperator {
-	std::string name = "div";
+	std::string name = "/";
 	static std::shared_ptr<Div> instance;
 	Div() = default;
 public:
@@ -411,7 +411,7 @@ public:
 };
 
 class Mod : public BinaryOperator {
-	std::string name = "mod";
+	std::string name = "MOD";
 	static std::shared_ptr<Mod> instance;
 	Mod() = default;
 public:
@@ -435,7 +435,7 @@ public:
 };
 
 class DivE : public BinaryOperator {
-	std::string name = "DivE";
+	std::string name = "DIV";
 	static std::shared_ptr<DivE> instance;
 	DivE() = default;
 public:
@@ -459,7 +459,7 @@ public:
 };
 
 class Equ : public BinaryOperator {
-	std::string name = "Equ";
+	std::string name = "=";
 	static std::shared_ptr<Equ> instance;
 	Equ() = default;
 public:
@@ -556,7 +556,7 @@ public:
 
 
 class Dif : public BinaryOperator {
-	std::string name = "Dif";
+	std::string name = "!=";
 	static std::shared_ptr<Dif> instance;
 	Dif() = default;
 public:
@@ -653,7 +653,7 @@ public:
 
 
 class InfEqu : public BinaryOperator {
-	std::string name = "InfEqu";
+	std::string name = "=<";
 	static std::shared_ptr<InfEqu> instance;
 	InfEqu() = default;
 public:
@@ -749,7 +749,7 @@ public:
 };
 
 class Inf : public BinaryOperator {
-	std::string name = "Inf";
+	std::string name = "<";
 	static std::shared_ptr<Inf> instance;
 	Inf() = default;
 public:
@@ -845,7 +845,7 @@ public:
 };
 
 class SupEqu : public BinaryOperator {
-	std::string name = "SupEqu";
+	std::string name = ">=";
 	static std::shared_ptr<SupEqu> instance;
 	SupEqu() = default;
 public:
@@ -941,7 +941,7 @@ public:
 };
 
 class Sup : public BinaryOperator {
-	std::string name = "Sup";
+	std::string name = ">";
 	static std::shared_ptr<Sup> instance;
 	Sup() = default;
 public:
@@ -1037,7 +1037,7 @@ public:
 };
 
 class And : public BinaryOperator {
-	std::string name = "And";
+	std::string name = "AND";
 	static std::shared_ptr<And> instance;
 	And() = default;
 public:
@@ -1047,7 +1047,7 @@ public:
 };
 
 class Or : public BinaryOperator {
-	std::string name = "Or";
+	std::string name = "OR";
 	static std::shared_ptr<Or> instance;
 	Or() = default;
 public:
@@ -1057,7 +1057,7 @@ public:
 };
 
 class Swap : public BinaryOperator {
-	std::string name = "Swap";
+	std::string name = "SWAP";
 	static std::shared_ptr<Swap> instance;
 	Swap() = default;
 public:

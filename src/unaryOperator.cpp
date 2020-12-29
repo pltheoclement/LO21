@@ -106,6 +106,7 @@ shared_ptr<Not> Not::instance = nullptr;
 
 bool Not::apply(Stack& s){
 	const shared_ptr<Literal> A = s.top();
+	s.pop();
 	Literal* litA = A.get();
 	if(litA->getType() == linteger){
 		LInteger* lIntA = dynamic_cast<LInteger*>(litA);
@@ -119,7 +120,7 @@ bool Not::apply(Stack& s){
 			s.push(newLit);
 		}
 	}else{
-		const shared_ptr<LInteger> newLit = LInteger::makeLiteral(1);
+		const shared_ptr<LInteger> newLit = LInteger::makeLiteral(0);
 		s.push(newLit);
 	}
 	return true;

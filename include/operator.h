@@ -59,5 +59,6 @@ public:
 };
 
 void creationOperators();
+void destructionOperators();
 
 #endif /* HEADERS_OPERATOR_H_ */

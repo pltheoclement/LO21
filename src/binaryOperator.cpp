@@ -34,15 +34,15 @@ bool BinaryOperator::apply(Stack& s){
     LiteralType B=elB->getType();
 
     if (possibles.count(make_pair(A, B)) > 0) {// existe bien dans ta map then possibles[make_pair(A,B)].execution(); // @suppress("Method cannot be resolved")
-    	auto opp = possibles.at(std::pair<LiteralType, LiteralType>(A,B));
+    	auto opp = possibles.at(make_pair(A,B));
     	cout<<"coucou";
     	cout.flush();
     	const shared_ptr<Literal> res = opp->execution(elA, elB);
     	s.push(res);
     	return true;
     }else{
-    	s.push(elA);
     	s.push(elB);
+    	s.push(elA);
     	return false;
     }
 }
@@ -1843,12 +1843,12 @@ bool Or::apply(Stack& s){
 		LInteger* lIntB = dynamic_cast<LInteger*>(litB);
 		int valeurA = lIntA->getValue();
 		int valeurB = lIntB->getValue();
-		if(valeurA == 1 || valeurB == 1){
-			const shared_ptr<LInteger> newLit = LInteger::makeLiteral(1);
+		if(valeurA == 0 && valeurB == 0){
+			const shared_ptr<LInteger> newLit = LInteger::makeLiteral(0);
 			s.push(newLit);
 		}
 		else{
-			const shared_ptr<LInteger> newLit = LInteger::makeLiteral(0);
+			const shared_ptr<LInteger> newLit = LInteger::makeLiteral(1);
 			s.push(newLit);
 		}
 	}else{
@@ -1882,8 +1882,8 @@ bool Swap::apply(Stack& s){
 	s.pop();
 	const shared_ptr<Literal> B = s.top();
 	s.pop();
-	s.push(B);
 	s.push(A);
+	s.push(B);
 	return true;
 }
 

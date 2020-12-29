@@ -200,3 +200,28 @@ void creationOperators(){
 	Swap::get();
 }
 
+void destructionOperators(){
+	Clear::free();
+	Neg::free();
+	Not::get();
+	Dup::get();
+	Drop::get();
+	Swap::get();
+	Add::free();
+	Mul::free();
+	Sub::free();
+	Div::free();
+	Mod::free();;
+	DivE::free();
+	Equ::free();
+	Dif::free();
+	InfEqu::free();
+	Inf::free();
+	SupEqu::free();
+	Sup::free();
+	And::free();
+	Or::free();
+	Swap::free();
+
+	Operator::freeInstance();
+}
