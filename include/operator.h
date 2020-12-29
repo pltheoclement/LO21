@@ -58,4 +58,6 @@ public:
 
 };
 
+void creationOperators();
+
 #endif /* HEADERS_OPERATOR_H_ */
