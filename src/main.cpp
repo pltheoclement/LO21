@@ -19,6 +19,7 @@ using namespace std;
 int main(){
 	//Stack s = Stack::getInstance();
 	creationOperators();
+	cout<<"BLAAAAAAAAAAAAAAAAA \n";
 	const shared_ptr<Literal> l1 = LInteger::makeLiteral(19);
 	const shared_ptr<Literal> l2 = LInteger::makeLiteral(10);
 	Stack::getInstance().push(l1);

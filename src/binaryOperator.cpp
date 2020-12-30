@@ -17,7 +17,7 @@
 using namespace std;
 
 
-void BinaryOperator::addBehaviour(LiteralType A, LiteralType B, AbstractBinaryOperation* a) {
+void BinaryOperator::addBehaviour(LiteralType A, LiteralType B, shared_ptr<AbstractBinaryOperation> a) {
 	possibles[std::make_pair(A,B)]=a;
 }
 
@@ -32,11 +32,10 @@ bool BinaryOperator::apply(Stack& s){
     LiteralType A=elA->getType();
 
     LiteralType B=elB->getType();
-
     if (possibles.count(make_pair(A, B)) > 0) {// existe bien dans ta map then possibles[make_pair(A,B)].execution(); // @suppress("Method cannot be resolved")
-    	auto opp = possibles.at(make_pair(A,B));
-    	cout<<"coucou";
+    	cout << "coucou";
     	cout.flush();
+    	auto opp = possibles.at(make_pair(A,B));
     	const shared_ptr<Literal> res = opp->execution(elA, elB);
     	s.push(res);
     	return true;
@@ -45,6 +44,10 @@ bool BinaryOperator::apply(Stack& s){
     	s.push(elA);
     	return false;
     }
+}
+
+void AbstractAdd::addMyself(){
+	Add::get().addBehaviour(typeA, typeB, shared_from_this());
 }
 
 /* Début Add */
@@ -66,9 +69,6 @@ void Add::free(){
 }
 
 /* Début AddIntInt */
-AddIntInt::AddIntInt(){
-	Add::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Add, qui permettra de trouver un objet de la classe AddIntInt si on recherche l'opérateur Add pour deux Int.
-}
 
 const std::shared_ptr<Literal> AddIntInt::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un pointeur de Literal sur le shared_ptr
@@ -83,9 +83,7 @@ const std::shared_ptr<Literal> AddIntInt::execution(const std::shared_ptr<Litera
 }
 /* Fin AddIntInt */
 /* Début AddIntReal */
-AddIntReal::AddIntReal(){
-	Add::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Add, qui permettra de trouver un objet de la classe AddIntReal si on recherche l'opérateur Add pour deux Int.
-}
+
 const std::shared_ptr<Literal> AddIntReal::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un pointeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
@@ -99,17 +97,13 @@ const std::shared_ptr<Literal> AddIntReal::execution(const std::shared_ptr<Liter
 }
 /* Fin AddIntReal */
 /* Début AddRealInt */
-AddRealInt::AddRealInt(){
-	Add::get().addBehaviour(typeB, typeA, this);  //On ajoute une entrée au Map de Add, qui permettra de trouver un objet de la classe AddRealInt si on recherche l'opérateur Add pour deux Int.
-}
+
 const std::shared_ptr<Literal> AddRealInt::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	return (AddIntReal::execution(B, A));
 }
 /* Fin AddRealInt */
 /* Début AddIntRational */
-AddIntRational::AddIntRational(){
-	Add::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Add, qui permettra de trouver un objet de la classe AddIntRational si on recherche l'opérateur Add pour deux Int.
-}
+
 const std::shared_ptr<Literal> AddIntRational::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un pointeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
@@ -124,17 +118,12 @@ const std::shared_ptr<Literal> AddIntRational::execution(const std::shared_ptr<L
 }
 /* Fin AddIntRational */
 /* Début AddRationalInt */
-AddRationalInt::AddRationalInt(){
-	Add::get().addBehaviour(typeB, typeA, this);  //On ajoute une entrée au Map de Add, qui permettra de trouver un objet de la classe AddRationalInt si on recherche l'opérateur Add pour deux Int.
-}
+
 const std::shared_ptr<Literal> AddRationalInt::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	return AddIntRational::execution(B, A);
 }
 /* Fin AddRationalInt */
 /* Début AddRationalRational */
-AddRationalRational::AddRationalRational(){
-	Add::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Add, qui permettra de trouver un objet de la classe AddRationalRational si on recherche l'opérateur Add pour deux Int.
-}
 const std::shared_ptr<Literal> AddRationalRational::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un pointeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
@@ -151,9 +140,7 @@ const std::shared_ptr<Literal> AddRationalRational::execution(const std::shared_
 }
 /* Fin AddRationalRational */
 /* Début AddRealReal */
-AddRealReal::AddRealReal(){
-	Add::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Add, qui permettra de trouver un objet de la classe AddRealReal si on recherche l'opérateur Add pour deux Int.
-}
+
 const std::shared_ptr<Literal> AddRealReal::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un podoubleeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
@@ -167,9 +154,7 @@ const std::shared_ptr<Literal> AddRealReal::execution(const std::shared_ptr<Lite
 }
 /* Fin AddRealReal */
 /* Début AddRealRational */
-AddRealRational::AddRealRational(){
-	Add::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Add, qui permettra de trouver un objet de la classe AddRealRational si on recherche l'opérateur Add pour deux Int.
-}
+
 const std::shared_ptr<Literal> AddRealRational::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un podoubleeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
@@ -184,9 +169,7 @@ const std::shared_ptr<Literal> AddRealRational::execution(const std::shared_ptr<
 }
 /* Fin AddRealRational */
 /* Début AddRationalReal */
-AddRationalReal::AddRationalReal(){
-	Add::get().addBehaviour(typeB, typeA, this);  //On ajoute une entrée au Map de Add, qui permettra de trouver un objet de la classe AddRealInt si on recherche l'opérateur Add pour deux Int.
-}
+
 const std::shared_ptr<Literal> AddRationalReal::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	return AddRealRational::execution(B, A);
 }
@@ -212,10 +195,12 @@ void Mul::free(){
 	}
 }
 
-/* Début MulIntInt */
-MulIntInt::MulIntInt(){
-	Mul::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Mul, qui permettra de trouver un objet de la classe MulIntInt si on recherche l'opérateur Mul pour deux Int.
+void AbstractMul::addMyself(){
+	Mul::get().addBehaviour(typeA, typeB, shared_from_this());
 }
+
+/* Début MulIntInt */
+
 const std::shared_ptr<Literal> MulIntInt::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un pointeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
@@ -229,9 +214,7 @@ const std::shared_ptr<Literal> MulIntInt::execution(const std::shared_ptr<Litera
 }
 /* Fin MulIntInt */
 /* Début MulIntReal */
-MulIntReal::MulIntReal(){
-	Mul::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Mul, qui permettra de trouver un objet de la classe MulIntReal si on recherche l'opérateur Mul pour deux Int.
-}
+
 const std::shared_ptr<Literal> MulIntReal::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un pointeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
@@ -245,17 +228,13 @@ const std::shared_ptr<Literal> MulIntReal::execution(const std::shared_ptr<Liter
 }
 /* Fin MulIntReal */
 /* Début MulRealInt */
-MulRealInt::MulRealInt(){
-	Mul::get().addBehaviour(typeB, typeA, this);  //On ajoute une entrée au Map de Mul, qui permettra de trouver un objet de la classe MulRealInt si on recherche l'opérateur Mul pour deux Int.
-}
+
 const std::shared_ptr<Literal> MulRealInt::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	return MulIntReal::execution(B, A);
 }
 /* Fin MulRealInt */
 /* Début MulIntRational */
-MulIntRational::MulIntRational(){
-	Mul::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Mul, qui permettra de trouver un objet de la classe MulIntRational si on recherche l'opérateur Mul pour deux Int.
-}
+
 const std::shared_ptr<Literal> MulIntRational::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un pointeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
@@ -270,17 +249,13 @@ const std::shared_ptr<Literal> MulIntRational::execution(const std::shared_ptr<L
 }
 /* Fin MulIntRational */
 /* Début MulRationalInt */
-MulRationalInt::MulRationalInt(){
-		Mul::get().addBehaviour(typeB, typeA, this);  //On ajoute une entrée au Map de Mul, qui permettra de trouver un objet de la classe MulRationalInt si on recherche l'opérateur Mul pour deux Int.
-}
+
 const std::shared_ptr<Literal> MulRationalInt::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	return MulIntRational::execution(B, A);
 }
 /* Fin MulRationalInt */
 /* Début MulRationalRational */
-MulRationalRational::MulRationalRational(){
-	Mul::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Mul, qui permettra de trouver un objet de la classe MulRationalRational si on recherche l'opérateur Mul pour deux Int.
-}
+
 const std::shared_ptr<Literal> MulRationalRational::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un pointeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
@@ -297,9 +272,7 @@ const std::shared_ptr<Literal> MulRationalRational::execution(const std::shared_
 }
 /* Fin MulRationalRational */
 /* Début MulRealReal */
-MulRealReal::MulRealReal(){
-	Mul::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Mul, qui permettra de trouver un objet de la classe MulRealReal si on recherche l'opérateur Mul pour deux Int.
-}
+
 const std::shared_ptr<Literal> MulRealReal::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un podoubleeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
@@ -313,9 +286,7 @@ const std::shared_ptr<Literal> MulRealReal::execution(const std::shared_ptr<Lite
 }
 /* Fin MulRealReal */
 /* Début MulRealRational */
-MulRealRational::MulRealRational(){
-	Mul::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Mul, qui permettra de trouver un objet de la classe MulRealRational si on recherche l'opérateur Mul pour deux Int.
-}
+
 const std::shared_ptr<Literal> MulRealRational::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un podoubleeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
@@ -330,9 +301,7 @@ const std::shared_ptr<Literal> MulRealRational::execution(const std::shared_ptr<
 }
 /* Fin MulRealRational */
 /* Début MulRationalReal */
-MulRationalReal::MulRationalReal(){
-	Mul::get().addBehaviour(typeB, typeA, this);  //On ajoute une entrée au Map de Mul, qui permettra de trouver un objet de la classe MulRealInt si on recherche l'opérateur Mul pour deux Int.
-}
+
 const std::shared_ptr<Literal> MulRationalReal::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	return MulRealRational::execution(B, A);
 }
@@ -357,10 +326,12 @@ void Sub::free(){
 	}
 }
 
-/* Début SubIntInt */
-SubIntInt::SubIntInt(){
-	Sub::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Sub, qui permettra de trouver un objet de la classe SubIntInt si on recherche l'opérateur Sub pour deux Int.
+void AbstractSub::addMyself(){
+	Sub::get().addBehaviour(typeA, typeB, shared_from_this());
 }
+
+/* Début SubIntInt */
+
 const std::shared_ptr<Literal> SubIntInt::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un pointeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
@@ -374,9 +345,7 @@ const std::shared_ptr<Literal> SubIntInt::execution(const std::shared_ptr<Litera
 }
 /* Fin SubIntInt */
 /* Début SubIntReal */
-SubIntReal::SubIntReal(){
-	Sub::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Sub, qui permettra de trouver un objet de la classe SubIntReal si on recherche l'opérateur Sub pour deux Int.
-}
+
 const std::shared_ptr<Literal> SubIntReal::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un pointeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
@@ -390,9 +359,7 @@ const std::shared_ptr<Literal> SubIntReal::execution(const std::shared_ptr<Liter
 }
 /* Fin SubIntReal */
 /* Début SubRealInt */
-SubRealInt::SubRealInt(){
-	Sub::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Sub, qui permettra de trouver un objet de la classe SubRealInt si on recherche l'opérateur Sub pour deux Int.
-}
+
 const std::shared_ptr<Literal> SubRealInt::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un pointeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
@@ -407,9 +374,7 @@ const std::shared_ptr<Literal> SubRealInt::execution(const std::shared_ptr<Liter
 
 /* Fin SubRealInt */
 /* Début SubIntRational */
-SubIntRational::SubIntRational(){
-	Sub::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Sub, qui permettra de trouver un objet de la classe SubIntRational si on recherche l'opérateur Sub pour deux Int.
-}
+
 const std::shared_ptr<Literal> SubIntRational::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un pointeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
@@ -424,9 +389,7 @@ const std::shared_ptr<Literal> SubIntRational::execution(const std::shared_ptr<L
 }
 /* Fin SubIntRational */
 /* Début SubRationalInt */
-SubRationalInt::SubRationalInt(){
-	Sub::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Sub, qui permettra de trouver un objet de la classe SubRationalInt si on recherche l'opérateur Sub pour deux Int.
-}
+
 const std::shared_ptr<Literal> SubRationalInt::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un pointeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
@@ -441,9 +404,7 @@ const std::shared_ptr<Literal> SubRationalInt::execution(const std::shared_ptr<L
 }
 /* Fin SubRationalInt */
 /* Début SubRationalRational */
-SubRationalRational::SubRationalRational(){
-	Sub::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Sub, qui permettra de trouver un objet de la classe SubRationalRational si on recherche l'opérateur Sub pour deux Int.
-}
+
 const std::shared_ptr<Literal> SubRationalRational::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un pointeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
@@ -460,9 +421,7 @@ const std::shared_ptr<Literal> SubRationalRational::execution(const std::shared_
 }
 /* Fin SubRationalRational */
 /* Début SubRealReal */
-SubRealReal::SubRealReal(){
-	Sub::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Sub, qui permettra de trouver un objet de la classe SubRealReal si on recherche l'opérateur Sub pour deux Int.
-}
+
 const std::shared_ptr<Literal> SubRealReal::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un podoubleeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
@@ -476,9 +435,7 @@ const std::shared_ptr<Literal> SubRealReal::execution(const std::shared_ptr<Lite
 }
 /* Fin SubRealReal */
 /* Début SubRealRational */
-SubRealRational::SubRealRational(){
-	Sub::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Sub, qui permettra de trouver un objet de la classe SubRealRational si on recherche l'opérateur Sub pour deux Int.
-}
+
 const std::shared_ptr<Literal> SubRealRational::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un podoubleeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
@@ -493,9 +450,7 @@ const std::shared_ptr<Literal> SubRealRational::execution(const std::shared_ptr<
 }
 /* Fin SubRealRational */
 /* Début SubRationalReal */
-SubRationalReal::SubRationalReal(){
-	Sub::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Sub, qui permettra de trouver un objet de la classe SubRealInt si on recherche l'opérateur Sub pour deux Int.
-}
+
 const std::shared_ptr<Literal> SubRationalReal::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un podoubleeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
@@ -529,10 +484,12 @@ void Div::free(){
 	}
 }
 
-/* Début DivIntInt */
-DivIntInt::DivIntInt(){
-	Div::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Div, qui permettra de trouver un objet de la classe DivIntInt si on recherche l'opérateur Div pour deux Int.
+void AbstractDiv::addMyself(){
+	Div::get().addBehaviour(typeA, typeB, shared_from_this());
 }
+
+/* Début DivIntInt */
+
 const std::shared_ptr<Literal> DivIntInt::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un pointeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
@@ -546,9 +503,7 @@ const std::shared_ptr<Literal> DivIntInt::execution(const std::shared_ptr<Litera
 }
 /* Fin DivIntInt */
 /* Début DivIntReal */
-DivIntReal::DivIntReal(){
-	Div::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Div, qui permettra de trouver un objet de la classe DivIntReal si on recherche l'opérateur Div pour deux Int.
-}
+
 const std::shared_ptr<Literal> DivIntReal::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un pointeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
@@ -562,9 +517,7 @@ const std::shared_ptr<Literal> DivIntReal::execution(const std::shared_ptr<Liter
 }
 /* Fin DivIntReal */
 /* Début DivRealInt */
-DivRealInt::DivRealInt(){
-	Div::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Div, qui permettra de trouver un objet de la classe DivRealInt si on recherche l'opérateur Div pour deux Int.
-}
+
 const std::shared_ptr<Literal> DivRealInt::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un pointeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
@@ -579,9 +532,7 @@ const std::shared_ptr<Literal> DivRealInt::execution(const std::shared_ptr<Liter
 
 /* Fin DivRealInt */
 /* Début DivIntRational */
-DivIntRational::DivIntRational(){
-	Div::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Div, qui permettra de trouver un objet de la classe DivIntRational si on recherche l'opérateur Div pour deux Int.
-}
+
 const std::shared_ptr<Literal> DivIntRational::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un pointeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
@@ -596,9 +547,7 @@ const std::shared_ptr<Literal> DivIntRational::execution(const std::shared_ptr<L
 }
 /* Fin DivIntRational */
 /* Début DivRationalInt */
-DivRationalInt::DivRationalInt(){
-	Div::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Div, qui permettra de trouver un objet de la classe DivRationalInt si on recherche l'opérateur Div pour deux Int.
-}
+
 const std::shared_ptr<Literal> DivRationalInt::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un pointeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
@@ -613,9 +562,7 @@ const std::shared_ptr<Literal> DivRationalInt::execution(const std::shared_ptr<L
 }
 /* Fin DivRationalInt */
 /* Début DivRationalRational */
-DivRationalRational::DivRationalRational(){
-	Div::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Div, qui permettra de trouver un objet de la classe DivRationalRational si on recherche l'opérateur Div pour deux Int.
-}
+
 const std::shared_ptr<Literal> DivRationalRational::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un pointeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
@@ -632,9 +579,7 @@ const std::shared_ptr<Literal> DivRationalRational::execution(const std::shared_
 }
 /* Fin DivRationalRational */
 /* Début DivRealReal */
-DivRealReal::DivRealReal(){
-	Div::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Div, qui permettra de trouver un objet de la classe DivRealReal si on recherche l'opérateur Div pour deux Int.
-}
+
 const std::shared_ptr<Literal> DivRealReal::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un podoubleeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
@@ -648,9 +593,7 @@ const std::shared_ptr<Literal> DivRealReal::execution(const std::shared_ptr<Lite
 }
 /* Fin DivRealReal */
 /* Début DivRealRational */
-DivRealRational::DivRealRational(){
-	Div::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Div, qui permettra de trouver un objet de la classe DivRealRational si on recherche l'opérateur Div pour deux Int.
-}
+
 const std::shared_ptr<Literal> DivRealRational::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un podoubleeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
@@ -665,9 +608,7 @@ const std::shared_ptr<Literal> DivRealRational::execution(const std::shared_ptr<
 }
 /* Fin DivRealRational */
 /* Début DivRationalReal */
-DivRationalReal::DivRationalReal(){
-	Div::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Div, qui permettra de trouver un objet de la classe DivRealInt si on recherche l'opérateur Div pour deux Int.
-}
+
 const std::shared_ptr<Literal> DivRationalReal::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un podoubleeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
@@ -701,10 +642,12 @@ void Mod::free(){
 	}
 }
 
-/* Début ModIntInt */
-ModIntInt::ModIntInt(){
-	Mod::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Mod, qui permettra de trouver un objet de la classe ModIntInt si on recherche l'opérateur Mod pour deux Int.
+void AbstractMod::addMyself(){
+	Mod::get().addBehaviour(typeA, typeB, shared_from_this());
 }
+
+/* Début ModIntInt */
+
 const std::shared_ptr<Literal> ModIntInt::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un pointeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
@@ -737,10 +680,13 @@ void DivE::free(){
 	}
 }
 
-/* Début DivEIntInt */
-DivEIntInt::DivEIntInt(){
-	DivE::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de DivE, qui permettra de trouver un objet de la classe DivEIntInt si on recherche l'opérateur DivE pour deux Int.
+void AbstarctDivE::addMyself(){
+	DivE::get().addBehaviour(typeA, typeB, shared_from_this());
 }
+
+
+/* Début DivEIntInt */
+
 const std::shared_ptr<Literal> DivEIntInt::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un pointeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
@@ -773,10 +719,13 @@ void Equ::free(){
 	}
 }
 
-/* Début EquIntInt */
-EquIntInt::EquIntInt(){
-	Equ::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Equ, qui permettra de trouver un objet de la classe EquIntInt si on recherche l'opérateur Equ pour deux Int.
+void AbstractEqu::addMyself(){
+	Equ::get().addBehaviour(typeA, typeB, shared_from_this());
 }
+
+
+/* Début EquIntInt */
+
 const std::shared_ptr<Literal> EquIntInt::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un pointeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
@@ -790,9 +739,7 @@ const std::shared_ptr<Literal> EquIntInt::execution(const std::shared_ptr<Litera
 }
 /* Fin EquIntInt */
 /* Début EquIntReal */
-EquIntReal::EquIntReal(){
-	Equ::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Equ, qui permettra de trouver un objet de la classe EquIntReal si on recherche l'opérateur Equ pour deux Int.
-}
+
 const std::shared_ptr<Literal> EquIntReal::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un pointeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
@@ -806,9 +753,7 @@ const std::shared_ptr<Literal> EquIntReal::execution(const std::shared_ptr<Liter
 }
 /* Fin EquIntReal */
 /* Début EquRealInt */
-EquRealInt::EquRealInt(){
-	Equ::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Equ, qui permettra de trouver un objet de la classe EquRealInt si on recherche l'opérateur Equ pour deux Int.
-}
+
 const std::shared_ptr<Literal> EquRealInt::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un pointeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
@@ -823,9 +768,7 @@ const std::shared_ptr<Literal> EquRealInt::execution(const std::shared_ptr<Liter
 
 /* Fin EquRealInt */
 /* Début EquIntRational */
-EquIntRational::EquIntRational(){
-	Equ::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Equ, qui permettra de trouver un objet de la classe EquIntRational si on recherche l'opérateur Equ pour deux Int.
-}
+
 const std::shared_ptr<Literal> EquIntRational::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un pointeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
@@ -840,9 +783,7 @@ const std::shared_ptr<Literal> EquIntRational::execution(const std::shared_ptr<L
 }
 /* Fin EquIntRational */
 /* Début EquRationalInt */
-EquRationalInt::EquRationalInt(){
-	Equ::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Equ, qui permettra de trouver un objet de la classe EquRationalInt si on recherche l'opérateur Equ pour deux Int.
-}
+
 const std::shared_ptr<Literal> EquRationalInt::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un pointeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
@@ -857,9 +798,7 @@ const std::shared_ptr<Literal> EquRationalInt::execution(const std::shared_ptr<L
 }
 /* Fin EquRationalInt */
 /* Début EquRationalRational */
-EquRationalRational::EquRationalRational(){
-	Equ::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Equ, qui permettra de trouver un objet de la classe EquRationalRational si on recherche l'opérateur Equ pour deux Int.
-}
+
 const std::shared_ptr<Literal> EquRationalRational::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un pointeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
@@ -875,9 +814,7 @@ const std::shared_ptr<Literal> EquRationalRational::execution(const std::shared_
 }
 /* Fin EquRationalRational */
 /* Début EquRealReal */
-EquRealReal::EquRealReal(){
-	Equ::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Equ, qui permettra de trouver un objet de la classe EquRealReal si on recherche l'opérateur Equ pour deux Int.
-}
+
 const std::shared_ptr<Literal> EquRealReal::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un podoubleeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
@@ -891,9 +828,7 @@ const std::shared_ptr<Literal> EquRealReal::execution(const std::shared_ptr<Lite
 }
 /* Fin EquRealReal */
 /* Début EquRealRational */
-EquRealRational::EquRealRational(){
-	Equ::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Equ, qui permettra de trouver un objet de la classe EquRealRational si on recherche l'opérateur Equ pour deux Int.
-}
+
 const std::shared_ptr<Literal> EquRealRational::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un podoubleeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
@@ -908,9 +843,7 @@ const std::shared_ptr<Literal> EquRealRational::execution(const std::shared_ptr<
 }
 /* Fin EquRealRational */
 /* Début EquRationalReal */
-EquRationalReal::EquRationalReal(){
-	Equ::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Equ, qui permettra de trouver un objet de la classe EquRealInt si on recherche l'opérateur Equ pour deux Int.
-}
+
 const std::shared_ptr<Literal> EquRationalReal::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un podoubleeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
@@ -944,10 +877,13 @@ void Dif::free(){
 	}
 }
 
-/* Début DifIntInt */
-DifIntInt::DifIntInt(){
-	Dif::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Dif, qui permettra de trouver un objet de la classe DifIntInt si on recherche l'opérateur Dif pour deux Int.
+void AbstractDif::addMyself(){
+	Dif::get().addBehaviour(typeA, typeB, shared_from_this());
 }
+
+
+/* Début DifIntInt */
+
 const std::shared_ptr<Literal> DifIntInt::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un pointeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
@@ -961,9 +897,7 @@ const std::shared_ptr<Literal> DifIntInt::execution(const std::shared_ptr<Litera
 }
 /* Fin DifIntInt */
 /* Début DifIntReal */
-DifIntReal::DifIntReal(){
-	Dif::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Dif, qui permettra de trouver un objet de la classe DifIntReal si on recherche l'opérateur Dif pour deux Int.
-}
+
 const std::shared_ptr<Literal> DifIntReal::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un pointeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
@@ -977,9 +911,7 @@ const std::shared_ptr<Literal> DifIntReal::execution(const std::shared_ptr<Liter
 }
 /* Fin DifIntReal */
 /* Début DifRealInt */
-DifRealInt::DifRealInt(){
-	Dif::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Dif, qui permettra de trouver un objet de la classe DifRealInt si on recherche l'opérateur Dif pour deux Int.
-}
+
 const std::shared_ptr<Literal> DifRealInt::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un pointeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
@@ -994,9 +926,7 @@ const std::shared_ptr<Literal> DifRealInt::execution(const std::shared_ptr<Liter
 
 /* Fin DifRealInt */
 /* Début DifIntRational */
-DifIntRational::DifIntRational(){
-	Dif::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Dif, qui permettra de trouver un objet de la classe DifIntRational si on recherche l'opérateur Dif pour deux Int.
-}
+
 const std::shared_ptr<Literal> DifIntRational::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un pointeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
@@ -1011,9 +941,7 @@ const std::shared_ptr<Literal> DifIntRational::execution(const std::shared_ptr<L
 }
 /* Fin DifIntRational */
 /* Début DifRationalInt */
-DifRationalInt::DifRationalInt(){
-	Dif::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Dif, qui permettra de trouver un objet de la classe DifRationalInt si on recherche l'opérateur Dif pour deux Int.
-}
+
 const std::shared_ptr<Literal> DifRationalInt::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un pointeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
@@ -1028,9 +956,7 @@ const std::shared_ptr<Literal> DifRationalInt::execution(const std::shared_ptr<L
 }
 /* Fin DifRationalInt */
 /* Début DifRationalRational */
-DifRationalRational::DifRationalRational(){
-	Dif::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Dif, qui permettra de trouver un objet de la classe DifRationalRational si on recherche l'opérateur Dif pour deux Int.
-}
+
 const std::shared_ptr<Literal> DifRationalRational::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un pointeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
@@ -1046,9 +972,7 @@ const std::shared_ptr<Literal> DifRationalRational::execution(const std::shared_
 }
 /* Fin DifRationalRational */
 /* Début DifRealReal */
-DifRealReal::DifRealReal(){
-	Dif::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Dif, qui permettra de trouver un objet de la classe DifRealReal si on recherche l'opérateur Dif pour deux Int.
-}
+
 const std::shared_ptr<Literal> DifRealReal::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un podoubleeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
@@ -1062,9 +986,7 @@ const std::shared_ptr<Literal> DifRealReal::execution(const std::shared_ptr<Lite
 }
 /* Fin DifRealReal */
 /* Début DifRealRational */
-DifRealRational::DifRealRational(){
-	Dif::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Dif, qui permettra de trouver un objet de la classe DifRealRational si on recherche l'opérateur Dif pour deux Int.
-}
+
 const std::shared_ptr<Literal> DifRealRational::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un podoubleeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
@@ -1079,9 +1001,7 @@ const std::shared_ptr<Literal> DifRealRational::execution(const std::shared_ptr<
 }
 /* Fin DifRealRational */
 /* Début DifRationalReal */
-DifRationalReal::DifRationalReal(){
-	Dif::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Dif, qui permettra de trouver un objet de la classe DifRealInt si on recherche l'opérateur Dif pour deux Int.
-}
+
 const std::shared_ptr<Literal> DifRationalReal::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un podoubleeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
@@ -1115,10 +1035,13 @@ void InfEqu::free(){
 	}
 }
 
-/* Début InfEquIntInt */
-InfEquIntInt::InfEquIntInt(){
-	InfEqu::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de InfEqu, qui permettra de trouver un objet de la classe InfEquIntInt si on recherche l'opérateur InfEqu pour deux Int.
+void AbstractInfEqu::addMyself(){
+	InfEqu::get().addBehaviour(typeA, typeB, shared_from_this());
 }
+
+
+/* Début InfEquIntInt */
+
 const std::shared_ptr<Literal> InfEquIntInt::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un pointeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
@@ -1132,9 +1055,7 @@ const std::shared_ptr<Literal> InfEquIntInt::execution(const std::shared_ptr<Lit
 }
 /* Fin InfEquIntInt */
 /* Début InfEquIntReal */
-InfEquIntReal::InfEquIntReal(){
-	InfEqu::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de InfEqu, qui permettra de trouver un objet de la classe InfEquIntReal si on recherche l'opérateur InfEqu pour deux Int.
-}
+
 const std::shared_ptr<Literal> InfEquIntReal::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un pointeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
@@ -1148,9 +1069,7 @@ const std::shared_ptr<Literal> InfEquIntReal::execution(const std::shared_ptr<Li
 }
 /* Fin InfEquIntReal */
 /* Début InfEquRealInt */
-InfEquRealInt::InfEquRealInt(){
-	InfEqu::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de InfEqu, qui permettra de trouver un objet de la classe InfEquRealInt si on recherche l'opérateur InfEqu pour deux Int.
-}
+
 const std::shared_ptr<Literal> InfEquRealInt::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un pointeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
@@ -1165,9 +1084,7 @@ const std::shared_ptr<Literal> InfEquRealInt::execution(const std::shared_ptr<Li
 
 /* Fin InfEquRealInt */
 /* Début InfEquIntRational */
-InfEquIntRational::InfEquIntRational(){
-	InfEqu::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de InfEqu, qui permettra de trouver un objet de la classe InfEquIntRational si on recherche l'opérateur InfEqu pour deux Int.
-}
+
 const std::shared_ptr<Literal> InfEquIntRational::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un pointeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
@@ -1182,9 +1099,7 @@ const std::shared_ptr<Literal> InfEquIntRational::execution(const std::shared_pt
 }
 /* Fin InfEquIntRational */
 /* Début InfEquRationalInt */
-InfEquRationalInt::InfEquRationalInt(){
-	InfEqu::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de InfEqu, qui permettra de trouver un objet de la classe InfEquRationalInt si on recherche l'opérateur InfEqu pour deux Int.
-}
+
 const std::shared_ptr<Literal> InfEquRationalInt::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un pointeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
@@ -1199,9 +1114,7 @@ const std::shared_ptr<Literal> InfEquRationalInt::execution(const std::shared_pt
 }
 /* Fin InfEquRationalInt */
 /* Début InfEquRationalRational */
-InfEquRationalRational::InfEquRationalRational(){
-	InfEqu::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de InfEqu, qui permettra de trouver un objet de la classe InfEquRationalRational si on recherche l'opérateur InfEqu pour deux Int.
-}
+
 const std::shared_ptr<Literal> InfEquRationalRational::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un pointeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
@@ -1217,9 +1130,7 @@ const std::shared_ptr<Literal> InfEquRationalRational::execution(const std::shar
 }
 /* Fin InfEquRationalRational */
 /* Début InfEquRealReal */
-InfEquRealReal::InfEquRealReal(){
-	InfEqu::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de InfEqu, qui permettra de trouver un objet de la classe InfEquRealReal si on recherche l'opérateur InfEqu pour deux Int.
-}
+
 const std::shared_ptr<Literal> InfEquRealReal::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un podoubleeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
@@ -1233,9 +1144,7 @@ const std::shared_ptr<Literal> InfEquRealReal::execution(const std::shared_ptr<L
 }
 /* Fin InfEquRealReal */
 /* Début InfEquRealRational */
-InfEquRealRational::InfEquRealRational(){
-	InfEqu::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de InfEqu, qui permettra de trouver un objet de la classe InfEquRealRational si on recherche l'opérateur InfEqu pour deux Int.
-}
+
 const std::shared_ptr<Literal> InfEquRealRational::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un podoubleeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
@@ -1250,9 +1159,7 @@ const std::shared_ptr<Literal> InfEquRealRational::execution(const std::shared_p
 }
 /* Fin InfEquRealRational */
 /* Début InfEquRationalReal */
-InfEquRationalReal::InfEquRationalReal(){
-	InfEqu::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de InfEqu, qui permettra de trouver un objet de la classe InfEquRealInt si on recherche l'opérateur InfEqu pour deux Int.
-}
+
 const std::shared_ptr<Literal> InfEquRationalReal::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un podoubleeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
@@ -1286,10 +1193,13 @@ void Inf::free(){
 	}
 }
 
-/* Début InfIntInt */
-InfIntInt::InfIntInt(){
-	Inf::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Inf, qui permettra de trouver un objet de la classe InfIntInt si on recherche l'opérateur Inf pour deux Int.
+void AbstractInf::addMyself(){
+	Inf::get().addBehaviour(typeA, typeB, shared_from_this());
 }
+
+
+/* Début InfIntInt */
+
 const std::shared_ptr<Literal> InfIntInt::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un pointeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
@@ -1303,9 +1213,7 @@ const std::shared_ptr<Literal> InfIntInt::execution(const std::shared_ptr<Litera
 }
 /* Fin InfIntInt */
 /* Début InfIntReal */
-InfIntReal::InfIntReal(){
-	Inf::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Inf, qui permettra de trouver un objet de la classe InfIntReal si on recherche l'opérateur Inf pour deux Int.
-}
+
 const std::shared_ptr<Literal> InfIntReal::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un pointeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
@@ -1319,9 +1227,7 @@ const std::shared_ptr<Literal> InfIntReal::execution(const std::shared_ptr<Liter
 }
 /* Fin InfIntReal */
 /* Début InfRealInt */
-InfRealInt::InfRealInt(){
-	Inf::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Inf, qui permettra de trouver un objet de la classe InfRealInt si on recherche l'opérateur Inf pour deux Int.
-}
+
 const std::shared_ptr<Literal> InfRealInt::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un pointeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
@@ -1336,9 +1242,7 @@ const std::shared_ptr<Literal> InfRealInt::execution(const std::shared_ptr<Liter
 
 /* Fin InfRealInt */
 /* Début InfIntRational */
-InfIntRational::InfIntRational(){
-	Inf::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Inf, qui permettra de trouver un objet de la classe InfIntRational si on recherche l'opérateur Inf pour deux Int.
-}
+
 const std::shared_ptr<Literal> InfIntRational::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un pointeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
@@ -1353,9 +1257,7 @@ const std::shared_ptr<Literal> InfIntRational::execution(const std::shared_ptr<L
 }
 /* Fin InfIntRational */
 /* Début InfRationalInt */
-InfRationalInt::InfRationalInt(){
-	Inf::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Inf, qui permettra de trouver un objet de la classe InfRationalInt si on recherche l'opérateur Inf pour deux Int.
-}
+
 const std::shared_ptr<Literal> InfRationalInt::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un pointeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
@@ -1370,9 +1272,7 @@ const std::shared_ptr<Literal> InfRationalInt::execution(const std::shared_ptr<L
 }
 /* Fin InfRationalInt */
 /* Début InfRationalRational */
-InfRationalRational::InfRationalRational(){
-	Inf::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Inf, qui permettra de trouver un objet de la classe InfRationalRational si on recherche l'opérateur Inf pour deux Int.
-}
+
 const std::shared_ptr<Literal> InfRationalRational::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un pointeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
@@ -1388,9 +1288,7 @@ const std::shared_ptr<Literal> InfRationalRational::execution(const std::shared_
 }
 /* Fin InfRationalRational */
 /* Début InfRealReal */
-InfRealReal::InfRealReal(){
-	Inf::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Inf, qui permettra de trouver un objet de la classe InfRealReal si on recherche l'opérateur Inf pour deux Int.
-}
+
 const std::shared_ptr<Literal> InfRealReal::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un podoubleeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
@@ -1404,9 +1302,7 @@ const std::shared_ptr<Literal> InfRealReal::execution(const std::shared_ptr<Lite
 }
 /* Fin InfRealReal */
 /* Début InfRealRational */
-InfRealRational::InfRealRational(){
-	Inf::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Inf, qui permettra de trouver un objet de la classe InfRealRational si on recherche l'opérateur Inf pour deux Int.
-}
+
 const std::shared_ptr<Literal> InfRealRational::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un podoubleeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
@@ -1421,9 +1317,7 @@ const std::shared_ptr<Literal> InfRealRational::execution(const std::shared_ptr<
 }
 /* Fin InfRealRational */
 /* Début InfRationalReal */
-InfRationalReal::InfRationalReal(){
-	Inf::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Inf, qui permettra de trouver un objet de la classe InfRealInt si on recherche l'opérateur Inf pour deux Int.
-}
+
 const std::shared_ptr<Literal> InfRationalReal::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un podoubleeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
@@ -1458,10 +1352,13 @@ void SupEqu::free(){
 	}
 }
 
-/* Début SupEquIntInt */
-SupEquIntInt::SupEquIntInt(){
-	SupEqu::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de SupEqu, qui permettra de trouver un objet de la classe SupEquIntInt si on recherche l'opérateur SupEqu pour deux Int.
+void AbstractSupEqu::addMyself(){
+	SupEqu::get().addBehaviour(typeA, typeB, shared_from_this());
 }
+
+
+/* Début SupEquIntInt */
+
 const std::shared_ptr<Literal> SupEquIntInt::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un pointeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
@@ -1475,9 +1372,7 @@ const std::shared_ptr<Literal> SupEquIntInt::execution(const std::shared_ptr<Lit
 }
 /* Fin SupEquIntInt */
 /* Début SupEquIntReal */
-SupEquIntReal::SupEquIntReal(){
-	SupEqu::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de SupEqu, qui permettra de trouver un objet de la classe SupEquIntReal si on recherche l'opérateur SupEqu pour deux Int.
-}
+
 const std::shared_ptr<Literal> SupEquIntReal::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un pointeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
@@ -1491,9 +1386,7 @@ const std::shared_ptr<Literal> SupEquIntReal::execution(const std::shared_ptr<Li
 }
 /* Fin SupEquIntReal */
 /* Début SupEquRealInt */
-SupEquRealInt::SupEquRealInt(){
-	SupEqu::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de SupEqu, qui permettra de trouver un objet de la classe SupEquRealInt si on recherche l'opérateur SupEqu pour deux Int.
-}
+
 const std::shared_ptr<Literal> SupEquRealInt::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un pointeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
@@ -1508,9 +1401,7 @@ const std::shared_ptr<Literal> SupEquRealInt::execution(const std::shared_ptr<Li
 
 /* Fin SupEquRealInt */
 /* Début SupEquIntRational */
-SupEquIntRational::SupEquIntRational(){
-	SupEqu::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de SupEqu, qui permettra de trouver un objet de la classe SupEquIntRational si on recherche l'opérateur SupEqu pour deux Int.
-}
+
 const std::shared_ptr<Literal> SupEquIntRational::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un pointeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
@@ -1525,9 +1416,7 @@ const std::shared_ptr<Literal> SupEquIntRational::execution(const std::shared_pt
 }
 /* Fin SupEquIntRational */
 /* Début SupEquRationalInt */
-SupEquRationalInt::SupEquRationalInt(){
-	SupEqu::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de SupEqu, qui permettra de trouver un objet de la classe SupEquRationalInt si on recherche l'opérateur SupEqu pour deux Int.
-}
+
 const std::shared_ptr<Literal> SupEquRationalInt::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un pointeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
@@ -1542,9 +1431,7 @@ const std::shared_ptr<Literal> SupEquRationalInt::execution(const std::shared_pt
 }
 /* Fin SupEquRationalInt */
 /* Début SupEquRationalRational */
-SupEquRationalRational::SupEquRationalRational(){
-	SupEqu::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de SupEqu, qui permettra de trouver un objet de la classe SupEquRationalRational si on recherche l'opérateur SupEqu pour deux Int.
-}
+
 const std::shared_ptr<Literal> SupEquRationalRational::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un pointeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
@@ -1560,9 +1447,7 @@ const std::shared_ptr<Literal> SupEquRationalRational::execution(const std::shar
 }
 /* Fin SupEquRationalRational */
 /* Début SupEquRealReal */
-SupEquRealReal::SupEquRealReal(){
-	SupEqu::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de SupEqu, qui permettra de trouver un objet de la classe SupEquRealReal si on recherche l'opérateur SupEqu pour deux Int.
-}
+
 const std::shared_ptr<Literal> SupEquRealReal::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un podoubleeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
@@ -1576,9 +1461,7 @@ const std::shared_ptr<Literal> SupEquRealReal::execution(const std::shared_ptr<L
 }
 /* Fin SupEquRealReal */
 /* Début SupEquRealRational */
-SupEquRealRational::SupEquRealRational(){
-	SupEqu::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de SupEqu, qui permettra de trouver un objet de la classe SupEquRealRational si on recherche l'opérateur SupEqu pour deux Int.
-}
+
 const std::shared_ptr<Literal> SupEquRealRational::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un podoubleeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
@@ -1593,9 +1476,7 @@ const std::shared_ptr<Literal> SupEquRealRational::execution(const std::shared_p
 }
 /* Fin SupEquRealRational */
 /* Début SupEquRationalReal */
-SupEquRationalReal::SupEquRationalReal(){
-	SupEqu::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de SupEqu, qui permettra de trouver un objet de la classe SupEquRealInt si on recherche l'opérateur SupEqu pour deux Int.
-}
+
 const std::shared_ptr<Literal> SupEquRationalReal::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un podoubleeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
@@ -1629,10 +1510,13 @@ void Sup::free(){
 	}
 }
 
-/* Début SupIntInt */
-SupIntInt::SupIntInt(){
-	Sup::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Sup, qui permettra de trouver un objet de la classe SupIntInt si on recherche l'opérateur Sup pour deux Int.
+void AbstractSup::addMyself(){
+	Sup::get().addBehaviour(typeA, typeB, shared_from_this());
 }
+
+
+/* Début SupIntInt */
+
 const std::shared_ptr<Literal> SupIntInt::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un pointeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
@@ -1646,9 +1530,7 @@ const std::shared_ptr<Literal> SupIntInt::execution(const std::shared_ptr<Litera
 }
 /* Fin SupIntInt */
 /* Début SupIntReal */
-SupIntReal::SupIntReal(){
-	Sup::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Sup, qui permettra de trouver un objet de la classe SupIntReal si on recherche l'opérateur Sup pour deux Int.
-}
+
 const std::shared_ptr<Literal> SupIntReal::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un pointeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
@@ -1662,9 +1544,7 @@ const std::shared_ptr<Literal> SupIntReal::execution(const std::shared_ptr<Liter
 }
 /* Fin SupIntReal */
 /* Début SupRealInt */
-SupRealInt::SupRealInt(){
-	Sup::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Sup, qui permettra de trouver un objet de la classe SupRealInt si on recherche l'opérateur Sup pour deux Int.
-}
+
 const std::shared_ptr<Literal> SupRealInt::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un pointeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
@@ -1679,9 +1559,7 @@ const std::shared_ptr<Literal> SupRealInt::execution(const std::shared_ptr<Liter
 
 /* Fin SupRealInt */
 /* Début SupIntRational */
-SupIntRational::SupIntRational(){
-	Sup::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Sup, qui permettra de trouver un objet de la classe SupIntRational si on recherche l'opérateur Sup pour deux Int.
-}
+
 const std::shared_ptr<Literal> SupIntRational::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un pointeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
@@ -1696,9 +1574,7 @@ const std::shared_ptr<Literal> SupIntRational::execution(const std::shared_ptr<L
 }
 /* Fin SupIntRational */
 /* Début SupRationalInt */
-SupRationalInt::SupRationalInt(){
-	Sup::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Sup, qui permettra de trouver un objet de la classe SupRationalInt si on recherche l'opérateur Sup pour deux Int.
-}
+
 const std::shared_ptr<Literal> SupRationalInt::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un pointeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
@@ -1713,9 +1589,7 @@ const std::shared_ptr<Literal> SupRationalInt::execution(const std::shared_ptr<L
 }
 /* Fin SupRationalInt */
 /* Début SupRationalRational */
-SupRationalRational::SupRationalRational(){
-	Sup::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Sup, qui permettra de trouver un objet de la classe SupRationalRational si on recherche l'opérateur Sup pour deux Int.
-}
+
 const std::shared_ptr<Literal> SupRationalRational::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un pointeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
@@ -1731,9 +1605,7 @@ const std::shared_ptr<Literal> SupRationalRational::execution(const std::shared_
 }
 /* Fin SupRationalRational */
 /* Début SupRealReal */
-SupRealReal::SupRealReal(){
-	Sup::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Sup, qui permettra de trouver un objet de la classe SupRealReal si on recherche l'opérateur Sup pour deux Int.
-}
+
 const std::shared_ptr<Literal> SupRealReal::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un podoubleeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
@@ -1747,9 +1619,7 @@ const std::shared_ptr<Literal> SupRealReal::execution(const std::shared_ptr<Lite
 }
 /* Fin SupRealReal */
 /* Début SupRealRational */
-SupRealRational::SupRealRational(){
-	Sup::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Sup, qui permettra de trouver un objet de la classe SupRealRational si on recherche l'opérateur Sup pour deux Int.
-}
+
 const std::shared_ptr<Literal> SupRealRational::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un podoubleeur de Literal sur le shared_ptr
 	Literal* litB = B.get();
@@ -1764,9 +1634,7 @@ const std::shared_ptr<Literal> SupRealRational::execution(const std::shared_ptr<
 }
 /* Fin SupRealRational */
 /* Début SupRationalReal */
-SupRationalReal::SupRationalReal(){
-	Sup::get().addBehaviour(typeA, typeB, this);  //On ajoute une entrée au Map de Sup, qui permettra de trouver un objet de la classe SupRealInt si on recherche l'opérateur Sup pour deux Int.
-}
+
 const std::shared_ptr<Literal> SupRationalReal::execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B){
 	Literal* litA = A.get(); //On récupère un podoubleeur de Literal sur le shared_ptr
 	Literal* litB = B.get();

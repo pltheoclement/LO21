@@ -16,47 +16,51 @@
 #include "literal.h"
 #include "operator.h"
 
-class AbstractUnaryOperation : public AbstractOperation {
+class AbstractUnaryOperation : public AbstractOperation, public std::enable_shared_from_this<AbstractUnaryOperation> {
+protected:
 	LiteralType typeA;
 public:
 	AbstractUnaryOperation() = default;
 	virtual const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A) = 0;
 	virtual ~AbstractUnaryOperation() = default;
+	virtual void addMyself() = 0;
 };
 
 class AbstractNeg : public AbstractUnaryOperation{
 public:
 	AbstractNeg() = default;
 	~AbstractNeg() = default;
+	void addMyself() override;
 };
 
 class NegInt : public AbstractNeg{
+protected:
 	LiteralType typeA = linteger;
 public:
-	NegInt();
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A);
+	~NegInt(){std::cout<<"Chui plus la";}
 };
 
 class NegReal : public AbstractNeg{
+protected:
 	LiteralType typeA = lreal;
 public:
-	NegReal();
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A);
 };
 
 class NegRational : public AbstractNeg{
+protected:
 	LiteralType typeA = lrational;
 public:
-	NegRational();
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A);
 };
 
 class UnaryOperator : public TypeOperator{
-	std::map<LiteralType, AbstractUnaryOperation*> possibles;
+	std::map<LiteralType, std::shared_ptr<AbstractUnaryOperation>> possibles;
 public :
     virtual ~UnaryOperator();
     UnaryOperator(){};
-    void addBehaviour(LiteralType A, AbstractUnaryOperation* a);
+    void addBehaviour(LiteralType A, std::shared_ptr<AbstractUnaryOperation> a);
     bool apply(Stack& s);
 };
 
