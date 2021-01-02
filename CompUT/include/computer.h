@@ -7,11 +7,9 @@
 #include <map>
 
 #include "literal.h"
-#include <QObject>
 
 
-class Stack : public QObject {
-    Q_OBJECT
+class Stack{
 
     std::vector<std::shared_ptr<Literal>> storage;
     Stack() = default;
@@ -23,10 +21,6 @@ public:
     void pop();
     const std::shared_ptr<Literal>& top() const;
     size_t size() const;
-
-
-signals:
-    void modificationEtat();
 
 };
 
@@ -40,6 +34,7 @@ public:
     void storeVariable(const std::string& name, const Literal& l);
     void forgetVariable(const std::string& name);
     void pushVariable(const std::string& name);
+    std::string getVariable(const std::string& name);
     std::string evalLine(const std::string& s);
 };
 #endif

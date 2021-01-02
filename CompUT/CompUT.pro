@@ -1,22 +1,21 @@
 QT += widgets
 
 SOURCES += \
-    main.cpp \
-    qCompUT.cpp \
-    src/Literal.cpp \
+    src/main.cpp \
     src/Operator.cpp \
     src/binaryOperator.cpp \
     src/computer.cpp \
+    src/literal.cpp \
+    src/qCompUT.cpp \
     src/ternaryOperator.cpp \
     src/unaryOperator.cpp
 
 HEADERS += \
-    computer.h \
-    include/binaryOperator.h \
     include/computer.h \
+    include/binaryOperator.h \
     include/literal.h \
     include/operator.h \
+    include/qCompUT.h \
     include/ternaryOperator.h \
-    include/unaryOperator.h \
-    qCompUT.h \
-    qcomputer.h
+    include/unaryOperator.h
+

@@ -7,25 +7,40 @@
 #include <iostream>
 #include <string>
 #include <map>
+#include <QDebug>
 
 #include "../include/operator.h"
 #include "../include/unaryOperator.h"
+#include "../include/computer.h"
 #include "../include/literal.h"
 
 using namespace std;
+
+void UnaryOperator::addBehaviour(LiteralType A, std::shared_ptr<AbstractUnaryOperation> a) {
+	possibles[A]=a;
+}
 
 bool UnaryOperator::apply(Stack& s){
 
 	const shared_ptr<Literal> elA = s.top();// le premier argument
     LiteralType A=elA->getType();
+
+    qDebug() << linteger;
+
     if (possibles.count(A) > 0) {// existe bien dans ta map then possibles[make_pair(A,B)].execution(); // @suppress("Method cannot be resolved")
+
     	s.pop();
     	const shared_ptr<Literal> res = possibles[A]->execution(elA);
+
     	s.push(res);
-        return true;
+    	return true;
+    }else{
+    	return false;
     }
     return false;
 }
+
+UnaryOperator::~UnaryOperator(){}
 
 /* Début opérateur NEG */
 shared_ptr<Neg> Neg::instance = nullptr;
@@ -45,24 +60,13 @@ void Neg::free(){
 	}
 }
 
-/* Début NegInt */
-NegInt::NegInt(){
-	Neg::get().addBehaviour(typeA, this);
+void AbstractNeg::addMyself(){
+	Neg::get().addBehaviour(this->typeA, shared_from_this());
 }
-const shared_ptr<Literal> NegInt::execution(const shared_ptr<Literal> A){
-	Literal* litA = A.get();
-	LInteger* lIntA = dynamic_cast<LInteger*>(litA);
-	int valeur = lIntA->getValue();
-	const int newVal = -1 * valeur;
-	const shared_ptr<LInteger> newLit = LInteger::makeLiteral(newVal);
-	//newLit
-	return newLit;
-}
-/* Fin NegInt */
+
+
+
 /* Début NegReal */
-NegReal::NegReal(){
-	Neg::get().addBehaviour(typeA, this);
-}
 const shared_ptr<Literal> NegReal::execution(const shared_ptr<Literal> A){
 	Literal* litA = A.get();
 	LReal* lRealA = dynamic_cast<LReal*>(litA);
@@ -73,9 +77,6 @@ const shared_ptr<Literal> NegReal::execution(const shared_ptr<Literal> A){
 }
 /* Fin NegReal */
 /* Début NegRational */
-NegRational::NegRational(){
-	Neg::get().addBehaviour(typeA, this);
-}
 const shared_ptr<Literal> NegRational::execution(const shared_ptr<Literal> A){
 	Literal* litA = A.get();
 	LRational* lRationalA = dynamic_cast<LRational*>(litA);
@@ -86,12 +87,47 @@ const shared_ptr<Literal> NegRational::execution(const shared_ptr<Literal> A){
 	return newLit;
 }
 /* Fin NegRational */
+/* Début NegInt */
+const shared_ptr<Literal> NegInt::execution(const shared_ptr<Literal> A){
 
+	Literal* litA = A.get();
+	LInteger* lIntA = dynamic_cast<LInteger*>(litA);
+	int valeur = lIntA->getValue();
+	const int newVal = -1 * valeur;
+	const shared_ptr<LInteger> newLit = LInteger::makeLiteral(newVal);
+	//newLit
+	return newLit;
+}
+/* Fin NegInt */
 /* fin opérateur NEG */
 
 
 /* Début opérateur Not */
 shared_ptr<Not> Not::instance = nullptr;
+
+
+
+bool Not::apply(Stack& s){
+	const shared_ptr<Literal> A = s.top();
+	s.pop();
+	Literal* litA = A.get();
+	if(litA->getType() == linteger){
+		LInteger* lIntA = dynamic_cast<LInteger*>(litA);
+		int valeur = lIntA->getValue();
+		if(valeur == 0){
+			const shared_ptr<LInteger> newLit = LInteger::makeLiteral(1);
+			s.push(newLit);
+		}
+		else{
+			const shared_ptr<LInteger> newLit = LInteger::makeLiteral(0);
+			s.push(newLit);
+		}
+	}else{
+		const shared_ptr<LInteger> newLit = LInteger::makeLiteral(0);
+		s.push(newLit);
+	}
+	return true;
+}
 
 Not& Not::get(){
 	if(instance == nullptr){
@@ -106,27 +142,6 @@ void Not::free(){
 		Operator::delOperator(instance->name);
 		instance = nullptr;
 	}
-}
-
-bool Not::apply(Stack& s){
-	const shared_ptr<Literal> A = s.top();
-	Literal* litA = A.get();
-	if(litA->getType() == linteger){
-		LInteger* lIntA = dynamic_cast<LInteger*>(litA);
-		int valeur = lIntA->getValue();
-		if(valeur == 1){
-				const shared_ptr<LInteger> newLit = LInteger::makeLiteral(1);
-				s.push(newLit);
-			}
-			else{
-				const shared_ptr<LInteger> newLit = LInteger::makeLiteral(0);
-				s.push(newLit);
-			}
-	}else{
-		const shared_ptr<LInteger> newLit = LInteger::makeLiteral(1);
-		s.push(newLit);
-	}
-	return true;
 }
 /* fin opérateur Not */
 
@@ -150,7 +165,6 @@ void Dup::free(){
 bool Dup::apply(Stack& s){
 
 	const shared_ptr<Literal> elA = s.top();
-    Literal* litA = elA.get();
     const shared_ptr<Literal> newLit = elA->getCopy();
     s.push(newLit);
     return true;
@@ -179,3 +193,32 @@ bool Drop::apply(Stack& s){
     return true;
 }
 /* Fin Drop */
+
+/* Début Eval */
+shared_ptr<Eval> Eval::instance = nullptr;
+
+Eval& Eval::get(){
+	if(instance == nullptr){
+		instance = shared_ptr<Eval>(new Eval);
+		Operator::addOperator(instance->name, instance);
+	}
+	return *instance;
+}
+
+void Eval::free(){
+	if(instance != nullptr){
+		Operator::delOperator(instance->name);
+		instance = nullptr;
+	}
+}
+
+bool Eval::apply(Stack& s){
+	const shared_ptr<Literal> elA = s.top();
+	Literal* litA = elA.get();
+	LExpression* lexpA = dynamic_cast<LExpression*>(litA);
+	const string var = lexpA->getValue();
+	Computer::getInstance().pushVariable(var);
+    return true;
+}
+/* Fin Drop */
+

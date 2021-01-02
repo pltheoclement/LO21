@@ -1,3 +1,8 @@
+
+#include <iostream>
+#include <string>
+#include <vector>
+#include <memory>
 #include "../include/literal.h"
 
 LiteralType Literal::isLiteral(const std::string& s){
@@ -17,7 +22,7 @@ LiteralType Literal::isLiteral(const std::string& s){
     }
 }
 
-std::shared_ptr<Literal> Literal::makeLiteral(const std::string& s, LiteralType t){
+const std::shared_ptr<Literal> Literal::makeLiteral(const std::string& s, LiteralType t){
     switch(t){
         case linteger : return LInteger::makeLiteral(std::stoi(s));
         case lreal : return LReal::makeLiteral(std::stod(s));

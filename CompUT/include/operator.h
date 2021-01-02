@@ -26,17 +26,16 @@ public:
 class AbstractOperation {
 };
 
-
-
 class TypeOperator {
+protected:
 	std::string name;
 public:
 	virtual bool apply(Stack& s) = 0;
-	virtual ~TypeOperator(){};
+	virtual ~TypeOperator();
 };
 
 class Clear : public TypeOperator {
-	std::string name = "clear";
+	std::string name = "CLEAR";
 	static std::shared_ptr<Clear> instance;
 	Clear() = default;
 public:
@@ -44,10 +43,6 @@ public:
 	static Clear& get();
 	static void free();
 };
-
-
-
-
 
 class Operator{
 	static std::map<std::string, std::shared_ptr<TypeOperator>> operators;
@@ -63,5 +58,8 @@ public:
 	static void freeInstance();
 
 };
+
+void creationOperators();
+void destructionOperators();
 
 #endif /* HEADERS_OPERATOR_H_ */

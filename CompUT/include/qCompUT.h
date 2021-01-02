@@ -19,11 +19,10 @@
 #include <QDebug>
 #include <algorithm>
 
-//#include "CompUT.h"
-#include "include/computer.h"
+#include "computer.h"
+#include "operator.h"
 
 using namespace std;
-
 
 class QCompUT : public QWidget{
     Q_OBJECT
@@ -32,35 +31,22 @@ class QCompUT : public QWidget{
     QTableWidget* viewStack;
     QLineEdit* commande;
     QString text;
-    size_t Nbr_Line;
-
-    //map<tuple<QString,QString>,QPushButton*> buttons_var;
-    //pair<tuple<QString,QString>,QPushButton*> bt_var;
-    //tuple<QString,QString>t;
-
-    map<QString,QPushButton*> buttons_First_keyboard;
-    map<QString,QPushButton*> buttons_Second_keyboard;
-    map<QString,QPushButton*> buttons_secondary_view;
-    map<QString,QPushButton*> buttons_var;
-    map<QString,QPushButton*> buttons_prog;
-    map<QString,QVBoxLayout*> layout_Vertical;
-    map<QString,QHBoxLayout*> layout_Horizontal;
-    map<QString,QWidget*> secondary_view;
-    map<QString,QLineEdit*> Line_Edit;
-    map<QString,QLabel*> label;
-    map<QString,QComboBox*> list;
-    map<QString,QTableWidget*> table;
-    QVector<QTableWidgetItem *>listeItemsVar;
-    QVector<QTableWidgetItem *>listeItemsProg;
-
+    size_t Nbr_Line = 8;
+    QSpinBox* Nbr_Line_Stack;
     QTabWidget *tab;
 
-    //Stack stack;
-    //Computer computer;
-
-
-    QSpinBox* Nbr_Line_Stack;
-
+    QMap<QString,QPushButton*> buttons_First_keyboard;
+    QMap<QString,QPushButton*> buttons_Second_keyboard;
+    QMap<QString,QPushButton*> buttons_secondary_view;
+    QMap<QString,QPushButton*> buttons_var;
+    QMap<QString,QPushButton*> buttons_prog;
+    QMap<QString,QVBoxLayout*> layout_Vertical;
+    QMap<QString,QHBoxLayout*> layout_Horizontal;
+    QMap<QString,QWidget*> secondary_view;
+    QMap<QString,QLineEdit*> Line_Edit;
+    QMap<QString,QLabel*> label;
+    QMap<QString,QComboBox*> list;
+    QMap<QString,QTableWidget*> table;
 
 public:
     explicit QCompUT(QWidget *father = 0);
@@ -68,9 +54,8 @@ public:
     void Initialisation();
     void Initialisation_Stack();
 
-
 public slots:
-    void refresh();
+    void refresh_stack();
     void getNextCommande();
     void slot1();void slot2();void slot3();void slot4();void slot5();void slot6();void slot7();void slot8();void slot9();void slot0();
     void slotPlus();void slotMoins();void slotMult();void slotDiv();void slotEqual();
@@ -78,16 +63,11 @@ public slots:
     void slotOpen2();
     void slotReduce1();
     void slotReduce2();
-
     void slotNewVariable(); void slotModifVariable(); void slotDeleteVariable();
     void slotNewProg(); void slotModifProg(); void slotDeleteProg();
-
     void slotVariable();
     void slotProgram();
-
     void slot_Nbr_Line_view_Stack();
-
 };
-
 
 #endif // QCOMPUT_H

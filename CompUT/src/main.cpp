@@ -1,26 +1,11 @@
-/*
- * main.cpp
- *
- *  Created on: Nov 23, 2020
- *      Author: theo
- */
+#include "../include/qCompUT.h"
 
-#include <iostream>
-#include <string>
-#include "literal.h"
-#include "operator.h"
-#include "unaryOperator.h"
+int main(int argc, char *argv[]) {
+    QApplication app(argc, argv);
 
-using namespace std;
+    QCompUT fenetre;
 
-int main(){
-	int a = 6;
-	int b = 4;
-	double ad = a;
-	double bd = b;
-	double C = ad / bd;
-	cout<<C;
+    fenetre.show();
 
+    return app.exec();
 }
-
-

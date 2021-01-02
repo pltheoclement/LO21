@@ -16,52 +16,56 @@
 #include "literal.h"
 #include "operator.h"
 
-class AbstractUnaryOperation : public AbstractOperation {
+class AbstractUnaryOperation : public AbstractOperation, public std::enable_shared_from_this<AbstractUnaryOperation> {
+protected:
 	LiteralType typeA;
 public:
 	AbstractUnaryOperation() = default;
+	AbstractUnaryOperation(LiteralType a) : typeA(a){}
 	virtual const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A) = 0;
 	virtual ~AbstractUnaryOperation() = default;
+	virtual void addMyself() = 0;
 };
 
 class AbstractNeg : public AbstractUnaryOperation{
 public:
 	AbstractNeg() = default;
 	~AbstractNeg() = default;
+	AbstractNeg(LiteralType a):AbstractUnaryOperation(a){}
+	void addMyself() override;
 };
 
 class NegInt : public AbstractNeg{
-	LiteralType typeA = linteger;
 public:
-	NegInt();
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A);
+	NegInt(): AbstractNeg(linteger){}
 };
 
 class NegReal : public AbstractNeg{
-	LiteralType typeA = lreal;
 public:
-	NegReal();
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A);
+	NegReal(): AbstractNeg(lreal){}
 };
 
 class NegRational : public AbstractNeg{
-	LiteralType typeA = lrational;
 public:
-	NegRational();
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A);
+	NegRational(): AbstractNeg(lrational){}
 };
 
 class UnaryOperator : public TypeOperator{
-	std::map<LiteralType, AbstractUnaryOperation*> possibles;
+protected:
+	std::map<LiteralType, std::shared_ptr<AbstractUnaryOperation>> possibles;
 public :
-    virtual ~UnaryOperator(){};
+    virtual ~UnaryOperator();
     UnaryOperator(){};
-    void addBehaviour(LiteralType A, AbstractUnaryOperation* a) { possibles[A]=a; }
+    void addBehaviour(LiteralType A, std::shared_ptr<AbstractUnaryOperation> a);
     bool apply(Stack& s);
 };
 
 class Neg : public UnaryOperator {
-	std::string name = "neg";
+protected:
+	std::string name = "NEG";
 	static std::shared_ptr<Neg> instance;
 	Neg() = default;
 public:
@@ -69,8 +73,10 @@ public:
 	static void free();
 };
 
+
 class Not : public UnaryOperator {
-	std::string name = "not";
+protected:
+	std::string name = "NOT";
 	static std::shared_ptr<Not> instance;
 	Not() = default;
 public:
@@ -80,17 +86,20 @@ public:
 };
 
 class Eval : public UnaryOperator {
-	std::string name = "eval";
+protected:
+	std::string name = "EVAL";
 	static std::shared_ptr<Eval> instance;
 	Eval() = default;
 public:
 	static Eval& get();
 	static void free();
+	bool apply(Stack& s);
 
 };
 
 class Dup : public UnaryOperator {
-	std::string name = "dup";
+protected:
+	std::string name = "DUP";
 	static std::shared_ptr<Dup> instance;
 	Dup() = default;
 public:
@@ -100,23 +109,14 @@ public:
 };
 
 class Drop : public UnaryOperator {
-	std::string name = "drop";
+protected:
+	std::string name = "DROP";
 	static std::shared_ptr<Drop> instance;
 	Drop() = default;
 public:
 	static Drop& get();
 	static void free();
 	bool apply(Stack& s);
-};
-
-
-class Swap : public UnaryOperator {
-	std::string name = "swap";
-	static std::shared_ptr<Swap> instance;
-	Swap() = default;
-public:
-	static Swap& get();
-	static void free();
 };
 
 #endif
