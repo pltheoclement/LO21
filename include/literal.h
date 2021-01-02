@@ -21,7 +21,7 @@ public:
     static LiteralType isLiteral(const std::string& s);
     static const std::shared_ptr<Literal> makeLiteral(const std::string& s, LiteralType t);
 
-    LiteralType getType(){ return type;}
+    virtual LiteralType getType(){ return this->type;}
     virtual std::string toString() const = 0;
     virtual std::shared_ptr<Literal> getCopy() const { return makeLiteral(this->toString(), this->type);}
     virtual ~Literal() {}
@@ -47,6 +47,7 @@ class LReal : public Literal {
     LiteralType type = lreal;
     double value;
 public:
+    LiteralType getType(){ return lreal;}
     LReal(const double& d): value(d){}
     LReal(const LInteger& i): value(double(i.getValue())){}
     double getValue() const { return value;}
@@ -62,6 +63,7 @@ class LRational : public Literal {
     int den;
     void simplify();
 public:
+    LiteralType getType(){ return lrational;}
     LRational(const int& n, const int& d): num(n),den(d){ this->simplify();}
     LRational(const LInteger& i): num(i.getValue()), den(1){}
     int getNum() const { return num;}
@@ -78,6 +80,7 @@ class LAtom : public Literal {
     LiteralType type = latom;
     std::string value;
 public:
+    LiteralType getType(){ return latom;}
     std::string getValue() const { return value;}
     std::string toString() const {return value;}
     ~LAtom(){}
@@ -88,6 +91,7 @@ class LExpression : public LAtom {
     LiteralType type = lexpression;
     std::string value;
 public:
+    LiteralType getType(){ return lexpression;}
     std::string getValue() const { return value;}
     std::string toString() const { return '\''+value+'\'';}
     ~LExpression(){}
@@ -97,6 +101,7 @@ class LProgram : public Literal {
     std::string program;
     LiteralType type = lprogram;
 public:
+    LiteralType getType(){ return lprogram;}
     //std::vector<Literal> getLiterals() const;
     //LiteralIterator iter(){ return LiteralIterator(*this);}
     std::string toString() const;

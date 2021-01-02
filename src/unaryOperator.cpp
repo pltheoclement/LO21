@@ -23,11 +23,13 @@ bool UnaryOperator::apply(Stack& s){
 
 	const shared_ptr<Literal> elA = s.top();// le premier argument
     LiteralType A=elA->getType();
+
+    cout << A;
+    cout.flush();
+
     if (possibles.count(A) > 0) {// existe bien dans ta map then possibles[make_pair(A,B)].execution(); // @suppress("Method cannot be resolved")
 
     	s.pop();
-    	cout<<possibles[A].use_count();
-    	cout.flush();
     	const shared_ptr<Literal> res = possibles[A]->execution(elA);
 
     	s.push(res);
@@ -59,21 +61,11 @@ void Neg::free(){
 }
 
 void AbstractNeg::addMyself(){
-	Neg::get().addBehaviour(typeA, shared_from_this());
+	Neg::get().addBehaviour(this->typeA, shared_from_this());
 }
 
-/* Début NegInt */
-const shared_ptr<Literal> NegInt::execution(const shared_ptr<Literal> A){
 
-	Literal* litA = A.get();
-	LInteger* lIntA = dynamic_cast<LInteger*>(litA);
-	int valeur = lIntA->getValue();
-	const int newVal = -1 * valeur;
-	const shared_ptr<LInteger> newLit = LInteger::makeLiteral(newVal);
-	//newLit
-	return newLit;
-}
-/* Fin NegInt */
+
 /* Début NegReal */
 const shared_ptr<Literal> NegReal::execution(const shared_ptr<Literal> A){
 	Literal* litA = A.get();
@@ -95,7 +87,18 @@ const shared_ptr<Literal> NegRational::execution(const shared_ptr<Literal> A){
 	return newLit;
 }
 /* Fin NegRational */
+/* Début NegInt */
+const shared_ptr<Literal> NegInt::execution(const shared_ptr<Literal> A){
 
+	Literal* litA = A.get();
+	LInteger* lIntA = dynamic_cast<LInteger*>(litA);
+	int valeur = lIntA->getValue();
+	const int newVal = -1 * valeur;
+	const shared_ptr<LInteger> newLit = LInteger::makeLiteral(newVal);
+	//newLit
+	return newLit;
+}
+/* Fin NegInt */
 /* fin opérateur NEG */
 
 

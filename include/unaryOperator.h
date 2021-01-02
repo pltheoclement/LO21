@@ -21,6 +21,7 @@ protected:
 	LiteralType typeA;
 public:
 	AbstractUnaryOperation() = default;
+	AbstractUnaryOperation(LiteralType a) : typeA(a){}
 	virtual const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A) = 0;
 	virtual ~AbstractUnaryOperation() = default;
 	virtual void addMyself() = 0;
@@ -30,32 +31,30 @@ class AbstractNeg : public AbstractUnaryOperation{
 public:
 	AbstractNeg() = default;
 	~AbstractNeg() = default;
+	AbstractNeg(LiteralType a):AbstractUnaryOperation(a){}
 	void addMyself() override;
 };
 
 class NegInt : public AbstractNeg{
-protected:
-	LiteralType typeA = linteger;
 public:
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A);
-	~NegInt(){std::cout<<"Chui plus la";}
+	NegInt(): AbstractNeg(linteger){}
 };
 
 class NegReal : public AbstractNeg{
-protected:
-	LiteralType typeA = lreal;
 public:
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A);
+	NegReal(): AbstractNeg(lreal){}
 };
 
 class NegRational : public AbstractNeg{
-protected:
-	LiteralType typeA = lrational;
 public:
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A);
+	NegRational(): AbstractNeg(lrational){}
 };
 
 class UnaryOperator : public TypeOperator{
+protected:
 	std::map<LiteralType, std::shared_ptr<AbstractUnaryOperation>> possibles;
 public :
     virtual ~UnaryOperator();
@@ -65,6 +64,7 @@ public :
 };
 
 class Neg : public UnaryOperator {
+protected:
 	std::string name = "NEG";
 	static std::shared_ptr<Neg> instance;
 	Neg() = default;
@@ -75,6 +75,7 @@ public:
 
 
 class Not : public UnaryOperator {
+protected:
 	std::string name = "NOT";
 	static std::shared_ptr<Not> instance;
 	Not() = default;
@@ -85,6 +86,7 @@ public:
 };
 
 class Eval : public UnaryOperator {
+protected:
 	std::string name = "EVAL";
 	static std::shared_ptr<Eval> instance;
 	Eval() = default;
@@ -96,6 +98,7 @@ public:
 };
 
 class Dup : public UnaryOperator {
+protected:
 	std::string name = "DUP";
 	static std::shared_ptr<Dup> instance;
 	Dup() = default;
@@ -106,6 +109,7 @@ public:
 };
 
 class Drop : public UnaryOperator {
+protected:
 	std::string name = "DROP";
 	static std::shared_ptr<Drop> instance;
 	Drop() = default;

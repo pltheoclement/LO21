@@ -75,7 +75,7 @@ void Clear::free(){
 }
 
 /* fin opérateur CLEAR */
-shared_ptr<AddIntInt> addIntInt = make_shared<AddIntInt>();
+//shared_ptr<AddIntInt> addIntInt = make_shared<AddIntInt>();
 void creationOperators(){
 	Clear::get();
 
@@ -92,7 +92,7 @@ void creationOperators(){
 
 	Drop::get();
 
-	//shared_ptr<AddIntInt> addIntInt = make_shared<AddIntInt>();
+	shared_ptr<AddIntInt> addIntInt = make_shared<AddIntInt>();
 	addIntInt->addMyself();
 	shared_ptr<AddIntReal> addIntReal = make_shared<AddIntReal>();
 	addIntReal->addMyself();
@@ -293,6 +293,7 @@ void creationOperators(){
 	Or::get();
 
 	Swap::get();
+
 }
 
 void destructionOperators(){

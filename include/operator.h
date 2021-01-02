@@ -27,6 +27,7 @@ class AbstractOperation {
 };
 
 class TypeOperator {
+protected:
 	std::string name;
 public:
 	virtual bool apply(Stack& s) = 0;

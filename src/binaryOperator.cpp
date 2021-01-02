@@ -18,7 +18,8 @@ using namespace std;
 
 
 void BinaryOperator::addBehaviour(LiteralType A, LiteralType B, shared_ptr<AbstractBinaryOperation> a) {
-	possibles[std::make_pair(A,B)]=a;
+	this->possibles[std::make_pair(A,B)]=a;
+	//cout << "(A = " << A << " B = " << B << ")" << endl;
 }
 
 bool BinaryOperator::apply(Stack& s){
@@ -32,9 +33,9 @@ bool BinaryOperator::apply(Stack& s){
     LiteralType A=elA->getType();
 
     LiteralType B=elB->getType();
+
     if (possibles.count(make_pair(A, B)) > 0) {// existe bien dans ta map then possibles[make_pair(A,B)].execution(); // @suppress("Method cannot be resolved")
-    	cout << "coucou";
-    	cout.flush();
+
     	auto opp = possibles.at(make_pair(A,B));
     	const shared_ptr<Literal> res = opp->execution(elA, elB);
     	s.push(res);
@@ -47,7 +48,7 @@ bool BinaryOperator::apply(Stack& s){
 }
 
 void AbstractAdd::addMyself(){
-	Add::get().addBehaviour(typeA, typeB, shared_from_this());
+	Add::get().addBehaviour(this->typeA, this->typeB, shared_from_this());
 }
 
 /* Début Add */
@@ -497,7 +498,7 @@ const std::shared_ptr<Literal> DivIntInt::execution(const std::shared_ptr<Litera
 	LInteger* lIntB = dynamic_cast<LInteger*>(litB);
 	double valeurA = lIntA->getValue(); //On récupère la valeur de ce Literal
 	double valeurB = lIntB->getValue();
-	const int newVal = valeurB / valeurA; //On effectue l'opération Div
+	const double newVal = valeurB / valeurA; //On effectue l'opération Div
 	const shared_ptr<LReal> newLit = LReal::makeLiteral(newVal); //On créé un const shared_ptr pour notre nouveau int
 	return newLit; //On pous notre Literal sur la Stack.
 }

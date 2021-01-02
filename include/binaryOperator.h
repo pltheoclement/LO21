@@ -22,7 +22,8 @@ protected:
 	LiteralType typeA;
 	LiteralType typeB;
 public:
-	AbstractBinaryOperation(){}
+	AbstractBinaryOperation() = default;
+	AbstractBinaryOperation(LiteralType a, LiteralType b) : typeA(a), typeB(b){}
 	virtual const std::shared_ptr<Literal> execution(std::shared_ptr<Literal> A, std::shared_ptr<Literal> B) = 0;
 	virtual ~AbstractBinaryOperation() = default;
 	virtual void addMyself() = 0;
@@ -30,6 +31,7 @@ public:
 
 
 class BinaryOperator : public TypeOperator{
+protected:
     std::map<std::pair<LiteralType,LiteralType>, std::shared_ptr<AbstractBinaryOperation>> possibles;
 
 public :
@@ -40,6 +42,7 @@ public :
 };
 
 class Add : public BinaryOperator {
+protected:
 	std::string name = "+";
 	static std::shared_ptr<Add> instance;
 	Add() = default;
@@ -51,71 +54,66 @@ public:
 class AbstractAdd : public AbstractBinaryOperation{
 public:
 	AbstractAdd() = default;
+	AbstractAdd(LiteralType a, LiteralType b):AbstractBinaryOperation(a, b){}
 	~AbstractAdd() = default;
 	void addMyself() override;
 };
 
 class AddIntInt : public AbstractAdd{
-protected:
-	LiteralType typeA = linteger;
-	LiteralType typeB = linteger;
 public:
-	AddIntInt() = default;
+	AddIntInt(): AbstractAdd(linteger, linteger){}
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
 class AddIntReal : public AbstractAdd{
-protected:
-	LiteralType typeA = linteger;
-	LiteralType typeB = lreal;
 public:
+	AddIntReal(): AbstractAdd(linteger, lreal){}
+	AddIntReal(LiteralType a, LiteralType b):AbstractAdd(a, b){}
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
 class AddRealInt : public AddIntReal{
 public:
+	AddRealInt(): AddIntReal(lreal, linteger){}
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
 class AddIntRational : public AbstractAdd{
-protected:
-	LiteralType typeA = linteger;
-	LiteralType typeB = lrational;
 public:
+	AddIntRational(): AbstractAdd(linteger, lrational){}
+	AddIntRational(LiteralType a, LiteralType b):AbstractAdd(a, b){}
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
 class AddRationalInt : public AddIntRational{
 public:
+	AddRationalInt(): AddIntRational(lrational, linteger){}
+
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
 class AddRationalRational : public AbstractAdd{
-protected:
-	LiteralType typeA = lrational;
-	LiteralType typeB = lrational;
 public:
+	AddRationalRational(): AbstractAdd(lrational, lrational){}
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
 class AddRealReal : public AbstractAdd{
-protected:
-	LiteralType typeA = lreal;
-	LiteralType typeB = lreal;
 public:
+	AddRealReal(): AbstractAdd(lreal, lreal){}
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
 class AddRealRational : public AbstractAdd{
-protected:
-	LiteralType typeA = lreal;
-	LiteralType typeB = lrational;
 public:
+	AddRealRational(): AbstractAdd(lreal, lrational){}
+	AddRealRational(LiteralType a, LiteralType b):AbstractAdd(a, b){}
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
 class AddRationalReal : public AddRealRational{
 public:
+	AddRationalReal(): AddRealRational(lrational, lreal){}
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
@@ -125,6 +123,7 @@ public:
 
 
 class Mul : public BinaryOperator {
+protected:
 	std::string name = "*";
 	static std::shared_ptr<Mul> instance;
 	Mul() = default;
@@ -137,74 +136,71 @@ class AbstractMul : public AbstractBinaryOperation{
 public:
 	AbstractMul() = default;
 	~AbstractMul() = default;
+	AbstractMul(LiteralType a, LiteralType b):AbstractBinaryOperation(a, b){}
 	void addMyself() override;
 };
 
 class MulIntInt : public AbstractMul{
-protected:
-	LiteralType typeA = linteger;
-	LiteralType typeB = linteger;
 public:
+	MulIntInt(): AbstractMul(linteger, linteger){}
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
 class MulIntReal : public AbstractMul{
-protected:
-	LiteralType typeA = linteger;
-	LiteralType typeB = lreal;
 public:
+	MulIntReal(): AbstractMul(linteger, lreal){}
+	MulIntReal(LiteralType a, LiteralType b):AbstractMul(a, b){}
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
 class MulRealInt : public MulIntReal{
 public:
+	MulRealInt(): MulIntReal(lreal, linteger){}
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
 class MulIntRational : public AbstractMul{
-protected:
-	LiteralType typeA = linteger;
-	LiteralType typeB = lrational;
 public:
+	MulIntRational(): AbstractMul(linteger, lrational){}
+	MulIntRational(LiteralType a, LiteralType b):AbstractMul(a, b){}
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
 class MulRationalInt : public MulIntRational{
 public:
+	MulRationalInt(): MulIntRational(lrational, linteger){}
+
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
 class MulRationalRational : public AbstractMul{
-protected:
-	LiteralType typeA = lrational;
-	LiteralType typeB = lrational;
 public:
+	MulRationalRational(): AbstractMul(lrational, lrational){}
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
 class MulRealReal : public AbstractMul{
-protected:
-	LiteralType typeA = lreal;
-	LiteralType typeB = lreal;
 public:
+	MulRealReal(): AbstractMul(lreal, lreal){}
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
 class MulRealRational : public AbstractMul{
-protected:
-	LiteralType typeA = lreal;
-	LiteralType typeB = lrational;
 public:
+	MulRealRational(): AbstractMul(lreal, lrational){}
+	MulRealRational(LiteralType a, LiteralType b):AbstractMul(a, b){}
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
 class MulRationalReal : public MulRealRational{
 public:
+	MulRationalReal(): MulRealRational(lrational, lreal){}
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
 
 class Sub : public BinaryOperator {
+protected:
 	std::string name = "-";
 	static std::shared_ptr<Sub> instance;
 	Sub() = default;
@@ -217,82 +213,66 @@ class AbstractSub : public AbstractBinaryOperation{
 public:
 	AbstractSub() = default;
 	~AbstractSub() = default;
+	AbstractSub(LiteralType a, LiteralType b):AbstractBinaryOperation(a, b){}
 	void addMyself() override;
 };
 
 class SubIntInt : public AbstractSub{
-protected:
-	LiteralType typeA = linteger;
-	LiteralType typeB = linteger;
 public:
+	SubIntInt(): AbstractSub(linteger, linteger){}
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
 class SubIntReal : public AbstractSub{
-protected:
-	LiteralType typeA = linteger;
-	LiteralType typeB = lreal;
 public:
+	SubIntReal(): AbstractSub(linteger, lreal){}
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
 class SubRealInt : public AbstractSub{
-protected:
-	LiteralType typeA = lreal;
-	LiteralType typeB = linteger;
 public:
+	SubRealInt(): AbstractSub(lreal, linteger){}
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
 class SubIntRational : public AbstractSub{
-protected:
-	LiteralType typeA = linteger;
-	LiteralType typeB = lrational;
 public:
+	SubIntRational(): AbstractSub(linteger, lrational){}
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
 class SubRationalInt : public AbstractSub{
-protected:
-	LiteralType typeA = lrational;
-	LiteralType typeB = linteger;
 public:
+	SubRationalInt(): AbstractSub(lrational, linteger){}
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
 class SubRationalRational : public AbstractSub{
-protected:
-	LiteralType typeA = lrational;
-	LiteralType typeB = lrational;
 public:
+	SubRationalRational(): AbstractSub(lrational, lrational){}
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
 class SubRealReal : public AbstractSub{
-protected:
-	LiteralType typeA = lreal;
-	LiteralType typeB = lreal;
 public:
+	SubRealReal(): AbstractSub(lreal, lreal){}
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
 class SubRealRational : public AbstractSub{
-protected:
-	LiteralType typeA = lreal;
-	LiteralType typeB = lrational;
 public:
+	SubRealRational(): AbstractSub(lreal, lrational){}
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
 class SubRationalReal : public AbstractSub{
-protected:
-	LiteralType typeA = lrational;
-	LiteralType typeB = lreal;
 public:
+	SubRationalReal(): AbstractSub(lrational, lreal){}
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
 class Div : public BinaryOperator {
+protected:
 	std::string name = "/";
 	static std::shared_ptr<Div> instance;
 	Div() = default;
@@ -305,82 +285,66 @@ class AbstractDiv : public AbstractBinaryOperation{
 public:
 	AbstractDiv() = default;
 	~AbstractDiv() = default;
+	AbstractDiv(LiteralType a, LiteralType b):AbstractBinaryOperation(a, b){}
 	void addMyself() override;
 };
 
 class DivIntInt : public AbstractDiv{
-protected:
-	LiteralType typeA = linteger;
-	LiteralType typeB = linteger;
 public:
+	DivIntInt(): AbstractDiv(linteger, linteger){}
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
 class DivIntReal : public AbstractDiv{
-protected:
-	LiteralType typeA = linteger;
-	LiteralType typeB = lreal;
 public:
+	DivIntReal(): AbstractDiv(linteger, lreal){}
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
 class DivRealInt : public AbstractDiv{
-protected:
-	LiteralType typeA = lreal;
-	LiteralType typeB = linteger;
 public:
+	DivRealInt(): AbstractDiv(lreal, linteger){}
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
 class DivIntRational : public AbstractDiv{
-protected:
-	LiteralType typeA = linteger;
-	LiteralType typeB = lrational;
 public:
+	DivIntRational(): AbstractDiv(linteger, lrational){}
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
 class DivRationalInt : public AbstractDiv{
-protected:
-	LiteralType typeA = lrational;
-	LiteralType typeB = linteger;
 public:
+	DivRationalInt(): AbstractDiv(lrational, linteger){}
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
 class DivRationalRational : public AbstractDiv{
-protected:
-	LiteralType typeA = lrational;
-	LiteralType typeB = lrational;
 public:
+	DivRationalRational(): AbstractDiv(lrational, lrational){}
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
 class DivRealReal : public AbstractDiv{
-protected:
-	LiteralType typeA = lreal;
-	LiteralType typeB = lreal;
 public:
+	DivRealReal(): AbstractDiv(lreal, lreal){}
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
 class DivRealRational : public AbstractDiv{
-protected:
-	LiteralType typeA = lreal;
-	LiteralType typeB = lrational;
 public:
+	DivRealRational(): AbstractDiv(lreal, lrational){}
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
 class DivRationalReal : public AbstractDiv{
-protected:
-	LiteralType typeA = lrational;
-	LiteralType typeB = lreal;
 public:
+	DivRationalReal(): AbstractDiv(lrational, lreal){}
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
 class Mod : public BinaryOperator {
+protected:
 	std::string name = "MOD";
 	static std::shared_ptr<Mod> instance;
 	Mod() = default;
@@ -393,18 +357,18 @@ class AbstractMod : public AbstractBinaryOperation{
 public:
 	AbstractMod() = default;
 	~AbstractMod() = default;
+	AbstractMod(LiteralType a, LiteralType b):AbstractBinaryOperation(a, b){}
 	void addMyself() override;
 };
 
 class ModIntInt : public AbstractMod{
-protected:
-	LiteralType typeA = linteger;
-	LiteralType typeB = linteger;
 public:
+	ModIntInt(): AbstractMod(linteger, linteger){}
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
 class DivE : public BinaryOperator {
+protected:
 	std::string name = "DIV";
 	static std::shared_ptr<DivE> instance;
 	DivE() = default;
@@ -417,18 +381,18 @@ class AbstarctDivE : public AbstractBinaryOperation{
 public:
 	AbstarctDivE() = default;
 	~AbstarctDivE() = default;
+	AbstarctDivE(LiteralType a, LiteralType b):AbstractBinaryOperation(a, b){}
 	void addMyself() override;
 };
 
 class DivEIntInt : public AbstarctDivE{
-protected:
-	LiteralType typeA = linteger;
-	LiteralType typeB = linteger;
 public:
+	DivEIntInt(): AbstarctDivE(linteger, linteger){}
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
 class Equ : public BinaryOperator {
+protected:
 	std::string name = "=";
 	static std::shared_ptr<Equ> instance;
 	Equ() = default;
@@ -441,83 +405,67 @@ class AbstractEqu : public AbstractBinaryOperation{
 public:
 	AbstractEqu() = default;
 	~AbstractEqu() = default;
+	AbstractEqu(LiteralType a, LiteralType b):AbstractBinaryOperation(a, b){}
 	void addMyself() override;
 };
 
 class EquIntInt : public AbstractEqu{
-protected:
-	LiteralType typeA = linteger;
-	LiteralType typeB = linteger;
 public:
+	EquIntInt(): AbstractEqu(linteger, linteger){}
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
 class EquIntReal : public AbstractEqu{
-protected:
-	LiteralType typeA = linteger;
-	LiteralType typeB = lreal;
 public:
+	EquIntReal(): AbstractEqu(linteger, lreal){}
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
 class EquRealInt : public AbstractEqu{
-protected:
-	LiteralType typeA = lreal;
-	LiteralType typeB = linteger;
 public:
+	EquRealInt(): AbstractEqu(lreal, linteger){}
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
 class EquIntRational : public AbstractEqu{
-protected:
-	LiteralType typeA = linteger;
-	LiteralType typeB = lrational;
 public:
+	EquIntRational(): AbstractEqu(linteger, lrational){}
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
 class EquRationalInt : public AbstractEqu{
-protected:
-	LiteralType typeA = lrational;
-	LiteralType typeB = linteger;
 public:
+	EquRationalInt(): AbstractEqu(lrational, linteger){}
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
 class EquRationalRational : public AbstractEqu{
-protected:
-	LiteralType typeA = lrational;
-	LiteralType typeB = lrational;
 public:
+	EquRationalRational(): AbstractEqu(lrational, lrational){}
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
 class EquRealReal : public AbstractEqu{
-protected:
-	LiteralType typeA = lreal;
-	LiteralType typeB = lreal;
 public:
+	EquRealReal(): AbstractEqu(lreal, lreal){}
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
 class EquRealRational : public AbstractEqu{
-protected:
-	LiteralType typeA = lreal;
-	LiteralType typeB = lrational;
 public:
+	EquRealRational(): AbstractEqu(lreal, lrational){}
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
 class EquRationalReal : public AbstractEqu{
-protected:
-	LiteralType typeA = lrational;
-	LiteralType typeB = lreal;
 public:
+	EquRationalReal(): AbstractEqu(lrational, lreal){}
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
 
 class Dif : public BinaryOperator {
+protected:
 	std::string name = "!=";
 	static std::shared_ptr<Dif> instance;
 	Dif() = default;
@@ -530,83 +478,67 @@ class AbstractDif : public AbstractBinaryOperation{
 public:
 	AbstractDif() = default;
 	~AbstractDif() = default;
+	AbstractDif(LiteralType a, LiteralType b):AbstractBinaryOperation(a, b){}
 	void addMyself() override;
 };
 
 class DifIntInt : public AbstractDif{
-protected:
-	LiteralType typeA = linteger;
-	LiteralType typeB = linteger;
 public:
+	DifIntInt(): AbstractDif(linteger, linteger){}
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
 class DifIntReal : public AbstractDif{
-protected:
-	LiteralType typeA = linteger;
-	LiteralType typeB = lreal;
 public:
+	DifIntReal(): AbstractDif(linteger, lreal){}
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
 class DifRealInt : public AbstractDif{
-protected:
-	LiteralType typeA = lreal;
-	LiteralType typeB = linteger;
 public:
+	DifRealInt(): AbstractDif(lreal, linteger){}
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
 class DifIntRational : public AbstractDif{
-protected:
-	LiteralType typeA = linteger;
-	LiteralType typeB = lrational;
 public:
+	DifIntRational(): AbstractDif(linteger, lrational){}
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
 class DifRationalInt : public AbstractDif{
-protected:
-	LiteralType typeA = lrational;
-	LiteralType typeB = linteger;
 public:
+	DifRationalInt(): AbstractDif(lrational, linteger){}
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
 class DifRationalRational : public AbstractDif{
-protected:
-	LiteralType typeA = lrational;
-	LiteralType typeB = lrational;
 public:
+	DifRationalRational(): AbstractDif(lrational, lrational){}
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
 class DifRealReal : public AbstractDif{
-protected:
-	LiteralType typeA = lreal;
-	LiteralType typeB = lreal;
 public:
+	DifRealReal(): AbstractDif(lreal, lreal){}
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
 class DifRealRational : public AbstractDif{
-protected:
-	LiteralType typeA = lreal;
-	LiteralType typeB = lrational;
 public:
+	DifRealRational(): AbstractDif(lreal, lrational){}
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
 class DifRationalReal : public AbstractDif{
-protected:
-	LiteralType typeA = lrational;
-	LiteralType typeB = lreal;
 public:
+	DifRationalReal(): AbstractDif(lrational, lreal){}
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
 
 class InfEqu : public BinaryOperator {
+protected:
 	std::string name = "=<";
 	static std::shared_ptr<InfEqu> instance;
 	InfEqu() = default;
@@ -619,82 +551,66 @@ class AbstractInfEqu : public AbstractBinaryOperation{
 public:
 	AbstractInfEqu() = default;
 	~AbstractInfEqu() = default;
+	AbstractInfEqu(LiteralType a, LiteralType b):AbstractBinaryOperation(a, b){}
 	void addMyself() override;
 };
 
 class InfEquIntInt : public AbstractInfEqu{
-protected:
-	LiteralType typeA = linteger;
-	LiteralType typeB = linteger;
 public:
+	InfEquIntInt(): AbstractInfEqu(linteger, linteger){}
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
 class InfEquIntReal : public AbstractInfEqu{
-protected:
-	LiteralType typeA = linteger;
-	LiteralType typeB = lreal;
 public:
+	InfEquIntReal(): AbstractInfEqu(linteger, lreal){}
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
 class InfEquRealInt : public AbstractInfEqu{
-protected:
-	LiteralType typeA = lreal;
-	LiteralType typeB = linteger;
 public:
+	InfEquRealInt(): AbstractInfEqu(lreal, linteger){}
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
 class InfEquIntRational : public AbstractInfEqu{
-protected:
-	LiteralType typeA = linteger;
-	LiteralType typeB = lrational;
 public:
+	InfEquIntRational(): AbstractInfEqu(linteger, lrational){}
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
 class InfEquRationalInt : public AbstractInfEqu{
-protected:
-	LiteralType typeA = lrational;
-	LiteralType typeB = linteger;
 public:
+	InfEquRationalInt(): AbstractInfEqu(lrational, linteger){}
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
 class InfEquRationalRational : public AbstractInfEqu{
-protected:
-	LiteralType typeA = lrational;
-	LiteralType typeB = lrational;
 public:
+	InfEquRationalRational(): AbstractInfEqu(lrational, lrational){}
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
 class InfEquRealReal : public AbstractInfEqu{
-protected:
-	LiteralType typeA = lreal;
-	LiteralType typeB = lreal;
 public:
+	InfEquRealReal(): AbstractInfEqu(lreal, lreal){}
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
 class InfEquRealRational : public AbstractInfEqu{
-protected:
-	LiteralType typeA = lreal;
-	LiteralType typeB = lrational;
 public:
+	InfEquRealRational(): AbstractInfEqu(lreal, lrational){}
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
 class InfEquRationalReal : public AbstractInfEqu{
-protected:
-	LiteralType typeA = lrational;
-	LiteralType typeB = lreal;
 public:
+	InfEquRationalReal(): AbstractInfEqu(lrational, lreal){}
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
 class Inf : public BinaryOperator {
+protected:
 	std::string name = "<";
 	static std::shared_ptr<Inf> instance;
 	Inf() = default;
@@ -706,83 +622,67 @@ public:
 class AbstractInf : public AbstractBinaryOperation{
 public:
 	AbstractInf() = default;
+	AbstractInf(LiteralType a, LiteralType b):AbstractBinaryOperation(a, b){}
 	~AbstractInf() = default;
 	void addMyself() override;
 };
 
 class InfIntInt : public AbstractInf{
-protected:
-	LiteralType typeA = linteger;
-	LiteralType typeB = linteger;
 public:
+	InfIntInt(): AbstractInf(linteger, linteger){}
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
 class InfIntReal : public AbstractInf{
-protected:
-	LiteralType typeA = linteger;
-	LiteralType typeB = lreal;
 public:
+	InfIntReal(): AbstractInf(linteger, lreal){}
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
 class InfRealInt : public AbstractInf{
-protected:
-	LiteralType typeA = lreal;
-	LiteralType typeB = linteger;
 public:
+	InfRealInt(): AbstractInf(lreal, linteger){}
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
 class InfIntRational : public AbstractInf{
-protected:
-	LiteralType typeA = linteger;
-	LiteralType typeB = lrational;
 public:
+	InfIntRational(): AbstractInf(linteger, lrational){}
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
 class InfRationalInt : public AbstractInf{
-protected:
-	LiteralType typeA = lrational;
-	LiteralType typeB = linteger;
 public:
+	InfRationalInt(): AbstractInf(lrational, linteger){}
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
 class InfRationalRational : public AbstractInf{
-protected:
-	LiteralType typeA = lrational;
-	LiteralType typeB = lrational;
 public:
+	InfRationalRational(): AbstractInf(lrational, lrational){}
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
 class InfRealReal : public AbstractInf{
-protected:
-	LiteralType typeA = lreal;
-	LiteralType typeB = lreal;
 public:
+	InfRealReal(): AbstractInf(lreal, lreal){}
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
 class InfRealRational : public AbstractInf{
-protected:
-	LiteralType typeA = lreal;
-	LiteralType typeB = lrational;
 public:
+	InfRealRational(): AbstractInf(lreal, lrational){}
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
 class InfRationalReal : public AbstractInf{
-protected:
-	LiteralType typeA = lrational;
-	LiteralType typeB = lreal;
 public:
+	InfRationalReal(): AbstractInf(lrational, lreal){}
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
 class SupEqu : public BinaryOperator {
+protected:
 	std::string name = ">=";
 	static std::shared_ptr<SupEqu> instance;
 	SupEqu() = default;
@@ -795,82 +695,66 @@ class AbstractSupEqu : public AbstractBinaryOperation{
 public:
 	AbstractSupEqu() = default;
 	~AbstractSupEqu() = default;
+	AbstractSupEqu(LiteralType a, LiteralType b):AbstractBinaryOperation(a, b){}
 	void addMyself() override;
 };
 
 class SupEquIntInt : public AbstractSupEqu{
-protected:
-	LiteralType typeA = linteger;
-	LiteralType typeB = linteger;
 public:
+	SupEquIntInt(): AbstractSupEqu(linteger, linteger){}
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
 class SupEquIntReal : public AbstractSupEqu{
-protected:
-	LiteralType typeA = linteger;
-	LiteralType typeB = lreal;
 public:
+	SupEquIntReal(): AbstractSupEqu(linteger, lreal){}
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
 class SupEquRealInt : public AbstractSupEqu{
-protected:
-	LiteralType typeA = lreal;
-	LiteralType typeB = linteger;
 public:
+	SupEquRealInt(): AbstractSupEqu(lreal, linteger){}
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
 class SupEquIntRational : public AbstractSupEqu{
-protected:
-	LiteralType typeA = linteger;
-	LiteralType typeB = lrational;
 public:
+	SupEquIntRational(): AbstractSupEqu(linteger, lrational){}
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
 class SupEquRationalInt : public AbstractSupEqu{
-protected:
-	LiteralType typeA = lrational;
-	LiteralType typeB = linteger;
 public:
+	SupEquRationalInt(): AbstractSupEqu(lrational, linteger){}
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
 class SupEquRationalRational : public AbstractSupEqu{
-protected:
-	LiteralType typeA = lrational;
-	LiteralType typeB = lrational;
 public:
+	SupEquRationalRational(): AbstractSupEqu(lrational, lrational){}
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
 class SupEquRealReal : public AbstractSupEqu{
-protected:
-	LiteralType typeA = lreal;
-	LiteralType typeB = lreal;
 public:
+	SupEquRealReal(): AbstractSupEqu(lreal, lreal){}
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
 class SupEquRealRational : public AbstractSupEqu{
-protected:
-	LiteralType typeA = lreal;
-	LiteralType typeB = lrational;
 public:
+	SupEquRealRational(): AbstractSupEqu(lreal, lrational){}
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
 class SupEquRationalReal : public AbstractSupEqu{
-protected:
-	LiteralType typeA = lrational;
-	LiteralType typeB = lreal;
 public:
+	SupEquRationalReal(): AbstractSupEqu(lrational, lreal){}
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
 class Sup : public BinaryOperator {
+protected:
 	std::string name = ">";
 	static std::shared_ptr<Sup> instance;
 	Sup() = default;
@@ -883,82 +767,66 @@ class AbstractSup : public AbstractBinaryOperation{
 public:
 	AbstractSup() = default;
 	~AbstractSup() = default;
+	AbstractSup(LiteralType a, LiteralType b):AbstractBinaryOperation(a, b){}
 	void addMyself() override;
 };
 
 class SupIntInt : public AbstractSup{
-protected:
-	LiteralType typeA = linteger;
-	LiteralType typeB = linteger;
 public:
+	SupIntInt(): AbstractSup(linteger, linteger){}
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
 class SupIntReal : public AbstractSup{
-protected:
-	LiteralType typeA = linteger;
-	LiteralType typeB = lreal;
 public:
+	SupIntReal(): AbstractSup(linteger, lreal){}
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
 class SupRealInt : public AbstractSup{
-protected:
-	LiteralType typeA = lreal;
-	LiteralType typeB = linteger;
 public:
+	SupRealInt(): AbstractSup(lreal, linteger){}
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
 class SupIntRational : public AbstractSup{
-protected:
-	LiteralType typeA = linteger;
-	LiteralType typeB = lrational;
 public:
+	SupIntRational(): AbstractSup(linteger, lrational){}
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
 class SupRationalInt : public AbstractSup{
-protected:
-	LiteralType typeA = lrational;
-	LiteralType typeB = linteger;
 public:
+	SupRationalInt(): AbstractSup(lrational, linteger){}
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
 class SupRationalRational : public AbstractSup{
-protected:
-	LiteralType typeA = lrational;
-	LiteralType typeB = lrational;
 public:
+	SupRationalRational(): AbstractSup(lrational, lrational){}
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
 class SupRealReal : public AbstractSup{
-protected:
-	LiteralType typeA = lreal;
-	LiteralType typeB = lreal;
 public:
+	SupRealReal(): AbstractSup(lreal, lreal){}
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
 class SupRealRational : public AbstractSup{
-protected:
-	LiteralType typeA = lreal;
-	LiteralType typeB = lrational;
 public:
+	SupRealRational(): AbstractSup(lreal, lrational){}
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
 class SupRationalReal : public AbstractSup{
-protected:
-	LiteralType typeA = lrational;
-	LiteralType typeB = lreal;
 public:
+	SupRationalReal(): AbstractSup(lrational, lreal){}
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
 class And : public BinaryOperator {
+protected:
 	std::string name = "AND";
 	static std::shared_ptr<And> instance;
 	And() = default;
@@ -969,6 +837,7 @@ public:
 };
 
 class Or : public BinaryOperator {
+protected:
 	std::string name = "OR";
 	static std::shared_ptr<Or> instance;
 	Or() = default;
@@ -979,6 +848,7 @@ public:
 };
 
 class Swap : public BinaryOperator {
+protected:
 	std::string name = "SWAP";
 	static std::shared_ptr<Swap> instance;
 	Swap() = default;
