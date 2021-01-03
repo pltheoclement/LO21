@@ -62,7 +62,7 @@ class LRational : public Literal {
     void simplify();
 public:
     LiteralType getType(){ return lrational;}
-    LRational(const int& n, const int& d): num(n),den(d){ this->simplify();}
+    LRational(const int& n, const int& d): num(n),den(d){ if(d==0) throw LiteralException("Dénominateur nul"): this->simplify();}
     LRational(const LInteger& i): num(i.getValue()), den(1){}
     int getNum() const { return num;}
     int getDen() const { return den;}
