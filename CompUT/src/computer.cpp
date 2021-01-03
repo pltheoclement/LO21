@@ -1,6 +1,6 @@
 #include "../include/operator.h"
 #include "../include/computer.h"
-
+#include <QDebug>
 Stack &Stack::getInstance() {
     static Stack instance;
     return instance;
@@ -52,10 +52,14 @@ void Computer::forgetVariable(const std::string &name) {
 }
 
 void Computer::pushVariable(const std::string &name) {
+            qDebug() << "QString::fromStdString(variables.at(name))";
     if (variables.count(name)) {
         LiteralType lt = Literal::isLiteral(variables.at(name));
+        qDebug() << "QString::fromStdString(variables.at(name))";
+        qDebug() << QString::fromStdString(variables.at(name));
         switch (lt) {
-            case lerror: message = "The variable " + name + " is invalid"; break;
+            case lerror:
+            case other : message = "The variable " + name + " is invalid"; break;
             case lprogram: evalLine(variables.at(name)); break;
             default: Stack::getInstance().push(Literal::makeLiteral(variables.at(name), lt));
         }
@@ -74,7 +78,7 @@ std::string Computer::getVariable(const std::string &name) {
 }
 
 std::string Computer::evalLine(const std::string &s) {
-
+    message = "";
     // Checking program integrity
     int brackets = 0;
     for (char c : s){
@@ -101,9 +105,14 @@ std::string Computer::evalLine(const std::string &s) {
         if (c == ' ' && brackets == 0) {
             if (!inst.empty()) {
                 if (Operator::isOperator(inst)) {
-                    if (!Operator::getOperator(inst).apply(Stack::getInstance())) {
+                    try {
+                        Operator::getOperator(inst).apply(Stack::getInstance());
+                    }
+                    catch (OperatorException& e) {
+                        message = e.getInfo();
                         return line;
                     }
+
                 } else {
                     LiteralType lt = Literal::isLiteral(inst);
                     if (lt == lerror) {
@@ -117,7 +126,14 @@ std::string Computer::evalLine(const std::string &s) {
                             return line;
                         }
                     } else {
-                        Stack::getInstance().push(Literal::makeLiteral(inst, lt));
+                        try {
+                            Stack::getInstance().push(Literal::makeLiteral(inst, lt));
+                        }
+                        catch (LiteralException& e) {
+                            message = e.getInfo();
+                            return line;
+                        }
+
                     }
                 }
             }

@@ -92,6 +92,8 @@ void creationOperators(){
 
 	Drop::get();
 
+    Eval::get();
+
 	shared_ptr<AddIntInt> addIntInt = make_shared<AddIntInt>();
 	addIntInt->addMyself();
 	shared_ptr<AddIntReal> addIntReal = make_shared<AddIntReal>();

@@ -26,7 +26,7 @@ public:
 
 class Computer{
     std::map<std::string, std::string> variables;
-    std::string message;
+    std::string message = "Welcome";
     Computer() = default;
 public:
     static Computer& getInstance();

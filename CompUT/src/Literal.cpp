@@ -15,7 +15,7 @@ LiteralType Literal::isLiteral(const std::string& s){
     }
     else{
         if(s[0]=='[') return lprogram;
-        if(s[0]==39) return lexpression;
+        if(s[0]=='"') return lexpression;
         /*for(unsigned int i=0; i<nbvar; i++)
             if(!(strcmp(getvariable(i)[0], s))) return latom;*/
         return other;
@@ -32,10 +32,13 @@ const std::shared_ptr<Literal> Literal::makeLiteral(const std::string& s, Litera
             std::string d="";
             unsigned int i=0;
             while(s[i]!='/'){n += s[i]; i++;}
-            for(; i<s.size(); i++) d += s[i];
+            for(i++; i<s.size(); i++) d += s[i];
             return LRational::makeLiteral(std::stod(n),std::stod(d));
             }
-        default : throw "Erreur : impossible de construire le literal !";
+        case lprogram : return LProgram::makeLiteral(s);
+        case lexpression: return LExpression::makeLiteral(s.substr(1, s.size() - 2));
+
+        default : throw LiteralException("Erreur : impossible de construire le literal !");
     }
 }
 
@@ -72,6 +75,20 @@ std::shared_ptr<LRational> LRational::makeLiteral(const int& n, const int& d){
 std::string LProgram::toString() const {
     return program;
 }
+
+const std::shared_ptr<LProgram> LProgram::makeLiteral(std::string s){
+    auto it = std::make_shared<LProgram>(s);
+    return it;
+}
+
+const std::shared_ptr<LExpression> LExpression::makeLiteral(std::string s){
+    auto it = std::make_shared<LExpression>(s);
+    return it;
+}
+
+
+
+
 
 void LRational::simplify(){
     if(num == 0) { den = 1; return;}

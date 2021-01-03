@@ -14,16 +14,13 @@ public:
 };
 
 class Literal {
-
-    LiteralType type;
 public:
-
     static LiteralType isLiteral(const std::string& s);
     static const std::shared_ptr<Literal> makeLiteral(const std::string& s, LiteralType t);
 
-    virtual LiteralType getType(){ return this->type;}
+    virtual LiteralType getType() = 0;
     virtual std::string toString() const = 0;
-    virtual std::shared_ptr<Literal> getCopy() const { return makeLiteral(this->toString(), this->type);}
+    virtual std::shared_ptr<Literal> getCopy() { return makeLiteral(this->toString(), this->getType());}
     virtual ~Literal() {}
 };
 
@@ -62,7 +59,7 @@ class LRational : public Literal {
     void simplify();
 public:
     LiteralType getType(){ return lrational;}
-    LRational(const int& n, const int& d): num(n),den(d){ if(d==0) throw LiteralException("Dénominateur nul"): this->simplify();}
+    LRational(const int& n, const int& d): num(n),den(d){if (den == 0) throw LiteralException("Null denominator"); this->simplify();}
     LRational(const LInteger& i): num(i.getValue()), den(1){}
     int getNum() const { return num;}
     int getDen() const { return den;}
@@ -90,6 +87,8 @@ public:
     LiteralType getType(){ return lexpression;}
     std::string getValue() const { return value;}
     std::string toString() const { return '\''+value+'\'';}
+    static const std::shared_ptr<LExpression>makeLiteral(std::string s);
+    LExpression(std::string s) : value(s){}
     ~LExpression(){}
 };
 
@@ -98,6 +97,8 @@ class LProgram : public Literal {
 public:
     LiteralType getType(){ return lprogram;}
     std::string toString() const;
+    static const std::shared_ptr<LProgram>makeLiteral(std::string s);
+    LProgram(std::string s) : program(s){}
     ~LProgram(){}
 };
 

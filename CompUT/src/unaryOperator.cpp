@@ -7,12 +7,13 @@
 #include <iostream>
 #include <string>
 #include <map>
-#include <QDebug>
 
 #include "../include/operator.h"
 #include "../include/unaryOperator.h"
 #include "../include/computer.h"
 #include "../include/literal.h"
+
+#include <QDebug>
 
 using namespace std;
 
@@ -21,11 +22,11 @@ void UnaryOperator::addBehaviour(LiteralType A, std::shared_ptr<AbstractUnaryOpe
 }
 
 bool UnaryOperator::apply(Stack& s){
-
+	if(s.size() < 1)
+            throw OperatorException("Need 1 element in the stack");
 	const shared_ptr<Literal> elA = s.top();// le premier argument
     LiteralType A=elA->getType();
 
-    qDebug() << linteger;
 
     if (possibles.count(A) > 0) {// existe bien dans ta map then possibles[make_pair(A,B)].execution(); // @suppress("Method cannot be resolved")
 
@@ -108,6 +109,8 @@ shared_ptr<Not> Not::instance = nullptr;
 
 
 bool Not::apply(Stack& s){
+	if(s.size() < 1)
+            throw OperatorException("Need 1 element in the stack");
 	const shared_ptr<Literal> A = s.top();
 	s.pop();
 	Literal* litA = A.get();
@@ -163,8 +166,10 @@ void Dup::free(){
 	}
 }
 bool Dup::apply(Stack& s){
-
+	if(s.size() < 1)
+            throw OperatorException("Need 1 element in the stack");
 	const shared_ptr<Literal> elA = s.top();
+
     const shared_ptr<Literal> newLit = elA->getCopy();
     s.push(newLit);
     return true;
@@ -213,7 +218,13 @@ void Eval::free(){
 }
 
 bool Eval::apply(Stack& s){
+            qDebug() << "QString::fromStdString(variables.at(name))";
+	if(s.size() < 1)
+            throw OperatorException("Need 1 element in the stack");
 	const shared_ptr<Literal> elA = s.top();
+    if(elA->getType() == lexpression)
+            throw OperatorException("Need a literal expression");
+    s.pop();
 	Literal* litA = elA.get();
 	LExpression* lexpA = dynamic_cast<LExpression*>(litA);
 	const string var = lexpA->getValue();
@@ -221,4 +232,3 @@ bool Eval::apply(Stack& s){
     return true;
 }
 /* Fin Drop */
-

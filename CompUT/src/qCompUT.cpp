@@ -1,14 +1,18 @@
 #include "../include/qCompUT.h"
 
 QCompUT::QCompUT(QWidget* father) : QWidget(father){
-    Nbr_Line_Stack = new QSpinBox;
-    Nbr_Line_Stack->setRange(0,1000); Nbr_Line_Stack->setSingleStep(1); Nbr_Line_Stack->setValue(Nbr_Line);
+/*--------------------------------------------------------------------------------------------------------------------------------------------*/
+/*--Création du Spinbox pour le vue secondaire Setting----------------------------------------------------------------------------------------*/
+/**/    Nbr_Line_Stack = new QSpinBox;
+/**/    Nbr_Line_Stack->setRange(0,1000); Nbr_Line_Stack->setSingleStep(1); Nbr_Line_Stack->setValue(Nbr_Line); Nbr_Line_Stack->setFixedSize(160,20);
+/**/    QTableWidget* viewStack = new QTableWidget(Nbr_Line,1); table["viewStack"] = viewStack;
+/**/    viewStack->setMaximumSize(300,250);
+/**/    QLineEdit* message   = new QLineEdit; Line_Edit["message"] = message;
+/**/    QLineEdit* commande  = new QLineEdit; Line_Edit["commande"] = commande;
+/*      Nous avons choisis de commencer cette partie du programme par la création et l'initialisation d'un QSpinBox avec la valeur par défaut Nbr_Line
+ *          dans le .h. Cette initialisation est necessaire car nous réutilisons les données du QSpinBox afin de modifier le nombre de visualisation
+ *          de ligne dans le stack */
 
-    viewStack = new QTableWidget(Nbr_Line,1);
-    viewStack->setMaximumSize(300,250);
-
-    message   = new QLineEdit;
-    commande  = new QLineEdit;
     Initialisation_Stack(); //Initilisation de la pile
     creation(); //Création des différents composant utiliser pour l'interface de l'application
     Initialisation(); //Initialisation des différents composants
@@ -47,22 +51,17 @@ QCompUT::QCompUT(QWidget* father) : QWidget(father){
     connect(buttons_secondary_view["delete_prog"],SIGNAL(clicked()),this,SLOT(slotDeleteProg()));
 
     connect(Nbr_Line_Stack,SIGNAL(valueChanged(int)),this,SLOT(slot_Nbr_Line_view_Stack()));
-
-    //connect(&Stack::getInstance(),SIGNAL(modificationEtat()),this,SLOT(refresh_stack()));
 }
 
 
 void QCompUT::Initialisation_Stack(){
-
-
-
     //viewStack->setStyleSheet("color: white");
-    viewStack->horizontalHeader()->setVisible(false);
+    table["viewStack"]->horizontalHeader()->setVisible(false);
     //Ajuster la taille des colone
-    viewStack->horizontalHeader()->setStretchLastSection(true);
+    table["viewStack"]->horizontalHeader()->setStretchLastSection(true);
     //viewStack->setFixedHeight(Nbr_Line*viewStack->rowHeight(0)+2);
     //Vérouiller l'écriture au clavier dans le tableau
-    viewStack->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    table["viewStack"]->setEditTriggers(QAbstractItemView::NoEditTriggers);
     //Affichage inverse indice tableau
     QStringList labels;
 
@@ -70,9 +69,9 @@ void QCompUT::Initialisation_Stack(){
         QString str = QString::number(i);
         str+=" :";
         labels << str;
-        viewStack->setItem(i-1,0,new QTableWidgetItem(""));
+        table["viewStack"]->setItem(i-1,0,new QTableWidgetItem(""));
     }
-    viewStack->setVerticalHeaderLabels(labels);
+    table["viewStack"]->setVerticalHeaderLabels(labels);
 }
 
 /*----------------------------------------------------------------------------------------------------------------------------*/
@@ -210,8 +209,7 @@ void QCompUT::creation(){
 
     /*--------------------------------------------------------------------------------------------------------------------------------------------*/
     /*--Création du Spinbox pour le vue secondaire Setting----------------------------------------------------------------------------------------*/
-    QLabel* label_settings = new QLabel("Number of line in the stack"); label["label_settings"] = label_settings; label["label_settings"]->setFixedSize(200,20);
-
+    QLabel* label_settings = new QLabel("Number of line in the stack"); label["label_settings"] = label_settings; label["label_settings"]->setFixedSize(160,20);
 
     /*--------------------------------------------------------------------------------------------------------------------------------------------*/
     /*--Création des 4 onglets au niveau des claviers---------------------------------------------------------------------------------------------*/
@@ -233,11 +231,11 @@ void QCompUT::Initialisation(){
     creationOperators();
 
 /*------Initialisation de la couche stack et EditLine----------------------------------------------------------------------------------------*/
-/**/    layout_Vertical["layout_stack"]->addWidget(message);
-/**/    layout_Vertical["layout_stack"]->addWidget(viewStack);
-/**/    layout_Vertical["layout_stack"]->addWidget(commande);
-/**/    message->setReadOnly(true);
-/**/    message->setText("Bonjour et bienvenu dans CompUT");
+/**/    layout_Vertical["layout_stack"]->addWidget(Line_Edit["message"]);
+/**/    layout_Vertical["layout_stack"]->addWidget(table["viewStack"]);
+/**/    layout_Vertical["layout_stack"]->addWidget(Line_Edit["commande"]);
+/**/    Line_Edit["message"]->setReadOnly(true);
+/**/    Line_Edit["message"]->setText("Bonjour et bienvenu dans CompUT");
 /*-------------------------------------------------------------------------------------------------------------------------------------------*/
 /*------Initialisation de secon clavier------------------------------------------------------------------------------------------------------*/
 /**/    layout_Horizontal["layout123"]->addWidget(buttons_First_keyboard["b1"]); layout_Horizontal["layout123"]->addWidget(buttons_First_keyboard["b2"]); layout_Horizontal["layout123"]->addWidget(buttons_First_keyboard["b3"]);
@@ -267,7 +265,7 @@ void QCompUT::Initialisation(){
 /**/    layout_Vertical["layout_keyboard_two"]->addWidget(buttons_Second_keyboard["reduce_keyboard_two"]); layout_Vertical["layout_keyboard_two"]->addWidget(buttons_Second_keyboard["open_keyboard_two"]);
 /**/    layout_Vertical["layout_keyboard_two"]->addLayout(layout_Horizontal["layout_var_prog"]);
 /*-------------------------------------------------------------------------------------------------------------------------------------------*/
-/**/    //Layout de la vu secondaire Variable
+/**/    //Layout de la vue secondaire Variable
 /**/    layout_Vertical["layoutV_add_var"]->addWidget(label["name_var_add"]);layout_Vertical["layoutV_add_var"]->addWidget(Line_Edit["add_name_var"]);
 /**/    layout_Vertical["layoutV_add_var"]->addWidget(label["value_var_add"]);layout_Vertical["layoutV_add_var"]->addWidget(Line_Edit["add_edit_var"]);
 /**/
@@ -291,7 +289,7 @@ void QCompUT::Initialisation(){
 /**/    layout_Vertical["layout_var"]->addLayout(layout_Horizontal["layoutH_modif_var"]);
 /**/    layout_Vertical["layout_var"]->addLayout(layout_Horizontal["layoutH_del_var"]);
 /**/
-/**/    //Layout de la vu secondaire Program
+/**/    //Layout de la vue secondaire Program
 /**/    layout_Vertical["layoutV_add_prog"]->addWidget(label["name_prog_add"]);layout_Vertical["layoutV_add_prog"]->addWidget(Line_Edit["add_name_prog"]);
 /**/    layout_Vertical["layoutV_add_prog"]->addWidget(label["value_prog_add"]);layout_Vertical["layoutV_add_prog"]->addWidget(Line_Edit["add_edit_prog"]);
 /**/
@@ -315,11 +313,13 @@ void QCompUT::Initialisation(){
 /**/    layout_Vertical["layout_prog"]->addLayout(layout_Horizontal["layoutH_modif_prog"]);
 /**/    layout_Vertical["layout_prog"]->addLayout(layout_Horizontal["layoutH_del_prog"]);
 /**/
-/**/    //Initialisation de la couche avec les 2 claviers
-/**/    layout_Horizontal["layout_keyboard_one_two"]->addLayout(layout_Vertical["layout_keyboard_one"]); layout_Horizontal["layout_keyboard_one_two"]->addLayout(layout_Vertical["layout_keyboard_two"]);
-/**/
+/**/    //Layout de la vue secondaire Settings
 /**/    layout_Vertical["Layout_Setting"]->addWidget(label["label_settings"]);
 /**/    layout_Vertical["Layout_Setting"]->addWidget(Nbr_Line_Stack);
+/**/    layout_Vertical["Layout_Setting"]->setAlignment(Qt::AlignTop);
+/**/
+/**/    //Initialisation de la couche avec les 2 claviers
+/**/    layout_Horizontal["layout_keyboard_one_two"]->addLayout(layout_Vertical["layout_keyboard_one"]); layout_Horizontal["layout_keyboard_one_two"]->addLayout(layout_Vertical["layout_keyboard_two"]);
 /**/
 /**/    //Initialisation des 4 onglets, dont 3 sont secondaires
 /**/    secondary_view["Principal"]->setLayout(layout_Horizontal["layout_keyboard_one_two"]); tab->addTab(secondary_view["Principal"], "Keyboard");
@@ -344,7 +344,7 @@ void QCompUT::Initialisation(){
 /**/    setFixedSize(900,350);
 /**/
 /**/    //Focus a un composant
-/**/    commande->setFocus(Qt::OtherFocusReason);
+/**/    Line_Edit["commande"]->setFocus(Qt::OtherFocusReason);
 }
 
 /*--------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -358,14 +358,13 @@ void QCompUT::Initialisation(){
 /*--------------------------------------------------------------------------------------------------------------------------------------------*/
 /*------Rafraichissement de la vue du stack---------------------------------------------------------------------------------------------------*/
 void QCompUT::refresh_stack(){
-    message->setText(QString::fromStdString(Computer::getInstance().getMessage()));
-//qDebug() << Nbr_Line;
+    Line_Edit["message"]->setText(QString::fromStdString(Computer::getInstance().getMessage()));
     for(size_t i=0; i<Nbr_Line; i++)
-        viewStack->item(i,0)->setText("");
+        table["viewStack"]->item(i,0)->setText("");
 
    size_t nb=0;
     for(auto it=Stack::getInstance().iterator(); it!=Stack::getInstance().end() && nb<Nbr_Line; ++it){
-        viewStack->item(Nbr_Line-nb-1,0)->setText(QString::fromStdString((*it)->toString()));
+        table["viewStack"]->item(Nbr_Line-nb-1,0)->setText(QString::fromStdString((*it)->toString()));
         nb++;
     }
 }
@@ -373,29 +372,29 @@ void QCompUT::refresh_stack(){
 /*--------------------------------------------------------------------------------------------------------------------------------------------*/
 /*------Permet de passer une information dans le stack----------------------------------------------------------------------------------------*/
 void QCompUT::getNextCommande(){
-    QString c=commande->text();
+    QString c=Line_Edit["commande"]->text();
     Computer::getInstance().evalLine(c.toStdString());
     refresh_stack();
-    commande->clear();
+    Line_Edit["commande"]->clear();
     text ="";
 }
 
 /*--------------------------------------------------------------------------------------------------------------------------------------------*/
 /*------Slot pour les boutons du premier------------------------------------------------------------------------------------------------------*/
-/**/    void QCompUT::slot1(){ text +="1"; commande->setText(text); }
-/**/    void QCompUT::slot2(){ text +="2"; commande->setText(text); }
-/**/    void QCompUT::slot3(){ text +="3"; commande->setText(text); }
-/**/    void QCompUT::slot4(){ text +="4"; commande->setText(text); }
-/**/    void QCompUT::slot5(){ text +="5"; commande->setText(text); }
-/**/    void QCompUT::slot6(){ text +="6"; commande->setText(text); }
-/**/    void QCompUT::slot7(){ text +="7"; commande->setText(text); }
-/**/    void QCompUT::slot8(){ text +="8"; commande->setText(text); }
-/**/    void QCompUT::slot9(){ text +="9"; commande->setText(text); }
-/**/    void QCompUT::slot0(){ text +="0"; commande->setText(text); }
-/**/    void QCompUT::slotPlus() { text +="+"; commande->setText(text); }
-/**/    void QCompUT::slotMoins(){ text +="-"; commande->setText(text); }
-/**/    void QCompUT::slotMult() { text +="*"; commande->setText(text); }
-/**/    void QCompUT::slotDiv()  { text +="/"; commande->setText(text); }
+/**/    void QCompUT::slot1(){ text +="1"; Line_Edit["commande"]->setText(text); }
+/**/    void QCompUT::slot2(){ text +="2"; Line_Edit["commande"]->setText(text); }
+/**/    void QCompUT::slot3(){ text +="3"; Line_Edit["commande"]->setText(text); }
+/**/    void QCompUT::slot4(){ text +="4"; Line_Edit["commande"]->setText(text); }
+/**/    void QCompUT::slot5(){ text +="5"; Line_Edit["commande"]->setText(text); }
+/**/    void QCompUT::slot6(){ text +="6"; Line_Edit["commande"]->setText(text); }
+/**/    void QCompUT::slot7(){ text +="7"; Line_Edit["commande"]->setText(text); }
+/**/    void QCompUT::slot8(){ text +="8"; Line_Edit["commande"]->setText(text); }
+/**/    void QCompUT::slot9(){ text +="9"; Line_Edit["commande"]->setText(text); }
+/**/    void QCompUT::slot0(){ text +="0"; Line_Edit["commande"]->setText(text); }
+/**/    void QCompUT::slotPlus() { text +="+"; Line_Edit["commande"]->setText(text); }
+/**/    void QCompUT::slotMoins(){ text +="-"; Line_Edit["commande"]->setText(text); }
+/**/    void QCompUT::slotMult() { text +="*"; Line_Edit["commande"]->setText(text); }
+/**/    void QCompUT::slotDiv()  { text +="/"; Line_Edit["commande"]->setText(text); }
 /**/    void QCompUT::slotEqual() { QCompUT::getNextCommande(); }
 
 /*--------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -648,21 +647,21 @@ void QCompUT::getNextCommande(){
 void QCompUT::slotVariable(){
     text = qobject_cast<QPushButton*>(sender())->text();
     string nom = Computer::getInstance().getVariable(text.toStdString());
-    commande->setText(QString::fromStdString(nom));
+    Line_Edit["commande"]->setText(QString::fromStdString(nom));
 }
 
 //Slot qui permet de réstituer la valeur d'un programme créé précédemment
 void QCompUT::slotProgram(){
     text = qobject_cast<QPushButton*>(sender())->text();
     string nom = Computer::getInstance().getVariable(text.toStdString());
-    commande->setText(QString::fromStdString(nom));
+    Line_Edit["commande"]->setText(QString::fromStdString(nom));
 }
 
 void QCompUT::slot_Nbr_Line_view_Stack(){
     //viewStack->setRowCount(0);
     Nbr_Line = Nbr_Line_Stack->text().toInt();
-    viewStack->setRowCount(Nbr_Line);
-    viewStack->clear();
+    table["viewStack"]->setRowCount(Nbr_Line);
+    table["viewStack"]->clear();
     Initialisation_Stack();
     refresh_stack();
 }

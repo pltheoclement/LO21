@@ -27,9 +27,6 @@ using namespace std;
 class QCompUT : public QWidget{
     Q_OBJECT
 
-    QLineEdit* message;
-    QTableWidget* viewStack;
-    QLineEdit* commande;
     QString text;
     size_t Nbr_Line = 8;
     QSpinBox* Nbr_Line_Stack;
