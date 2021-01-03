@@ -99,6 +99,7 @@ public:
     std::string toString() const;
     static const std::shared_ptr<LProgram>makeLiteral(std::string s);
     LProgram(std::string s) : program(s){}
+    std::string getValue() {return program;}
     ~LProgram(){}
 };
 

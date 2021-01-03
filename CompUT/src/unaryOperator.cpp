@@ -218,17 +218,26 @@ void Eval::free(){
 }
 
 bool Eval::apply(Stack& s){
-            qDebug() << "QString::fromStdString(variables.at(name))";
-	if(s.size() < 1)
-            throw OperatorException("Need 1 element in the stack");
-	const shared_ptr<Literal> elA = s.top();
-    if(elA->getType() == lexpression)
-            throw OperatorException("Need a literal expression");
-    s.pop();
-	Literal* litA = elA.get();
-	LExpression* lexpA = dynamic_cast<LExpression*>(litA);
-	const string var = lexpA->getValue();
-	Computer::getInstance().pushVariable(var);
+    if(s.size() < 1)
+        throw OperatorException("Need 1 elements in the stack");
+    const shared_ptr<Literal> elA = s.top();
+    if (elA->getType() == lexpression){
+        s.pop();
+        Literal* litA = elA.get();
+        LExpression* lexpA = dynamic_cast<LExpression*>(litA);
+        const string var = lexpA->getValue();
+        Computer::getInstance().pushVariable(var);
+    }else if (elA->getType() == lprogram){
+        s.pop();
+        Literal* litA = elA.get();
+        LProgram* lprogA = dynamic_cast<LProgram*>(litA);
+        string sProg = lprogA->getValue();
+        Computer::getInstance().evalLine(sProg.substr(1, sProg.size()-2));
+
+    }else{
+        throw OperatorException("Wesh donne moi une expresiion ou un programme !");
+    }
     return true;
+
 }
 /* Fin Drop */
