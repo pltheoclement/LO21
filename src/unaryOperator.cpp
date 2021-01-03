@@ -20,12 +20,11 @@ void UnaryOperator::addBehaviour(LiteralType A, std::shared_ptr<AbstractUnaryOpe
 }
 
 bool UnaryOperator::apply(Stack& s){
-
+	if(s.size() < 1)
+			throw OperatorException("Need 1 elements in the stack");
 	const shared_ptr<Literal> elA = s.top();// le premier argument
     LiteralType A=elA->getType();
 
-    cout << A;
-    cout.flush();
 
     if (possibles.count(A) > 0) {// existe bien dans ta map then possibles[make_pair(A,B)].execution(); // @suppress("Method cannot be resolved")
 
@@ -108,6 +107,8 @@ shared_ptr<Not> Not::instance = nullptr;
 
 
 bool Not::apply(Stack& s){
+	if(s.size() < 1)
+			throw OperatorException("Need 1 elements in the stack");
 	const shared_ptr<Literal> A = s.top();
 	s.pop();
 	Literal* litA = A.get();
@@ -163,8 +164,10 @@ void Dup::free(){
 	}
 }
 bool Dup::apply(Stack& s){
-
+	if(s.size() < 1)
+			throw OperatorException("Need 1 elements in the stack");
 	const shared_ptr<Literal> elA = s.top();
+
     const shared_ptr<Literal> newLit = elA->getCopy();
     s.push(newLit);
     return true;
@@ -198,6 +201,7 @@ bool Drop::apply(Stack& s){
 shared_ptr<Eval> Eval::instance = nullptr;
 
 Eval& Eval::get(){
+
 	if(instance == nullptr){
 		instance = shared_ptr<Eval>(new Eval);
 		Operator::addOperator(instance->name, instance);
@@ -213,6 +217,8 @@ void Eval::free(){
 }
 
 bool Eval::apply(Stack& s){
+	if(s.size() < 1)
+			throw OperatorException("Need 1 elements in the stack");
 	const shared_ptr<Literal> elA = s.top();
 	Literal* litA = elA.get();
 	LExpression* lexpA = dynamic_cast<LExpression*>(litA);

@@ -15,23 +15,22 @@ public:
 
 class Literal {
 
-    LiteralType type;
 public:
 
     static LiteralType isLiteral(const std::string& s);
     static const std::shared_ptr<Literal> makeLiteral(const std::string& s, LiteralType t);
 
-    virtual LiteralType getType(){ return this->type;}
+    virtual LiteralType getType() = 0;
     virtual std::string toString() const = 0;
-    virtual std::shared_ptr<Literal> getCopy() const { return makeLiteral(this->toString(), this->type);}
+    virtual std::shared_ptr<Literal> getCopy() { return makeLiteral(this->toString(), this->getType());}
     virtual ~Literal() {}
 };
 
 class LInteger : public Literal {
 
-    LiteralType type = linteger;
     int value;
 public:
+    LiteralType getType(){ return linteger;}
     LInteger(const int& i): value(i){}
     int getValue() const { return value;}
     const std::shared_ptr<LInteger> operator=(const std::shared_ptr<LInteger>){
@@ -44,7 +43,6 @@ public:
 
 class LReal : public Literal {
 
-    LiteralType type = lreal;
     double value;
 public:
     LiteralType getType(){ return lreal;}
@@ -58,7 +56,6 @@ public:
 
 class LRational : public Literal {
 
-    LiteralType type = lrational;
     int num;
     int den;
     void simplify();
@@ -77,7 +74,6 @@ public:
 
 class LAtom : public Literal {
 
-    LiteralType type = latom;
     std::string value;
 public:
     LiteralType getType(){ return latom;}
@@ -88,7 +84,6 @@ public:
 
 class LExpression : public LAtom {
 
-    LiteralType type = lexpression;
     std::string value;
 public:
     LiteralType getType(){ return lexpression;}
@@ -99,24 +94,10 @@ public:
 
 class LProgram : public Literal {
     std::string program;
-    LiteralType type = lprogram;
 public:
     LiteralType getType(){ return lprogram;}
-    //std::vector<Literal> getLiterals() const;
-    //LiteralIterator iter(){ return LiteralIterator(*this);}
     std::string toString() const;
     ~LProgram(){}
 };
-
-/* class LiteralIterator{
-
-    size_t pos;
-public:
-    LiteralIterator(Stack s);
-    LiteralIterator(LProgram p);
-    void next();
-    Literal item();
-    bool isDone();
-}; */
 
 #endif

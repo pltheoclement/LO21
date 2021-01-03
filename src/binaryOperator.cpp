@@ -19,32 +19,36 @@ using namespace std;
 
 void BinaryOperator::addBehaviour(LiteralType A, LiteralType B, shared_ptr<AbstractBinaryOperation> a) {
 	this->possibles[std::make_pair(A,B)]=a;
-	//cout << "(A = " << A << " B = " << B << ")" << endl;
 }
 
 bool BinaryOperator::apply(Stack& s){
 
-	const std::shared_ptr<Literal> elA = s.top();// le premier argument
-	s.pop();
+	if(s.size() < 2)
+		throw OperatorException("Need 2 elements in the stack");
+	else{
+		const std::shared_ptr<Literal> elA = s.top();// le premier argument
+		s.pop();
 
-	const std::shared_ptr<Literal> elB = s.top();// le deuxième
-	s.pop();
+		const std::shared_ptr<Literal> elB = s.top();// le deuxième
+		s.pop();
 
-    LiteralType A=elA->getType();
+		LiteralType A=elA->getType();
 
-    LiteralType B=elB->getType();
+		LiteralType B=elB->getType();
 
-    if (possibles.count(make_pair(A, B)) > 0) {// existe bien dans ta map then possibles[make_pair(A,B)].execution(); // @suppress("Method cannot be resolved")
+		if (possibles.count(make_pair(A, B)) > 0) {// existe bien dans ta map then possibles[make_pair(A,B)].execution(); // @suppress("Method cannot be resolved")
 
-    	auto opp = possibles.at(make_pair(A,B));
-    	const shared_ptr<Literal> res = opp->execution(elA, elB);
-    	s.push(res);
-    	return true;
-    }else{
-    	s.push(elB);
-    	s.push(elA);
-    	return false;
-    }
+			auto opp = possibles.at(make_pair(A,B));
+			const shared_ptr<Literal> res = opp->execution(elA, elB);
+			s.push(res);
+			return true;
+		}else{
+			s.push(elB);
+			s.push(elA);
+			throw OperatorException("The operator you entered does not exist for the type of the top 2 elements of the stack");
+			return false;
+		}
+	}
 }
 
 void AbstractAdd::addMyself(){
@@ -136,8 +140,13 @@ const std::shared_ptr<Literal> AddRationalRational::execution(const std::shared_
 	int valeurBden = lIntB->getDen();
 	const int newNum = valeurAnum * valeurBden + valeurBnum * valeurAden; //On effectue l'opération Add
 	const int newDen = valeurBden * valeurAden;
-	const shared_ptr<LRational> newLit = LRational::makeLiteral(newNum, newDen); //On créé un const shared_ptr pour notre nouveau int
-	return newLit; //On pous notre Literal sur la Stack.
+	if(newDen == 1){
+		const shared_ptr<LInteger> newLit = LInteger::makeLiteral(newNum); //On créé un const shared_ptr pour notre nouveau int
+		return newLit;
+	}else{
+		const shared_ptr<LRational> newLit = LRational::makeLiteral(newNum, newDen); //On créé un const shared_ptr pour notre nouveau int
+		return newLit; //On pous notre Literal sur la Stack.
+	}
 }
 /* Fin AddRationalRational */
 /* Début AddRealReal */
@@ -268,8 +277,13 @@ const std::shared_ptr<Literal> MulRationalRational::execution(const std::shared_
 	int valeurBden = lIntB->getDen();
 	const int newNum = valeurAnum * valeurBnum; //On effectue l'opération Mul
 	const int newDen = valeurBden * valeurAden;
-	const shared_ptr<LRational> newLit = LRational::makeLiteral(newNum, newDen); //On créé un const shared_ptr pour notre nouveau int
-	return newLit; //On pous notre Literal sur la Stack.
+	if(newDen == 1){
+		const shared_ptr<LInteger> newLit = LInteger::makeLiteral(newNum); //On créé un const shared_ptr pour notre nouveau int
+		return newLit;
+	}else{
+		const shared_ptr<LRational> newLit = LRational::makeLiteral(newNum, newDen); //On créé un const shared_ptr pour notre nouveau int
+		return newLit; //On pous notre Literal sur la Stack.
+	}
 }
 /* Fin MulRationalRational */
 /* Début MulRealReal */
@@ -417,8 +431,13 @@ const std::shared_ptr<Literal> SubRationalRational::execution(const std::shared_
 	int valeurBden = lIntB->getDen();
 	const int newNum = valeurAden * valeurBnum - valeurAnum * valeurBden; //On effectue l'opération Sub
 	const int newDen = valeurBden * valeurAden;
-	const shared_ptr<LRational> newLit = LRational::makeLiteral(newNum, newDen); //On créé un const shared_ptr pour notre nouveau int
-	return newLit; //On pous notre Literal sur la Stack.
+	if(newDen == 1){
+		const shared_ptr<LInteger> newLit = LInteger::makeLiteral(newNum); //On créé un const shared_ptr pour notre nouveau int
+		return newLit;
+	}else{
+		const shared_ptr<LRational> newLit = LRational::makeLiteral(newNum, newDen); //On créé un const shared_ptr pour notre nouveau int
+		return newLit; //On pous notre Literal sur la Stack.
+	}
 }
 /* Fin SubRationalRational */
 /* Début SubRealReal */
@@ -497,6 +516,9 @@ const std::shared_ptr<Literal> DivIntInt::execution(const std::shared_ptr<Litera
 	LInteger* lIntA = dynamic_cast<LInteger*>(litA); //On cast ce pointeur en LInteger
 	LInteger* lIntB = dynamic_cast<LInteger*>(litB);
 	double valeurA = lIntA->getValue(); //On récupère la valeur de ce Literal
+	if(valeurA == 0){
+		throw OperatorException("Divided by 0");
+	}
 	double valeurB = lIntB->getValue();
 	const double newVal = valeurB / valeurA; //On effectue l'opération Div
 	const shared_ptr<LReal> newLit = LReal::makeLiteral(newVal); //On créé un const shared_ptr pour notre nouveau int
@@ -511,6 +533,9 @@ const std::shared_ptr<Literal> DivIntReal::execution(const std::shared_ptr<Liter
 	LInteger* lIntA = dynamic_cast<LInteger*>(litA); //On cast ce pointeur en LInteger
 	LReal* lDoubleB = dynamic_cast<LReal*>(litB);
 	double valeurA = lIntA->getValue(); //On récupère la valeur de ce Literal
+	if(valeurA == 0){
+		throw OperatorException("Divided by 0");
+	}
 	double valeurB = lDoubleB->getValue();
 	const double newVal = valeurB / valeurA; //On effectue l'opération Div
 	const shared_ptr<LReal> newLit = LReal::makeLiteral(newVal); //On créé un const shared_ptr pour notre nouveau int
@@ -525,6 +550,9 @@ const std::shared_ptr<Literal> DivRealInt::execution(const std::shared_ptr<Liter
 	LReal* ldoubleA = dynamic_cast<LReal*>(litA); //On cast ce pointeur en LInteger
 	LInteger* lintB = dynamic_cast<LInteger*>(litB);
 	double valeurA = ldoubleA->getValue(); //On récupère la valeur de ce Literal
+	if(valeurA == 0){
+		throw OperatorException("Divided by 0");
+	}
 	double valeurB = lintB->getValue();
 	const double newVal = valeurB / valeurA; //On effectue l'opération Div
 	const shared_ptr<LReal> newLit = LReal::makeLiteral(newVal); //On créé un const shared_ptr pour notre nouveau int
@@ -541,10 +569,18 @@ const std::shared_ptr<Literal> DivIntRational::execution(const std::shared_ptr<L
 	LRational* lRatB = dynamic_cast<LRational*>(litB);
 	int valeurA = lIntA->getValue(); //On récupère la valeur de ce Literal
 	int valeurBnum = lRatB->getNum();
+	if(valeurBnum == 0){
+		throw OperatorException("Divided by 0");
+	}
 	int valeurBden = lRatB->getDen();
 	const int newNum = (valeurBden * valeurA); //On effectue l'opération Div
-	const shared_ptr<LRational> newLit = LRational::makeLiteral(newNum, valeurBnum); //On créé un const shared_ptr pour notre nouveau int
-	return newLit; //On pous notre Literal sur la Stack.
+	if(valeurBnum == 1){
+		const shared_ptr<LInteger> newLit = LInteger::makeLiteral(newNum); //On créé un const shared_ptr pour notre nouveau int
+		return newLit;
+	}else{
+		const shared_ptr<LRational> newLit = LRational::makeLiteral(newNum, valeurBnum); //On créé un const shared_ptr pour notre nouveau int
+		return newLit; //On pous notre Literal sur la Stack.
+	}
 }
 /* Fin DivIntRational */
 /* Début DivRationalInt */
@@ -556,6 +592,9 @@ const std::shared_ptr<Literal> DivRationalInt::execution(const std::shared_ptr<L
 	LInteger* lIntB = dynamic_cast<LInteger*>(litB);
 	int valeurB = lIntB->getValue(); //On récupère la valeur de ce Literal
 	int valeurAnum = lRatA->getNum();
+	if(valeurAnum == 0){
+		throw OperatorException("Divided by 0");
+	}
 	int valeurAden = lRatA->getDen();
 	const int newNum = (valeurB * valeurAden); //On effectue l'opération Div
 	const shared_ptr<LRational> newLit = LRational::makeLiteral(newNum, valeurAnum); //On créé un const shared_ptr pour notre nouveau int
@@ -575,8 +614,16 @@ const std::shared_ptr<Literal> DivRationalRational::execution(const std::shared_
 	int valeurBden = lIntB->getDen();
 	const int newNum = valeurAnum * valeurBden; //On effectue l'opération Div
 	const int newDen = valeurBnum * valeurAden;
-	const shared_ptr<LRational> newLit = LRational::makeLiteral(newNum, newDen); //On créé un const shared_ptr pour notre nouveau int
-	return newLit; //On pous notre Literal sur la Stack.
+	if(newDen == 0){
+		throw OperatorException("Divided by 0");
+	}
+	if(newDen == 1){
+		const shared_ptr<LInteger> newLit = LInteger::makeLiteral(newNum); //On créé un const shared_ptr pour notre nouveau int
+		return newLit;
+	}else{
+		const shared_ptr<LRational> newLit = LRational::makeLiteral(newNum, newDen); //On créé un const shared_ptr pour notre nouveau int
+		return newLit; //On pous notre Literal sur la Stack.
+	}
 }
 /* Fin DivRationalRational */
 /* Début DivRealReal */
@@ -587,6 +634,9 @@ const std::shared_ptr<Literal> DivRealReal::execution(const std::shared_ptr<Lite
 	LReal* lIntA = dynamic_cast<LReal*>(litA); //On cast ce podoubleeur en LReal
 	LReal* lIntB = dynamic_cast<LReal*>(litB);
 	double valeurA = lIntA->getValue(); //On récupère la valeur de ce Literal
+	if(valeurA == 0){
+		throw OperatorException("Divided by 0");
+	}
 	double valeurB = lIntB->getValue();
 	const double newVal = valeurB / valeurA; //On effectue l'opération Div
 	const shared_ptr<LReal> newLit = LReal::makeLiteral(newVal); //On créé un const shared_ptr pour notre nouveau double
@@ -601,6 +651,9 @@ const std::shared_ptr<Literal> DivRealRational::execution(const std::shared_ptr<
 	LReal* lIntA = dynamic_cast<LReal*>(litA); //On cast ce podoubleeur en LReal
 	LRational* lIntB = dynamic_cast<LRational*>(litB);
 	double valeurA = lIntA->getValue(); //On récupère la valeur de ce Literal
+	if(valeurA == 0){
+		throw OperatorException("Divided by 0");
+	}
 	double valeurBnum = lIntB->getNum();
 	double valeurBden = lIntB->getDen();
 	const double newVal = (valeurBnum / valeurBden) / valeurA; //On effectue l'opération Div
@@ -617,7 +670,13 @@ const std::shared_ptr<Literal> DivRationalReal::execution(const std::shared_ptr<
 	LReal* lRealB = dynamic_cast<LReal*>(litB);
 	double valeurB = lRealB->getValue(); //On récupère la valeur de ce Literal
 	double valeurAnum = lRatA->getNum();
+	if(valeurAnum == 0){
+		throw OperatorException("Divided by 0");
+	}
 	double valeurAden = lRatA->getDen();
+	if(valeurAden == 0){
+		throw OperatorException("Divided by 0");
+	}
 	const double newVal = valeurB / (valeurAnum / valeurAden); //On effectue l'opération Div
 	const shared_ptr<LReal> newLit = LReal::makeLiteral(newVal); //On créé un const shared_ptr pour notre nouveau double
 	return newLit; //On pous notre Literal sur la Stack.
@@ -655,6 +714,9 @@ const std::shared_ptr<Literal> ModIntInt::execution(const std::shared_ptr<Litera
 	LInteger* lIntA = dynamic_cast<LInteger*>(litA); //On cast ce pointeur en LInteger
 	LInteger* lIntB = dynamic_cast<LInteger*>(litB);
 	int valeurA = lIntA->getValue(); //On récupère la valeur de ce Literal
+	if(valeurA == 0){
+		throw OperatorException("Divided by 0");
+	}
 	int valeurB = lIntB->getValue();
 	const int newVal = valeurB % valeurA; //On effectue l'opération Mod
 	const shared_ptr<LInteger> newLit = LInteger::makeLiteral(newVal); //On créé un const shared_ptr pour notre nouveau int
@@ -694,6 +756,9 @@ const std::shared_ptr<Literal> DivEIntInt::execution(const std::shared_ptr<Liter
 	LInteger* lIntA = dynamic_cast<LInteger*>(litA); //On cast ce pointeur en LInteger
 	LInteger* lIntB = dynamic_cast<LInteger*>(litB);
 	int valeurA = lIntA->getValue(); //On récupère la valeur de ce Literal
+	if(valeurA == 0){
+		throw OperatorException("Divided by 0");
+	}
 	int valeurB = lIntB->getValue();
 	const int newVal = valeurB / valeurA; //On effectue l'opération DivE
 	const shared_ptr<LInteger> newLit = LInteger::makeLiteral(newVal); //On créé un const shared_ptr pour notre nouveau int
@@ -1655,6 +1720,8 @@ const std::shared_ptr<Literal> SupRationalReal::execution(const std::shared_ptr<
 shared_ptr<And> And::instance = nullptr;
 
 bool And::apply(Stack& s){
+	if(s.size() < 2)
+			throw OperatorException("Need 2 elements in the stack");
 	const shared_ptr<Literal> A = s.top();
 	s.pop();
 	const shared_ptr<Literal> B = s.top();
@@ -1701,6 +1768,8 @@ void And::free(){
 shared_ptr<Or> Or::instance = nullptr;
 
 bool Or::apply(Stack& s){
+	if(s.size() < 2)
+			throw OperatorException("Need 2 elements in the stack");
 	const shared_ptr<Literal> A = s.top();
 	s.pop();
 	const shared_ptr<Literal> B = s.top();
@@ -1747,6 +1816,8 @@ void Or::free(){
 shared_ptr<Swap> Swap::instance = nullptr;
 
 bool Swap::apply(Stack& s){
+	if(s.size() < 2)
+			throw OperatorException("Need 2 elements in the stack");
 	const shared_ptr<Literal> A = s.top();
 	s.pop();
 	const shared_ptr<Literal> B = s.top();

@@ -40,7 +40,7 @@ std::string Computer::getMessage() const {
 }
 
 void Computer::storeVariable(const std::string &name, const Literal &l) {
-    variables.at(name) = l.toString();
+    variables[name] = l.toString();
 }
 
 void Computer::forgetVariable(const std::string &name) {
@@ -61,6 +61,15 @@ void Computer::pushVariable(const std::string &name) {
         }
     } else {
         message = "There is no variable with name " + name;
+    }
+}
+
+std::string Computer::getVariable(const std::string &name) {
+    if (variables.count(name)) {
+        return variables.at(name);
+    } else {
+        message = "There is no variable with name " + name;
+        return "";
     }
 }
 
@@ -88,7 +97,7 @@ std::string Computer::evalLine(const std::string &s) {
     // String processing
     std::string inst;
     std::string line = s + ' ';
-    for (char c : (s + ' ')) {
+    for (char c : s + " ") {
         if (c == ' ' && brackets == 0) {
             if (!inst.empty()) {
                 if (Operator::isOperator(inst)) {
