@@ -32,7 +32,7 @@ const std::shared_ptr<Literal> Literal::makeLiteral(const std::string& s, Litera
             std::string d="";
             unsigned int i=0;
             while(s[i]!='/'){n += s[i]; i++;}
-            for(; i<s.size(); i++) d += s[i];
+            for(i++; i<s.size(); i++) d += s[i];
             return LRational::makeLiteral(std::stod(n),std::stod(d));
             }
         default : throw "Erreur : impossible de construire le literal !";

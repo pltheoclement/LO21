@@ -19,8 +19,8 @@ using namespace std;
 int main(){
 	//Stack s = Stack::getInstance();
 	creationOperators();
-	const shared_ptr<Literal> l1 = LRational::makeLiteral(19, 5);
-	const shared_ptr<Literal> l2 = LReal::makeLiteral(10.0);
+	const shared_ptr<Literal> l1 = LRational::makeLiteral(3, 4);
+	const shared_ptr<Literal> l2 = LRational::makeLiteral(1, 4);
 	Stack::getInstance().push(l1);
 	Stack::getInstance().push(l2);
 	Operator::getInstance().getOperator("+").apply(Stack::getInstance());
@@ -28,6 +28,6 @@ int main(){
 
 	const shared_ptr<Literal> l3 = Stack::getInstance().top();
 	Literal* litA = l3.get();
-	LReal* lIntA = dynamic_cast<LReal*>(litA);
+	LRational* lIntA = dynamic_cast<LRational*>(litA);
 	cout << lIntA->toString();
 }

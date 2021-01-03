@@ -140,12 +140,12 @@ const std::shared_ptr<Literal> AddRationalRational::execution(const std::shared_
 	int valeurBden = lIntB->getDen();
 	const int newNum = valeurAnum * valeurBden + valeurBnum * valeurAden; //On effectue l'opération Add
 	const int newDen = valeurBden * valeurAden;
-	if(newDen == 1){
-		const shared_ptr<LInteger> newLit = LInteger::makeLiteral(newNum); //On créé un const shared_ptr pour notre nouveau int
+	const shared_ptr<LRational> lit = LRational::makeLiteral(newNum, newDen); //On créé un const shared_ptr pour notre nouveau int
+	if(lit->getDen() == 1){
+		const shared_ptr<LInteger> newLit = LInteger::makeLiteral(lit->getNum()); //On créé un const shared_ptr pour notre nouveau int
 		return newLit;
 	}else{
-		const shared_ptr<LRational> newLit = LRational::makeLiteral(newNum, newDen); //On créé un const shared_ptr pour notre nouveau int
-		return newLit; //On pous notre Literal sur la Stack.
+		return lit; //On pous notre Literal sur la Stack.
 	}
 }
 /* Fin AddRationalRational */
@@ -277,12 +277,12 @@ const std::shared_ptr<Literal> MulRationalRational::execution(const std::shared_
 	int valeurBden = lIntB->getDen();
 	const int newNum = valeurAnum * valeurBnum; //On effectue l'opération Mul
 	const int newDen = valeurBden * valeurAden;
-	if(newDen == 1){
-		const shared_ptr<LInteger> newLit = LInteger::makeLiteral(newNum); //On créé un const shared_ptr pour notre nouveau int
+	const shared_ptr<LRational> lit = LRational::makeLiteral(newNum, newDen); //On créé un const shared_ptr pour notre nouveau int
+	if(lit->getDen() == 1){
+		const shared_ptr<LInteger> newLit = LInteger::makeLiteral(lit->getNum()); //On créé un const shared_ptr pour notre nouveau int
 		return newLit;
 	}else{
-		const shared_ptr<LRational> newLit = LRational::makeLiteral(newNum, newDen); //On créé un const shared_ptr pour notre nouveau int
-		return newLit; //On pous notre Literal sur la Stack.
+		return lit; //On pous notre Literal sur la Stack.
 	}
 }
 /* Fin MulRationalRational */
@@ -431,12 +431,12 @@ const std::shared_ptr<Literal> SubRationalRational::execution(const std::shared_
 	int valeurBden = lIntB->getDen();
 	const int newNum = valeurAden * valeurBnum - valeurAnum * valeurBden; //On effectue l'opération Sub
 	const int newDen = valeurBden * valeurAden;
-	if(newDen == 1){
-		const shared_ptr<LInteger> newLit = LInteger::makeLiteral(newNum); //On créé un const shared_ptr pour notre nouveau int
+	const shared_ptr<LRational> lit = LRational::makeLiteral(newNum, newDen); //On créé un const shared_ptr pour notre nouveau int
+	if(lit->getDen() == 1){
+		const shared_ptr<LInteger> newLit = LInteger::makeLiteral(lit->getNum()); //On créé un const shared_ptr pour notre nouveau int
 		return newLit;
 	}else{
-		const shared_ptr<LRational> newLit = LRational::makeLiteral(newNum, newDen); //On créé un const shared_ptr pour notre nouveau int
-		return newLit; //On pous notre Literal sur la Stack.
+		return lit; //On pous notre Literal sur la Stack.
 	}
 }
 /* Fin SubRationalRational */
@@ -574,12 +574,12 @@ const std::shared_ptr<Literal> DivIntRational::execution(const std::shared_ptr<L
 	}
 	int valeurBden = lRatB->getDen();
 	const int newNum = (valeurBden * valeurA); //On effectue l'opération Div
-	if(valeurBnum == 1){
-		const shared_ptr<LInteger> newLit = LInteger::makeLiteral(newNum); //On créé un const shared_ptr pour notre nouveau int
+	const shared_ptr<LRational> lit = LRational::makeLiteral(newNum, valeurBden); //On créé un const shared_ptr pour notre nouveau int
+	if(lit->getDen() == 1){
+		const shared_ptr<LInteger> newLit = LInteger::makeLiteral(lit->getNum()); //On créé un const shared_ptr pour notre nouveau int
 		return newLit;
 	}else{
-		const shared_ptr<LRational> newLit = LRational::makeLiteral(newNum, valeurBnum); //On créé un const shared_ptr pour notre nouveau int
-		return newLit; //On pous notre Literal sur la Stack.
+		return lit; //On pous notre Literal sur la Stack.
 	}
 }
 /* Fin DivIntRational */
@@ -617,12 +617,12 @@ const std::shared_ptr<Literal> DivRationalRational::execution(const std::shared_
 	if(newDen == 0){
 		throw OperatorException("Divided by 0");
 	}
-	if(newDen == 1){
-		const shared_ptr<LInteger> newLit = LInteger::makeLiteral(newNum); //On créé un const shared_ptr pour notre nouveau int
+	const shared_ptr<LRational> lit = LRational::makeLiteral(newNum, newDen); //On créé un const shared_ptr pour notre nouveau int
+	if(lit->getDen() == 1){
+		const shared_ptr<LInteger> newLit = LInteger::makeLiteral(lit->getNum()); //On créé un const shared_ptr pour notre nouveau int
 		return newLit;
 	}else{
-		const shared_ptr<LRational> newLit = LRational::makeLiteral(newNum, newDen); //On créé un const shared_ptr pour notre nouveau int
-		return newLit; //On pous notre Literal sur la Stack.
+		return lit; //On pous notre Literal sur la Stack.
 	}
 }
 /* Fin DivRationalRational */
@@ -813,7 +813,7 @@ const std::shared_ptr<Literal> EquIntReal::execution(const std::shared_ptr<Liter
 	LReal* lDoubleB = dynamic_cast<LReal*>(litB);
 	double valeurA = lIntA->getValue(); //On récupère la valeur de ce Literal
 	double valeurB = lDoubleB->getValue();
-  const int newVal = valeurB == valeurA; //On effectue l'opération Equ
+	const int newVal = valeurB == valeurA; //On effectue l'opération Equ
 	const shared_ptr<LInteger> newLit = LInteger::makeLiteral(newVal); //On créé un const shared_ptr pour notre nouveau int
 	return newLit; //On pous notre Literal sur la Stack.
 }
@@ -827,7 +827,7 @@ const std::shared_ptr<Literal> EquRealInt::execution(const std::shared_ptr<Liter
 	LInteger* lintB = dynamic_cast<LInteger*>(litB);
 	double valeurA = ldoubleA->getValue(); //On récupère la valeur de ce Literal
 	double valeurB = lintB->getValue();
-  const int newVal = valeurB == valeurA; //On effectue l'opération Equ
+	const int newVal = valeurB == valeurA; //On effectue l'opération Equ
 	const shared_ptr<LInteger> newLit = LInteger::makeLiteral(newVal); //On créé un const shared_ptr pour notre nouveau int
 	return newLit; //On pous notre Literal sur la Stack.
 }
@@ -841,9 +841,9 @@ const std::shared_ptr<Literal> EquIntRational::execution(const std::shared_ptr<L
 	LInteger* lIntA = dynamic_cast<LInteger*>(litA); //On cast ce pointeur en LInteger
 	LRational* lRatB = dynamic_cast<LRational*>(litB);
 	int valeurA = lIntA->getValue(); //On récupère la valeur de ce Literal
-	int valeurBnum = lRatB->getNum();
-	int valeurBden = lRatB->getDen();
-  const int newVal = (valeurBnum / valeurBden) == valeurA; //On effectue l'opération Equ
+	double valeurBnum = lRatB->getNum();
+	double valeurBden = lRatB->getDen();
+	const int newVal = (valeurBnum / valeurBden) == valeurA; //On effectue l'opération Equ
 	const shared_ptr<LInteger> newLit = LInteger::makeLiteral(newVal); //On créé un const shared_ptr pour notre nouveau int
 	return newLit; //On pous notre Literal sur la Stack.
 }
@@ -856,9 +856,9 @@ const std::shared_ptr<Literal> EquRationalInt::execution(const std::shared_ptr<L
 	LRational* lRatA = dynamic_cast<LRational*>(litA); //On cast ce pointeur en LInteger
 	LInteger* lIntB = dynamic_cast<LInteger*>(litB);
 	int valeurB = lIntB->getValue(); //On récupère la valeur de ce Literal
-	int valeurAnum = lRatA->getNum();
-	int valeurAden = lRatA->getDen();
-  const int newVal = valeurB == (valeurAnum / valeurAden ); //On effectue l'opération Equ
+	double valeurAnum = lRatA->getNum();
+	double valeurAden = lRatA->getDen();
+	const int newVal = valeurB == (valeurAnum / valeurAden ); //On effectue l'opération Equ
 	const shared_ptr<LInteger> newLit = LInteger::makeLiteral(newVal); //On créé un const shared_ptr pour notre nouveau int
 	return newLit; //On pous notre Literal sur la Stack.
 }
@@ -870,11 +870,11 @@ const std::shared_ptr<Literal> EquRationalRational::execution(const std::shared_
 	Literal* litB = B.get();
 	LRational* lIntA = dynamic_cast<LRational*>(litA); //On cast ce pointeur en lrational
 	LRational* lIntB = dynamic_cast<LRational*>(litB);
-	int valeurAnum = lIntA->getNum();
-	int valeurAden = lIntA->getDen();
-	int valeurBnum = lIntB->getNum();
-	int valeurBden = lIntB->getDen();
-  const int newVal = (valeurBnum / valeurBden) == (valeurAnum / valeurAden ); //On effectue l'opération Equ
+	double valeurAnum = lIntA->getNum();
+	double valeurAden = lIntA->getDen();
+	double valeurBnum = lIntB->getNum();
+	double valeurBden = lIntB->getDen();
+	const int newVal = (valeurBnum / valeurBden) == (valeurAnum / valeurAden ); //On effectue l'opération Equ
 	const shared_ptr<LInteger> newLit = LInteger::makeLiteral(newVal); //On créé un const shared_ptr pour notre nouveau int
 	return newLit; //On pous notre Literal sur la Stack.
 }
@@ -888,7 +888,7 @@ const std::shared_ptr<Literal> EquRealReal::execution(const std::shared_ptr<Lite
 	LReal* lIntB = dynamic_cast<LReal*>(litB);
 	double valeurA = lIntA->getValue(); //On récupère la valeur de ce Literal
 	double valeurB = lIntB->getValue();
-  const int newVal = valeurB == valeurA; //On effectue l'opération Equ
+	const int newVal = valeurB == valeurA; //On effectue l'opération Equ
 	const shared_ptr<LInteger> newLit = LInteger::makeLiteral(newVal); //On créé un const shared_ptr pour notre nouveau int
 	return newLit; //On pous notre Literal sur la Stack.
 }
@@ -903,7 +903,7 @@ const std::shared_ptr<Literal> EquRealRational::execution(const std::shared_ptr<
 	double valeurA = lIntA->getValue(); //On récupère la valeur de ce Literal
 	double valeurBnum = lIntB->getNum();
 	double valeurBden = lIntB->getDen();
-  const int newVal = valeurA == (valeurBnum / valeurBden ); //On effectue l'opération Equ
+	const int newVal = valeurA == (valeurBnum / valeurBden ); //On effectue l'opération Equ
 	const shared_ptr<LInteger> newLit = LInteger::makeLiteral(newVal); //On créé un const shared_ptr pour notre nouveau int
 	return newLit; //On pous notre Literal sur la Stack.
 }
@@ -918,7 +918,7 @@ const std::shared_ptr<Literal> EquRationalReal::execution(const std::shared_ptr<
 	double valeurB = lRealB->getValue(); //On récupère la valeur de ce Literal
 	double valeurAnum = lRatA->getNum();
 	double valeurAden = lRatA->getDen();
-  const int newVal = valeurB == (valeurAnum / valeurAden ); //On effectue l'opération Equ
+	const int newVal = valeurB == (valeurAnum / valeurAden ); //On effectue l'opération Equ
 	const shared_ptr<LInteger> newLit = LInteger::makeLiteral(newVal); //On créé un const shared_ptr pour notre nouveau int
 	return newLit; //On pous notre Literal sur la Stack.
 }
@@ -971,7 +971,7 @@ const std::shared_ptr<Literal> DifIntReal::execution(const std::shared_ptr<Liter
 	LReal* lDoubleB = dynamic_cast<LReal*>(litB);
 	double valeurA = lIntA->getValue(); //On récupère la valeur de ce Literal
 	double valeurB = lDoubleB->getValue();
-  const int newVal = valeurB != valeurA; //On effectue l'opération Dif
+	const int newVal = valeurB != valeurA; //On effectue l'opération Dif
 	const shared_ptr<LInteger> newLit = LInteger::makeLiteral(newVal); //On créé un const shared_ptr pour notre nouveau int
 	return newLit; //On pous notre Literal sur la Stack.
 }
@@ -985,7 +985,7 @@ const std::shared_ptr<Literal> DifRealInt::execution(const std::shared_ptr<Liter
 	LInteger* lintB = dynamic_cast<LInteger*>(litB);
 	double valeurA = ldoubleA->getValue(); //On récupère la valeur de ce Literal
 	double valeurB = lintB->getValue();
-  const int newVal = valeurB != valeurA; //On effectue l'opération Dif
+	const int newVal = valeurB != valeurA; //On effectue l'opération Dif
 	const shared_ptr<LInteger> newLit = LInteger::makeLiteral(newVal); //On créé un const shared_ptr pour notre nouveau int
 	return newLit; //On pous notre Literal sur la Stack.
 }
@@ -999,9 +999,9 @@ const std::shared_ptr<Literal> DifIntRational::execution(const std::shared_ptr<L
 	LInteger* lIntA = dynamic_cast<LInteger*>(litA); //On cast ce pointeur en LInteger
 	LRational* lRatB = dynamic_cast<LRational*>(litB);
 	int valeurA = lIntA->getValue(); //On récupère la valeur de ce Literal
-	int valeurBnum = lRatB->getNum();
-	int valeurBden = lRatB->getDen();
-  const int newVal = (valeurBnum / valeurBden) != valeurA; //On effectue l'opération Dif
+	double valeurBnum = lRatB->getNum();
+	double valeurBden = lRatB->getDen();
+	const int newVal = (valeurBnum / valeurBden) != valeurA; //On effectue l'opération Dif
 	const shared_ptr<LInteger> newLit = LInteger::makeLiteral(newVal); //On créé un const shared_ptr pour notre nouveau int
 	return newLit; //On pous notre Literal sur la Stack.
 }
@@ -1014,9 +1014,9 @@ const std::shared_ptr<Literal> DifRationalInt::execution(const std::shared_ptr<L
 	LRational* lRatA = dynamic_cast<LRational*>(litA); //On cast ce pointeur en LInteger
 	LInteger* lIntB = dynamic_cast<LInteger*>(litB);
 	int valeurB = lIntB->getValue(); //On récupère la valeur de ce Literal
-	int valeurAnum = lRatA->getNum();
-	int valeurAden = lRatA->getDen();
-  const int newVal = valeurB != (valeurAnum / valeurAden ); //On effectue l'opération Dif
+	double valeurAnum = lRatA->getNum();
+	double valeurAden = lRatA->getDen();
+	const int newVal = valeurB != (valeurAnum / valeurAden ); //On effectue l'opération Dif
 	const shared_ptr<LInteger> newLit = LInteger::makeLiteral(newVal); //On créé un const shared_ptr pour notre nouveau int
 	return newLit; //On pous notre Literal sur la Stack.
 }
@@ -1028,11 +1028,11 @@ const std::shared_ptr<Literal> DifRationalRational::execution(const std::shared_
 	Literal* litB = B.get();
 	LRational* lIntA = dynamic_cast<LRational*>(litA); //On cast ce pointeur en lrational
 	LRational* lIntB = dynamic_cast<LRational*>(litB);
-	int valeurAnum = lIntA->getNum();
-	int valeurAden = lIntA->getDen();
-	int valeurBnum = lIntB->getNum();
-	int valeurBden = lIntB->getDen();
-  const int newVal = (valeurBnum / valeurBden) != (valeurAnum / valeurAden ); //On effectue l'opération Dif
+	double valeurAnum = lIntA->getNum();
+	double valeurAden = lIntA->getDen();
+	double valeurBnum = lIntB->getNum();
+	double valeurBden = lIntB->getDen();
+	const int newVal = (valeurBnum / valeurBden) != (valeurAnum / valeurAden ); //On effectue l'opération Dif
 	const shared_ptr<LInteger> newLit = LInteger::makeLiteral(newVal); //On créé un const shared_ptr pour notre nouveau int
 	return newLit; //On pous notre Literal sur la Stack.
 }
@@ -1046,7 +1046,7 @@ const std::shared_ptr<Literal> DifRealReal::execution(const std::shared_ptr<Lite
 	LReal* lIntB = dynamic_cast<LReal*>(litB);
 	double valeurA = lIntA->getValue(); //On récupère la valeur de ce Literal
 	double valeurB = lIntB->getValue();
-  const int newVal = valeurB != valeurA; //On effectue l'opération Dif
+	const int newVal = valeurB != valeurA; //On effectue l'opération Dif
 	const shared_ptr<LInteger> newLit = LInteger::makeLiteral(newVal); //On créé un const shared_ptr pour notre nouveau int
 	return newLit; //On pous notre Literal sur la Stack.
 }
@@ -1061,7 +1061,7 @@ const std::shared_ptr<Literal> DifRealRational::execution(const std::shared_ptr<
 	double valeurA = lIntA->getValue(); //On récupère la valeur de ce Literal
 	double valeurBnum = lIntB->getNum();
 	double valeurBden = lIntB->getDen();
-  const int newVal = valeurA != (valeurBnum / valeurBden ); //On effectue l'opération Dif
+	const int newVal = valeurA != (valeurBnum / valeurBden ); //On effectue l'opération Dif
 	const shared_ptr<LInteger> newLit = LInteger::makeLiteral(newVal); //On créé un const shared_ptr pour notre nouveau int
 	return newLit; //On pous notre Literal sur la Stack.
 }
@@ -1076,7 +1076,7 @@ const std::shared_ptr<Literal> DifRationalReal::execution(const std::shared_ptr<
 	double valeurB = lRealB->getValue(); //On récupère la valeur de ce Literal
 	double valeurAnum = lRatA->getNum();
 	double valeurAden = lRatA->getDen();
-  const int newVal = valeurB != (valeurAnum / valeurAden ); //On effectue l'opération Dif
+	const int newVal = valeurB != (valeurAnum / valeurAden ); //On effectue l'opération Dif
 	const shared_ptr<LInteger> newLit = LInteger::makeLiteral(newVal); //On créé un const shared_ptr pour notre nouveau int
 	return newLit; //On pous notre Literal sur la Stack.
 }
@@ -1129,7 +1129,7 @@ const std::shared_ptr<Literal> InfEquIntReal::execution(const std::shared_ptr<Li
 	LReal* lDoubleB = dynamic_cast<LReal*>(litB);
 	double valeurA = lIntA->getValue(); //On récupère la valeur de ce Literal
 	double valeurB = lDoubleB->getValue();
-  const int newVal = valeurB <= valeurA; //On effectue l'opération InfEqu
+	const int newVal = valeurB <= valeurA; //On effectue l'opération InfEqu
 	const shared_ptr<LInteger> newLit = LInteger::makeLiteral(newVal); //On créé un const shared_ptr pour notre nouveau int
 	return newLit; //On pous notre Literal sur la Stack.
 }
@@ -1143,7 +1143,7 @@ const std::shared_ptr<Literal> InfEquRealInt::execution(const std::shared_ptr<Li
 	LInteger* lintB = dynamic_cast<LInteger*>(litB);
 	double valeurA = ldoubleA->getValue(); //On récupère la valeur de ce Literal
 	double valeurB = lintB->getValue();
-  const int newVal = valeurB <= valeurA; //On effectue l'opération InfEqu
+	const int newVal = valeurB <= valeurA; //On effectue l'opération InfEqu
 	const shared_ptr<LInteger> newLit = LInteger::makeLiteral(newVal); //On créé un const shared_ptr pour notre nouveau int
 	return newLit; //On pous notre Literal sur la Stack.
 }
@@ -1157,9 +1157,9 @@ const std::shared_ptr<Literal> InfEquIntRational::execution(const std::shared_pt
 	LInteger* lIntA = dynamic_cast<LInteger*>(litA); //On cast ce pointeur en LInteger
 	LRational* lRatB = dynamic_cast<LRational*>(litB);
 	int valeurA = lIntA->getValue(); //On récupère la valeur de ce Literal
-	int valeurBnum = lRatB->getNum();
-	int valeurBden = lRatB->getDen();
-  const int newVal = (valeurBnum / valeurBden) <= valeurA; //On effectue l'opération InfEqu
+	double valeurBnum = lRatB->getNum();
+	double valeurBden = lRatB->getDen();
+	const int newVal = (valeurBnum / valeurBden) <= valeurA; //On effectue l'opération InfEqu
 	const shared_ptr<LInteger> newLit = LInteger::makeLiteral(newVal); //On créé un const shared_ptr pour notre nouveau int
 	return newLit; //On pous notre Literal sur la Stack.
 }
@@ -1172,9 +1172,9 @@ const std::shared_ptr<Literal> InfEquRationalInt::execution(const std::shared_pt
 	LRational* lRatA = dynamic_cast<LRational*>(litA); //On cast ce pointeur en LInteger
 	LInteger* lIntB = dynamic_cast<LInteger*>(litB);
 	int valeurB = lIntB->getValue(); //On récupère la valeur de ce Literal
-	int valeurAnum = lRatA->getNum();
-	int valeurAden = lRatA->getDen();
-  const int newVal = valeurB <= (valeurAnum / valeurAden ); //On effectue l'opération InfEqu
+	double valeurAnum = lRatA->getNum();
+	double valeurAden = lRatA->getDen();
+	const int newVal = valeurB <= (valeurAnum / valeurAden ); //On effectue l'opération InfEqu
 	const shared_ptr<LInteger> newLit = LInteger::makeLiteral(newVal); //On créé un const shared_ptr pour notre nouveau int
 	return newLit; //On pous notre Literal sur la Stack.
 }
@@ -1186,11 +1186,11 @@ const std::shared_ptr<Literal> InfEquRationalRational::execution(const std::shar
 	Literal* litB = B.get();
 	LRational* lIntA = dynamic_cast<LRational*>(litA); //On cast ce pointeur en lrational
 	LRational* lIntB = dynamic_cast<LRational*>(litB);
-	int valeurAnum = lIntA->getNum();
-	int valeurAden = lIntA->getDen();
-	int valeurBnum = lIntB->getNum();
-	int valeurBden = lIntB->getDen();
-  const int newVal = (valeurBnum / valeurBden) <= (valeurAnum / valeurAden ); //On effectue l'opération InfEqu
+	double valeurAnum = lIntA->getNum();
+	double valeurAden = lIntA->getDen();
+	double valeurBnum = lIntB->getNum();
+	double valeurBden = lIntB->getDen();
+	const int newVal = (valeurBnum / valeurBden) <= (valeurAnum / valeurAden ); //On effectue l'opération InfEqu
 	const shared_ptr<LInteger> newLit = LInteger::makeLiteral(newVal); //On créé un const shared_ptr pour notre nouveau int
 	return newLit; //On pous notre Literal sur la Stack.
 }
@@ -1204,7 +1204,7 @@ const std::shared_ptr<Literal> InfEquRealReal::execution(const std::shared_ptr<L
 	LReal* lIntB = dynamic_cast<LReal*>(litB);
 	double valeurA = lIntA->getValue(); //On récupère la valeur de ce Literal
 	double valeurB = lIntB->getValue();
-  const int newVal = valeurB <= valeurA; //On effectue l'opération InfEqu
+	const int newVal = valeurB <= valeurA; //On effectue l'opération InfEqu
 	const shared_ptr<LInteger> newLit = LInteger::makeLiteral(newVal); //On créé un const shared_ptr pour notre nouveau int
 	return newLit; //On pous notre Literal sur la Stack.
 }
@@ -1219,7 +1219,7 @@ const std::shared_ptr<Literal> InfEquRealRational::execution(const std::shared_p
 	double valeurA = lIntA->getValue(); //On récupère la valeur de ce Literal
 	double valeurBnum = lIntB->getNum();
 	double valeurBden = lIntB->getDen();
-  const int newVal = valeurA <= (valeurBnum / valeurBden ); //On effectue l'opération InfEqu
+	const int newVal = valeurA <= (valeurBnum / valeurBden ); //On effectue l'opération InfEqu
 	const shared_ptr<LInteger> newLit = LInteger::makeLiteral(newVal); //On créé un const shared_ptr pour notre nouveau int
 	return newLit; //On pous notre Literal sur la Stack.
 }
@@ -1234,7 +1234,7 @@ const std::shared_ptr<Literal> InfEquRationalReal::execution(const std::shared_p
 	double valeurB = lRealB->getValue(); //On récupère la valeur de ce Literal
 	double valeurAnum = lRatA->getNum();
 	double valeurAden = lRatA->getDen();
-  const int newVal = valeurB <= (valeurAnum / valeurAden ); //On effectue l'opération InfEqu
+	const int newVal = valeurB <= (valeurAnum / valeurAden ); //On effectue l'opération InfEqu
 	const shared_ptr<LInteger> newLit = LInteger::makeLiteral(newVal); //On créé un const shared_ptr pour notre nouveau int
 	return newLit; //On pous notre Literal sur la Stack.
 }
@@ -1287,7 +1287,7 @@ const std::shared_ptr<Literal> InfIntReal::execution(const std::shared_ptr<Liter
 	LReal* lDoubleB = dynamic_cast<LReal*>(litB);
 	double valeurA = lIntA->getValue(); //On récupère la valeur de ce Literal
 	double valeurB = lDoubleB->getValue();
-  const int newVal = valeurB < valeurA; //On effectue l'opération Inf
+	const int newVal = valeurB < valeurA; //On effectue l'opération Inf
 	const shared_ptr<LInteger> newLit = LInteger::makeLiteral(newVal); //On créé un const shared_ptr pour notre nouveau int
 	return newLit; //On pous notre Literal sur la Stack.
 }
@@ -1301,7 +1301,7 @@ const std::shared_ptr<Literal> InfRealInt::execution(const std::shared_ptr<Liter
 	LInteger* lintB = dynamic_cast<LInteger*>(litB);
 	double valeurA = ldoubleA->getValue(); //On récupère la valeur de ce Literal
 	double valeurB = lintB->getValue();
-  const int newVal = valeurB < valeurA; //On effectue l'opération Inf
+	const int newVal = valeurB < valeurA; //On effectue l'opération Inf
 	const shared_ptr<LInteger> newLit = LInteger::makeLiteral(newVal); //On créé un const shared_ptr pour notre nouveau int
 	return newLit; //On pous notre Literal sur la Stack.
 }
@@ -1315,9 +1315,9 @@ const std::shared_ptr<Literal> InfIntRational::execution(const std::shared_ptr<L
 	LInteger* lIntA = dynamic_cast<LInteger*>(litA); //On cast ce pointeur en LInteger
 	LRational* lRatB = dynamic_cast<LRational*>(litB);
 	int valeurA = lIntA->getValue(); //On récupère la valeur de ce Literal
-	int valeurBnum = lRatB->getNum();
-	int valeurBden = lRatB->getDen();
-  const int newVal = (valeurBnum / valeurBden) < valeurA; //On effectue l'opération Inf
+	double valeurBnum = lRatB->getNum();
+	double valeurBden = lRatB->getDen();
+	const int newVal = (valeurBnum / valeurBden) < valeurA; //On effectue l'opération Inf
 	const shared_ptr<LInteger> newLit = LInteger::makeLiteral(newVal); //On créé un const shared_ptr pour notre nouveau int
 	return newLit; //On pous notre Literal sur la Stack.
 }
@@ -1330,9 +1330,9 @@ const std::shared_ptr<Literal> InfRationalInt::execution(const std::shared_ptr<L
 	LRational* lRatA = dynamic_cast<LRational*>(litA); //On cast ce pointeur en LInteger
 	LInteger* lIntB = dynamic_cast<LInteger*>(litB);
 	int valeurB = lIntB->getValue(); //On récupère la valeur de ce Literal
-	int valeurAnum = lRatA->getNum();
-	int valeurAden = lRatA->getDen();
-  const int newVal = valeurB < (valeurAnum / valeurAden ); //On effectue l'opération Inf
+	double valeurAnum = lRatA->getNum();
+	double valeurAden = lRatA->getDen();
+	const int newVal = valeurB < (valeurAnum / valeurAden ); //On effectue l'opération Inf
 	const shared_ptr<LInteger> newLit = LInteger::makeLiteral(newVal); //On créé un const shared_ptr pour notre nouveau int
 	return newLit; //On pous notre Literal sur la Stack.
 }
@@ -1344,11 +1344,11 @@ const std::shared_ptr<Literal> InfRationalRational::execution(const std::shared_
 	Literal* litB = B.get();
 	LRational* lIntA = dynamic_cast<LRational*>(litA); //On cast ce pointeur en lrational
 	LRational* lIntB = dynamic_cast<LRational*>(litB);
-	int valeurAnum = lIntA->getNum();
-	int valeurAden = lIntA->getDen();
-	int valeurBnum = lIntB->getNum();
-	int valeurBden = lIntB->getDen();
-  const int newVal = (valeurBnum / valeurBden) < (valeurAnum / valeurAden ); //On effectue l'opération Inf
+	double valeurAnum = lIntA->getNum();
+	double valeurAden = lIntA->getDen();
+	double valeurBnum = lIntB->getNum();
+	double valeurBden = lIntB->getDen();
+	const int newVal = (valeurBnum / valeurBden) < (valeurAnum / valeurAden ); //On effectue l'opération Inf
 	const shared_ptr<LInteger> newLit = LInteger::makeLiteral(newVal); //On créé un const shared_ptr pour notre nouveau int
 	return newLit; //On pous notre Literal sur la Stack.
 }
@@ -1362,7 +1362,7 @@ const std::shared_ptr<Literal> InfRealReal::execution(const std::shared_ptr<Lite
 	LReal* lIntB = dynamic_cast<LReal*>(litB);
 	double valeurA = lIntA->getValue(); //On récupère la valeur de ce Literal
 	double valeurB = lIntB->getValue();
-  const int newVal = valeurB < valeurA; //On effectue l'opération Inf
+	const int newVal = valeurB < valeurA; //On effectue l'opération Inf
 	const shared_ptr<LInteger> newLit = LInteger::makeLiteral(newVal); //On créé un const shared_ptr pour notre nouveau int
 	return newLit; //On pous notre Literal sur la Stack.
 }
@@ -1377,7 +1377,7 @@ const std::shared_ptr<Literal> InfRealRational::execution(const std::shared_ptr<
 	double valeurA = lIntA->getValue(); //On récupère la valeur de ce Literal
 	double valeurBnum = lIntB->getNum();
 	double valeurBden = lIntB->getDen();
-  const int newVal = valeurA < (valeurBnum / valeurBden ); //On effectue l'opération Inf
+	const int newVal = valeurA < (valeurBnum / valeurBden ); //On effectue l'opération Inf
 	const shared_ptr<LInteger> newLit = LInteger::makeLiteral(newVal); //On créé un const shared_ptr pour notre nouveau int
 	return newLit; //On pous notre Literal sur la Stack.
 }
@@ -1392,7 +1392,7 @@ const std::shared_ptr<Literal> InfRationalReal::execution(const std::shared_ptr<
 	double valeurB = lRealB->getValue(); //On récupère la valeur de ce Literal
 	double valeurAnum = lRatA->getNum();
 	double valeurAden = lRatA->getDen();
-  const int newVal = valeurB < (valeurAnum / valeurAden ); //On effectue l'opération Inf
+	const int newVal = valeurB < (valeurAnum / valeurAden ); //On effectue l'opération Inf
 	const shared_ptr<LInteger> newLit = LInteger::makeLiteral(newVal); //On créé un const shared_ptr pour notre nouveau int
 	return newLit; //On pous notre Literal sur la Stack.
 }
@@ -1446,7 +1446,7 @@ const std::shared_ptr<Literal> SupEquIntReal::execution(const std::shared_ptr<Li
 	LReal* lDoubleB = dynamic_cast<LReal*>(litB);
 	double valeurA = lIntA->getValue(); //On récupère la valeur de ce Literal
 	double valeurB = lDoubleB->getValue();
-  const int newVal = valeurB >= valeurA; //On effectue l'opération SupEqu
+	const int newVal = valeurB >= valeurA; //On effectue l'opération SupEqu
 	const shared_ptr<LInteger> newLit = LInteger::makeLiteral(newVal); //On créé un const shared_ptr pour notre nouveau int
 	return newLit; //On pous notre Literal sur la Stack.
 }
@@ -1460,7 +1460,7 @@ const std::shared_ptr<Literal> SupEquRealInt::execution(const std::shared_ptr<Li
 	LInteger* lintB = dynamic_cast<LInteger*>(litB);
 	double valeurA = ldoubleA->getValue(); //On récupère la valeur de ce Literal
 	double valeurB = lintB->getValue();
-  const int newVal = valeurB >= valeurA; //On effectue l'opération SupEqu
+	const int newVal = valeurB >= valeurA; //On effectue l'opération SupEqu
 	const shared_ptr<LInteger> newLit = LInteger::makeLiteral(newVal); //On créé un const shared_ptr pour notre nouveau int
 	return newLit; //On pous notre Literal sur la Stack.
 }
@@ -1474,9 +1474,9 @@ const std::shared_ptr<Literal> SupEquIntRational::execution(const std::shared_pt
 	LInteger* lIntA = dynamic_cast<LInteger*>(litA); //On cast ce pointeur en LInteger
 	LRational* lRatB = dynamic_cast<LRational*>(litB);
 	int valeurA = lIntA->getValue(); //On récupère la valeur de ce Literal
-	int valeurBnum = lRatB->getNum();
-	int valeurBden = lRatB->getDen();
-  const int newVal = (valeurBnum / valeurBden) >= valeurA; //On effectue l'opération SupEqu
+	double valeurBnum = lRatB->getNum();
+	double valeurBden = lRatB->getDen();
+	const int newVal = (valeurBnum / valeurBden) >= valeurA; //On effectue l'opération SupEqu
 	const shared_ptr<LInteger> newLit = LInteger::makeLiteral(newVal); //On créé un const shared_ptr pour notre nouveau int
 	return newLit; //On pous notre Literal sur la Stack.
 }
@@ -1489,9 +1489,9 @@ const std::shared_ptr<Literal> SupEquRationalInt::execution(const std::shared_pt
 	LRational* lRatA = dynamic_cast<LRational*>(litA); //On cast ce pointeur en LInteger
 	LInteger* lIntB = dynamic_cast<LInteger*>(litB);
 	int valeurB = lIntB->getValue(); //On récupère la valeur de ce Literal
-	int valeurAnum = lRatA->getNum();
-	int valeurAden = lRatA->getDen();
-  const int newVal = valeurB >= (valeurAnum / valeurAden ); //On effectue l'opération SupEqu
+	double valeurAnum = lRatA->getNum();
+	double valeurAden = lRatA->getDen();
+	const int newVal = valeurB >= (valeurAnum / valeurAden ); //On effectue l'opération SupEqu
 	const shared_ptr<LInteger> newLit = LInteger::makeLiteral(newVal); //On créé un const shared_ptr pour notre nouveau int
 	return newLit; //On pous notre Literal sur la Stack.
 }
@@ -1503,11 +1503,11 @@ const std::shared_ptr<Literal> SupEquRationalRational::execution(const std::shar
 	Literal* litB = B.get();
 	LRational* lIntA = dynamic_cast<LRational*>(litA); //On cast ce pointeur en lrational
 	LRational* lIntB = dynamic_cast<LRational*>(litB);
-	int valeurAnum = lIntA->getNum();
-	int valeurAden = lIntA->getDen();
-	int valeurBnum = lIntB->getNum();
-	int valeurBden = lIntB->getDen();
-  const int newVal = (valeurBnum / valeurBden) >= (valeurAnum / valeurAden ); //On effectue l'opération SupEqu
+	double valeurAnum = lIntA->getNum();
+	double valeurAden = lIntA->getDen();
+	double valeurBnum = lIntB->getNum();
+	double valeurBden = lIntB->getDen();
+	const int newVal = (valeurBnum / valeurBden) >= (valeurAnum / valeurAden ); //On effectue l'opération SupEqu
 	const shared_ptr<LInteger> newLit = LInteger::makeLiteral(newVal); //On créé un const shared_ptr pour notre nouveau int
 	return newLit; //On pous notre Literal sur la Stack.
 }
@@ -1521,7 +1521,7 @@ const std::shared_ptr<Literal> SupEquRealReal::execution(const std::shared_ptr<L
 	LReal* lIntB = dynamic_cast<LReal*>(litB);
 	double valeurA = lIntA->getValue(); //On récupère la valeur de ce Literal
 	double valeurB = lIntB->getValue();
-  const int newVal = valeurB >= valeurA; //On effectue l'opération SupEqu
+	const int newVal = valeurB >= valeurA; //On effectue l'opération SupEqu
 	const shared_ptr<LInteger> newLit = LInteger::makeLiteral(newVal); //On créé un const shared_ptr pour notre nouveau int
 	return newLit; //On pous notre Literal sur la Stack.
 }
@@ -1536,7 +1536,7 @@ const std::shared_ptr<Literal> SupEquRealRational::execution(const std::shared_p
 	double valeurA = lIntA->getValue(); //On récupère la valeur de ce Literal
 	double valeurBnum = lIntB->getNum();
 	double valeurBden = lIntB->getDen();
-  const int newVal = valeurA >= (valeurBnum / valeurBden ); //On effectue l'opération SupEqu
+	const int newVal = valeurA >= (valeurBnum / valeurBden ); //On effectue l'opération SupEqu
 	const shared_ptr<LInteger> newLit = LInteger::makeLiteral(newVal); //On créé un const shared_ptr pour notre nouveau int
 	return newLit; //On pous notre Literal sur la Stack.
 }
@@ -1551,7 +1551,7 @@ const std::shared_ptr<Literal> SupEquRationalReal::execution(const std::shared_p
 	double valeurB = lRealB->getValue(); //On récupère la valeur de ce Literal
 	double valeurAnum = lRatA->getNum();
 	double valeurAden = lRatA->getDen();
-  const int newVal = valeurB >= (valeurAnum / valeurAden ); //On effectue l'opération SupEqu
+	const int newVal = valeurB >= (valeurAnum / valeurAden ); //On effectue l'opération SupEqu
 	const shared_ptr<LInteger> newLit = LInteger::makeLiteral(newVal); //On créé un const shared_ptr pour notre nouveau int
 	return newLit; //On pous notre Literal sur la Stack.
 }
@@ -1604,7 +1604,7 @@ const std::shared_ptr<Literal> SupIntReal::execution(const std::shared_ptr<Liter
 	LReal* lDoubleB = dynamic_cast<LReal*>(litB);
 	double valeurA = lIntA->getValue(); //On récupère la valeur de ce Literal
 	double valeurB = lDoubleB->getValue();
-  const int newVal = valeurB > valeurA; //On effectue l'opération Sup
+	const int newVal = valeurB > valeurA; //On effectue l'opération Sup
 	const shared_ptr<LInteger> newLit = LInteger::makeLiteral(newVal); //On créé un const shared_ptr pour notre nouveau int
 	return newLit; //On pous notre Literal sur la Stack.
 }
@@ -1618,7 +1618,7 @@ const std::shared_ptr<Literal> SupRealInt::execution(const std::shared_ptr<Liter
 	LInteger* lintB = dynamic_cast<LInteger*>(litB);
 	double valeurA = ldoubleA->getValue(); //On récupère la valeur de ce Literal
 	double valeurB = lintB->getValue();
-  const int newVal = valeurB > valeurA; //On effectue l'opération Sup
+	const int newVal = valeurB > valeurA; //On effectue l'opération Sup
 	const shared_ptr<LInteger> newLit = LInteger::makeLiteral(newVal); //On créé un const shared_ptr pour notre nouveau int
 	return newLit; //On pous notre Literal sur la Stack.
 }
@@ -1632,9 +1632,9 @@ const std::shared_ptr<Literal> SupIntRational::execution(const std::shared_ptr<L
 	LInteger* lIntA = dynamic_cast<LInteger*>(litA); //On cast ce pointeur en LInteger
 	LRational* lRatB = dynamic_cast<LRational*>(litB);
 	int valeurA = lIntA->getValue(); //On récupère la valeur de ce Literal
-	int valeurBnum = lRatB->getNum();
-	int valeurBden = lRatB->getDen();
-  const int newVal = (valeurBnum / valeurBden) > valeurA; //On effectue l'opération Sup
+	double valeurBnum = lRatB->getNum();
+	double valeurBden = lRatB->getDen();
+	const int newVal = (valeurBnum / valeurBden) > valeurA; //On effectue l'opération Sup
 	const shared_ptr<LInteger> newLit = LInteger::makeLiteral(newVal); //On créé un const shared_ptr pour notre nouveau int
 	return newLit; //On pous notre Literal sur la Stack.
 }
@@ -1647,9 +1647,9 @@ const std::shared_ptr<Literal> SupRationalInt::execution(const std::shared_ptr<L
 	LRational* lRatA = dynamic_cast<LRational*>(litA); //On cast ce pointeur en LInteger
 	LInteger* lIntB = dynamic_cast<LInteger*>(litB);
 	int valeurB = lIntB->getValue(); //On récupère la valeur de ce Literal
-	int valeurAnum = lRatA->getNum();
-	int valeurAden = lRatA->getDen();
-  const int newVal = valeurB > (valeurAnum / valeurAden ); //On effectue l'opération Sup
+	double valeurAnum = lRatA->getNum();
+	double valeurAden = lRatA->getDen();
+	const int newVal = valeurB > (valeurAnum / valeurAden ); //On effectue l'opération Sup
 	const shared_ptr<LInteger> newLit = LInteger::makeLiteral(newVal); //On créé un const shared_ptr pour notre nouveau int
 	return newLit; //On pous notre Literal sur la Stack.
 }
@@ -1661,11 +1661,11 @@ const std::shared_ptr<Literal> SupRationalRational::execution(const std::shared_
 	Literal* litB = B.get();
 	LRational* lIntA = dynamic_cast<LRational*>(litA); //On cast ce pointeur en lrational
 	LRational* lIntB = dynamic_cast<LRational*>(litB);
-	int valeurAnum = lIntA->getNum();
-	int valeurAden = lIntA->getDen();
-	int valeurBnum = lIntB->getNum();
-	int valeurBden = lIntB->getDen();
-  const int newVal = (valeurBnum / valeurBden) > (valeurAnum / valeurAden ); //On effectue l'opération Sup
+	double valeurAnum = lIntA->getNum();
+	double valeurAden = lIntA->getDen();
+	double valeurBnum = lIntB->getNum();
+	double valeurBden = lIntB->getDen();
+	const int newVal = (valeurBnum / valeurBden) > (valeurAnum / valeurAden ); //On effectue l'opération Sup
 	const shared_ptr<LInteger> newLit = LInteger::makeLiteral(newVal); //On créé un const shared_ptr pour notre nouveau int
 	return newLit; //On pous notre Literal sur la Stack.
 }
@@ -1679,7 +1679,7 @@ const std::shared_ptr<Literal> SupRealReal::execution(const std::shared_ptr<Lite
 	LReal* lIntB = dynamic_cast<LReal*>(litB);
 	double valeurA = lIntA->getValue(); //On récupère la valeur de ce Literal
 	double valeurB = lIntB->getValue();
-  const int newVal = valeurB > valeurA; //On effectue l'opération Sup
+	const int newVal = valeurB > valeurA; //On effectue l'opération Sup
 	const shared_ptr<LInteger> newLit = LInteger::makeLiteral(newVal); //On créé un const shared_ptr pour notre nouveau int
 	return newLit; //On pous notre Literal sur la Stack.
 }
@@ -1694,7 +1694,7 @@ const std::shared_ptr<Literal> SupRealRational::execution(const std::shared_ptr<
 	double valeurA = lIntA->getValue(); //On récupère la valeur de ce Literal
 	double valeurBnum = lIntB->getNum();
 	double valeurBden = lIntB->getDen();
-  const int newVal = valeurA > (valeurBnum / valeurBden ); //On effectue l'opération Sup
+	const int newVal = valeurA > (valeurBnum / valeurBden ); //On effectue l'opération Sup
 	const shared_ptr<LInteger> newLit = LInteger::makeLiteral(newVal); //On créé un const shared_ptr pour notre nouveau int
 	return newLit; //On pous notre Literal sur la Stack.
 }
@@ -1709,7 +1709,7 @@ const std::shared_ptr<Literal> SupRationalReal::execution(const std::shared_ptr<
 	double valeurB = lRealB->getValue(); //On récupère la valeur de ce Literal
 	double valeurAnum = lRatA->getNum();
 	double valeurAden = lRatA->getDen();
-  const int newVal = valeurB > (valeurAnum / valeurAden ); //On effectue l'opération Sup
+	const int newVal = valeurB > (valeurAnum / valeurAden ); //On effectue l'opération Sup
 	const shared_ptr<LInteger> newLit = LInteger::makeLiteral(newVal); //On créé un const shared_ptr pour notre nouveau int
 	return newLit; //On pous notre Literal sur la Stack.
 }
