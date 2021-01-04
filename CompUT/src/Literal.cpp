@@ -22,8 +22,7 @@ LiteralType Literal::isLiteral(const std::string& s){
             return lrational;
         else if (nslash == 0 && ndot == 1)
             return lerror;
-    }
-    else{
+    } else {
         if (s[0] >= 'A' && s[0] <= 'Z') {
             for (char c : s)
                 if ((c < '0' || c > '9') && (c < 'A' || c > 'Z'))
@@ -47,7 +46,7 @@ LiteralType Literal::isLiteral(const std::string& s){
         if(s[0]=='[' && s[s.size()-1] == ']') {
             static std::set<char> allowedChars;
             if (allowedChars.empty()) {
-                std::string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 []\".+-*/";
+                std::string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 []\".+-*/";
                 allowedChars.insert(chars.begin(), chars.end());
             }
             for (char c : s) {
