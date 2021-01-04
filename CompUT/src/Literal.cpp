@@ -13,34 +13,40 @@ LiteralType Literal::isLiteral(const std::string& s){
             else if (c=='.')
                 ndot++;
             else if (c < '0' || c > '9')
-                return other;
+                return lerror;
         }
         if (nslash == 0 && ndot == 0)
             return linteger;
         else if (nslash == 1 && ndot == 0)
             return lrational;
         else if (nslash == 0 && ndot == 1)
-            return lreal;
+            return lerror;
     }
     else{
+        if (s[0] >= 'A' && s[0] <= 'Z') {
+            for (char c : s)
+                if ((c < '0' || c > '9') && (c < 'A' || c > 'Z'))
+                    return lerror;
+            return latom;
+        }
         if (s[0] == '.' && s.size() >= 2) {
             for (char c : s.substr(1, s.size()-1))
                 if (c < '0' || c > '9')
-                    return other;
+                    return lerror;
             return lreal;
         }
         if(s[0]=='"' && s[s.size()-1] == '"' && s.size() >= 3) {
             if (s[1] >= 'A' && s[1] <= 'Z') {
                 for (char c : s.substr(1, s.size()-2))
                     if ((c < '0' || c > '9') && (c < 'A' || c > 'Z'))
-                        return other;
+                        return lerror;
                 return lexpression;
             }
         }
         if(s[0]=='[' && s[s.size()-1] == ']')
             return lprogram;
     }
-    return other;
+    return lerror;
 }
 
 const std::shared_ptr<Literal> Literal::makeLiteral(const std::string& s, LiteralType t){

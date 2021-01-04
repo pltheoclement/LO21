@@ -58,8 +58,7 @@ void Computer::pushVariable(const std::string &name) {
         qDebug() << "QString::fromStdString(variables.at(name))";
         qDebug() << QString::fromStdString(variables.at(name));
         switch (lt) {
-            case lerror:
-            case other : message = "The variable " + name + " is invalid"; break;
+            case lerror: message = "The variable " + name + " is invalid"; break;
             case lprogram: evalLine(variables.at(name)); break;
             default: Stack::getInstance().push(Literal::makeLiteral(variables.at(name), lt));
         }
@@ -120,7 +119,8 @@ std::string Computer::evalLine(const std::string &s) {
                         return line;
                     } else if (lt == latom) {
                         if (variables.count(inst)) {
-                            evalLine(variables.at(inst));
+                            std::string val = variables.at(inst);
+                            evalLine(val[0] == '[' ? val.substr(1, val.size()-2) : val);
                         } else {
                             message = "No variable or program called " + inst;
                             return line;
