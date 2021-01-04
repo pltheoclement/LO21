@@ -42,7 +42,11 @@ std::string Computer::getMessage() const {
 }
 
 void Computer::storeVariable(const std::string &name, const Literal &l) {
-    variables[name] = l.toString();
+    if (!Operator::isOperator(name)) {
+        variables[name] = l.toString();
+    } else {
+        message = "Conflict with built-in operator " + name;
+    }
 }
 
 void Computer::forgetVariable(const std::string &name) {
