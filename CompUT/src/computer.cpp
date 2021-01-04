@@ -1,3 +1,4 @@
+#include <deque>
 #include <fstream>
 
 #include "../include/computer.h"
@@ -90,6 +91,12 @@ std::vector<std::string> Computer::getVariableNames() const {
 void Computer::saveToFile(const std::string &filename) const {
     std::fstream file;
     file.open(filename, std::ios::out);
+    std::deque<std::string> lits;
+    for (auto it = Stack::getInstance().iterator(); it != Stack::getInstance().end(); it++) {
+        lits.push_front((*it)->toString());
+    }
+    for (auto& lit : lits) file << lit << std::endl;
+    file << "~" << std::endl;
     for (auto& entry : variables) {
         file << entry.first << ';' << entry.second << std::endl;
     }
@@ -101,24 +108,38 @@ void Computer::loadFromFile(const std::string &filename) {
     file.open(filename, std::ios::in);
     std::string line;
     int lc = 0;
+    bool programs = false;
     while (std::getline(file, line)) {
-        std::string name, value;
-        if (line.size() < 3) {
-            message = "Invalid file " + filename + " (error line " + std::to_string(lc) + ")";
-            file.close();
-            return;
+        if (!programs) {
+            if (line == "~") {
+                programs = true;
+            } else {
+                LiteralType lt = Literal::isLiteral(line);
+                if (lt != lerror) {
+                    Stack::getInstance().push(Literal::makeLiteral(line, lt));
+                } else {
+                    message = "Invalid file " + filename + " (error line " + std::to_string(lc) + ")";
+                }
+            }
+        } else {
+            std::string name, value;
+            if (line.size() < 3) {
+                message = "Invalid file " + filename + " (error line " + std::to_string(lc) + ")";
+                file.close();
+                return;
+            }
+            unsigned int i = 0;
+            while (line[i] != ';') name += line[i++];
+            i++;
+            while (i < line.size()) value += line[i++];
+            LiteralType lt = Literal::isLiteral(value);
+            if (Literal::isLiteral(name) != latom || lt == lerror) {
+                message = "Invalid file " + filename + " (error line " + std::to_string(lc) + ")";
+                file.close();
+                return;
+            }
+            storeVariable(name, *Literal::makeLiteral(value, lt));
         }
-        unsigned int i = 0;
-        while (line[i] != ';') name += line[i++];
-        i++;
-        while (i < line.size()) value += line[i++];
-        LiteralType lt = Literal::isLiteral(value);
-        if (Literal::isLiteral(name) != latom || lt == lerror) {
-            message = "Invalid file " + filename + " (error line " + std::to_string(lc) + ")";
-            file.close();
-            return;
-        }
-        storeVariable(name, *Literal::makeLiteral(value, lt));
         lc++;
     }
     file.close();
