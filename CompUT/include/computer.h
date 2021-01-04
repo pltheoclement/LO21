@@ -35,6 +35,8 @@ public:
     void forgetVariable(const std::string& name);
     void pushVariable(const std::string& name);
     std::string getVariable(const std::string& name);
+    void saveToFile(const std::string& filename) const;
+    void loadFromFile(const std::string& filename);
     std::string evalLine(const std::string& s);
 };
 #endif

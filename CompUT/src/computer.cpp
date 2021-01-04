@@ -1,6 +1,8 @@
-#include "../include/operator.h"
+#include <fstream>
+
 #include "../include/computer.h"
-#include <QDebug>
+#include "../include/operator.h"
+
 Stack &Stack::getInstance() {
     static Stack instance;
     return instance;
@@ -52,11 +54,8 @@ void Computer::forgetVariable(const std::string &name) {
 }
 
 void Computer::pushVariable(const std::string &name) {
-            qDebug() << "QString::fromStdString(variables.at(name))";
     if (variables.count(name)) {
         LiteralType lt = Literal::isLiteral(variables.at(name));
-        qDebug() << "QString::fromStdString(variables.at(name))";
-        qDebug() << QString::fromStdString(variables.at(name));
         switch (lt) {
             case lerror: message = "The variable " + name + " is invalid"; break;
             case lprogram: evalLine(variables.at(name)); break;
@@ -74,6 +73,43 @@ std::string Computer::getVariable(const std::string &name) {
         message = "There is no variable with name " + name;
         return "";
     }
+}
+
+void Computer::saveToFile(const std::string &filename) const {
+    std::fstream file;
+    file.open(filename, std::ios::out);
+    for (auto& entry : variables) {
+        file << entry.first << ';' << entry.second << std::endl;
+    }
+    file.close();
+}
+
+void Computer::loadFromFile(const std::string &filename) {
+    std::fstream file;
+    file.open(filename, std::ios::in);
+    std::string line;
+    int lc = 0;
+    while (std::getline(file, line)) {
+        std::string name, value;
+        if (line.size() < 3) {
+            message = "Invalid file " + filename + " (error line " + std::to_string(lc) + ")";
+            file.close();
+            return;
+        }
+        unsigned int i = 0;
+        while (line[i] != ';') name += line[i++];
+        i++;
+        while (i < line.size()) value += line[i++];
+        LiteralType lt = Literal::isLiteral(value);
+        if (Literal::isLiteral(name) != latom || lt == lerror) {
+            message = "Invalid file " + filename + " (error line " + std::to_string(lc) + ")";
+            file.close();
+            return;
+        }
+        storeVariable(name, *Literal::makeLiteral(value, lt));
+        lc++;
+    }
+    file.close();
 }
 
 std::string Computer::evalLine(const std::string &s) {
@@ -115,7 +151,7 @@ std::string Computer::evalLine(const std::string &s) {
                 } else {
                     LiteralType lt = Literal::isLiteral(inst);
                     if (lt == lerror) {
-                        message = "No such operator or literal " + inst;
+                        message = "No such operator or literal: " + inst;
                         return line;
                     } else if (lt == latom) {
                         if (variables.count(inst)) {
