@@ -75,6 +75,14 @@ std::string Computer::getVariable(const std::string &name) {
     }
 }
 
+std::vector<std::string> Computer::getVariableNames() const {
+    std::vector<std::string> names;
+    for (auto &pair : variables) {
+        names.push_back(pair.first);
+    }
+    return names;
+}
+
 void Computer::saveToFile(const std::string &filename) const {
     std::fstream file;
     file.open(filename, std::ios::out);
@@ -135,8 +143,10 @@ std::string Computer::evalLine(const std::string &s) {
 
     // String processing
     std::string inst;
-    std::string line = s + ' ';
-    for (char c : s + " ") {
+    std::string line = s;
+    if (line[line.size()-1] == '+' || line[line.size()-1] == '-' || line[line.size()-1] == '*' || line[line.size()-1] == '/')
+        line.insert(line.size()-1, " ");
+    for (char c : std::string(line + " ")) {
         if (c == ' ' && brackets == 0) {
             if (!inst.empty()) {
                 if (Operator::isOperator(inst)) {
