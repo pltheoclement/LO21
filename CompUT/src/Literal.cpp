@@ -1,94 +1,90 @@
 
-#include <iostream>
 #include <string>
 #include <vector>
 #include <memory>
 #include "../include/literal.h"
 
 LiteralType Literal::isLiteral(const std::string& s){
-    if (s[0] >= 48 && s[0] <= 57){
-        for(unsigned int i=1; i<s.size(); i++){
-            if(s[i]=='/') return lrational;
-            if(s[i]=='.') return lreal;
+    if (s[0] >= '0' && s[0] <= '9'){
+        unsigned int nslash = 0, ndot = 0;
+        for(char c : s){
+            if (c=='/')
+                nslash++;
+            else if (c=='.')
+                ndot++;
+            else if (c < '0' || c > '9')
+                return other;
         }
-        return linteger;
+        if (nslash == 0 && ndot == 0)
+            return linteger;
+        else if (nslash == 1 && ndot == 0)
+            return lrational;
+        else if (nslash == 0 && ndot == 1)
+            return lreal;
     }
     else{
-        if(s[0]=='[') return lprogram;
-        if(s[0]=='"') return lexpression;
-        /*for(unsigned int i=0; i<nbvar; i++)
-            if(!(strcmp(getvariable(i)[0], s))) return latom;*/
-        return other;
+        if (s[0] == '.' && s.size() >= 2) {
+            for (char c : s.substr(1, s.size()-1))
+                if (c < '0' || c > '9')
+                    return other;
+            return lreal;
+        }
+        if(s[0]=='"' && s[s.size()-1] == '"' && s.size() >= 3) {
+            if (s[1] >= 'A' && s[1] <= 'Z') {
+                for (char c : s.substr(1, s.size()-2))
+                    if ((c < '0' || c > '9') && (c < 'A' || c > 'Z'))
+                        return other;
+                return lexpression;
+            }
+        }
+        if(s[0]=='[' && s[s.size()-1] == ']')
+            return lprogram;
     }
+    return other;
 }
 
 const std::shared_ptr<Literal> Literal::makeLiteral(const std::string& s, LiteralType t){
     switch(t){
         case linteger : return LInteger::makeLiteral(std::stoi(s));
         case lreal : return LReal::makeLiteral(std::stod(s));
-        case lrational :
-            {
-            std::string n="";
-            std::string d="";
-            unsigned int i=0;
-            while(s[i]!='/'){n += s[i]; i++;}
-            for(i++; i<s.size(); i++) d += s[i];
-            return LRational::makeLiteral(std::stod(n),std::stod(d));
+        case lrational : {
+                std::string n;
+                std::string d;
+                unsigned int i=0;
+                while(s[i]!='/'){n += s[i]; i++;}
+                for(i++; i<s.size(); i++) d += s[i];
+                return LRational::makeLiteral(std::stoi(n),std::stoi(d));
             }
         case lprogram : return LProgram::makeLiteral(s);
         case lexpression: return LExpression::makeLiteral(s.substr(1, s.size() - 2));
 
-        default : throw LiteralException("Erreur : impossible de construire le literal !");
+        default : throw LiteralException("Invalid Literal");
     }
 }
 
 const std::shared_ptr<LInteger> LInteger::makeLiteral(const int& i){
-    auto it = std::make_shared<LInteger>(i);
-    return it;
+    return std::make_shared<LInteger>(i);
 }
 
 const std::shared_ptr<LReal> LReal::makeLiteral(const double& d){
-    auto re = std::make_shared<LReal>(d);
-    return re;
+    return std::make_shared<LReal>(d);
 }
 
 std::shared_ptr<LRational> LRational::makeLiteral(const int& n, const int& d){
-    auto ra = std::make_shared<LRational>(n,d);
-    return ra;
+    return std::make_shared<LRational>(n,d);
 }
-
-//std::shared_ptr<Literal> LInteger::getCopy(){
-//    auto it = std::make_shared<LInteger>(*this);
-//    return it;
-//}
-//
-//std::shared_ptr<Literal> LReal::getCopy(){
-//    auto re = std::make_shared<LReal>(*this);
-//    return re;
-//}
-//
-//std::shared_ptr<Literal> LRational::getCopy(){
-//    auto ra = std::make_shared<LRational>(*this);
-//    return ra;
-//}
 
 std::string LProgram::toString() const {
     return program;
 }
 
 const std::shared_ptr<LProgram> LProgram::makeLiteral(std::string s){
-    auto it = std::make_shared<LProgram>(s);
-    return it;
+    return std::make_shared<LProgram>(s);
 }
 
 const std::shared_ptr<LExpression> LExpression::makeLiteral(std::string s){
-    auto it = std::make_shared<LExpression>(s);
-    return it;
+    return std::make_shared<LExpression>(s);
 }
-
-
-
-
 
 void LRational::simplify(){
     if(num == 0) { den = 1; return;}
