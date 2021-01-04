@@ -23,11 +23,11 @@ void UnaryOperator::addBehaviour(LiteralType A, std::shared_ptr<AbstractUnaryOpe
 bool UnaryOperator::apply(Stack& s){
 	if(s.size() < 1)
             throw OperatorException("Need 1 element in the stack");
-	const shared_ptr<Literal> elA = s.top();// le premier argument
+	const shared_ptr<Literal> elA = s.top();
     LiteralType A=elA->getType();
 
 
-    if (possibles.count(A) > 0) {// existe bien dans ta map then possibles[make_pair(A,B)].execution(); // @suppress("Method cannot be resolved")
+    if (possibles.count(A) > 0) {
 
     	s.pop();
     	const shared_ptr<Literal> res = possibles[A]->execution(elA);

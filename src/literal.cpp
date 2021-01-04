@@ -47,7 +47,7 @@ LiteralType Literal::isLiteral(const std::string& s){
         if(s[0]=='[' && s[s.size()-1] == ']') {
             static std::set<char> allowedChars;
             if (allowedChars.empty()) {
-                std::string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 []\".+-*/";
+                std::string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 []\".+-*/";
                 allowedChars.insert(chars.begin(), chars.end());
             }
             for (char c : s) {

@@ -16,11 +16,14 @@
 #include "literal.h"
 #include "operator.h"
 
-
+/*
+ * Classe abstraite de laquelle hérite tous les comportements d'opérateurs binaires.
+ * Elle hérite publiquement de AbstractOperation et de enable_shared_from_this<AbstractUnaryOperation>, permettant ainsi de renvoyer le pointeur "this" sous forme de shared_ptr
+ */
 class AbstractBinaryOperation : public AbstractOperation, public std::enable_shared_from_this<AbstractBinaryOperation> {
 protected:
-	LiteralType typeA;
-	LiteralType typeB;
+	LiteralType typeA; //correspond au type de la premiere littérale sur laquel va s'executer l'opérateur
+	LiteralType typeB; //correspond au type de la deuxième littérale sur laquel va s'executer l'opérateur
 public:
 	//AbstractBinaryOperation() = default;
 	AbstractBinaryOperation(LiteralType a, LiteralType b) : typeA(a), typeB(b){}
@@ -29,7 +32,9 @@ public:
 
 };
 
-
+/*
+ * classe mère des opérateurs binaire
+ */
 class BinaryOperator : public TypeOperator{
 protected:
     std::map<std::pair<LiteralType,LiteralType>, std::shared_ptr<AbstractBinaryOperation>> possibles;
@@ -41,6 +46,10 @@ public :
     bool apply(Stack& s);
 };
 
+/*
+ * Classe de l'opérateur Add, premettant l'ajout de deux littérales
+ * Lors de son appel (par la méthode apply) dépile 2 littérales et les additionne (en fonction de leur type) et empile le resultat
+ */
 class Add : public BinaryOperator {
 protected:
 	std::string name = "+";
@@ -51,6 +60,10 @@ public:
 	static void free();
 };
 
+/*
+ * Classe abstraite de laquelle hérite tous les comportements de l'opérateur Add.
+ * Elle hérite publiquement de AbstractUnaryOperation
+ */
 class AbstractAdd : public AbstractBinaryOperation{
 public:
 	AbstractAdd() = default;
@@ -117,7 +130,10 @@ public:
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
-
+/*
+ * Classe de l'opérateur Mul, premettant la multiplication de deux littérales
+ * Lors de son appel (par la méthode apply) dépile 2 littérales et les multiplie (en fonction de leur type) et empile le resultat
+ */
 class Mul : public BinaryOperator {
 protected:
 	std::string name = "*";
@@ -128,6 +144,10 @@ public:
 	static void free();
 };
 
+/*
+ * Classe abstraite de laquelle hérite tous les comportements de l'opérateur Mul.
+ * Elle hérite publiquement de AbstractUnaryOperation
+ */
 class AbstractMul : public AbstractBinaryOperation{
 public:
 	AbstractMul() = default;
@@ -194,7 +214,10 @@ public:
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
-
+/*
+ * Classe de l'opérateur Sub, premettant la soustraction de deux littérales
+ * Lors de son appel (par la méthode apply) dépile 2 littérales et les soustrait (en fonction de leur type) et empile le resultat
+ */
 class Sub : public BinaryOperator {
 protected:
 	std::string name = "-";
@@ -205,6 +228,10 @@ public:
 	static void free();
 };
 
+/*
+ * Classe abstraite de laquelle hérite tous les comportements de l'opérateur Sub.
+ * Elle hérite publiquement de AbstractUnaryOperation
+ */
 class AbstractSub : public AbstractBinaryOperation{
 public:
 	AbstractSub() = default;
@@ -267,6 +294,11 @@ public:
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
+/*
+ * Classe de l'opérateur Div, premettant la division de deux littérales
+ * Lors de son appel (par la méthode apply) dépile 2 littérales et les divise (en fonction de leur type) et empile le resultat
+ * le cas de la division par 0 renvoit une exeption de type OperatorException
+ */
 class Div : public BinaryOperator {
 protected:
 	std::string name = "/";
@@ -277,6 +309,10 @@ public:
 	static void free();
 };
 
+/*
+ * Classe abstraite de laquelle hérite tous les comportements de l'opérateur Div.
+ * Elle hérite publiquement de AbstractUnaryOperation
+ */
 class AbstractDiv : public AbstractBinaryOperation{
 public:
 	AbstractDiv() = default;
@@ -339,6 +375,11 @@ public:
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
+/*
+ * Classe de l'opérateur Mod, premettant le modulo de deux littérales entières
+ * Lors de son appel (par la méthode apply) dépile 2 littérales entières et réaluse le modulo de l'une sur l'autre et empile le resultat
+ * le cas de la division par 0 renvoit une exeption de type OperatorException
+ */
 class Mod : public BinaryOperator {
 protected:
 	std::string name = "MOD";
@@ -349,6 +390,10 @@ public:
 	static void free();
 };
 
+/*
+ * Classe abstraite de laquelle hérite tous les comportements de l'opérateur Mod.
+ * Elle hérite publiquement de AbstractUnaryOperation
+ */
 class AbstractMod : public AbstractBinaryOperation{
 public:
 	AbstractMod() = default;
@@ -363,6 +408,11 @@ public:
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
+/*
+ * Classe de l'opérateur DivE, premettant la division entière de deux littérales entières
+ * Lors de son appel (par la méthode apply) dépile 2 littérales entières et les divise (en fonction de leur type) et empile le resultat entier
+ * le cas de la division par 0 renvoit une exeption de type OperatorException
+ */
 class DivE : public BinaryOperator {
 protected:
 	std::string name = "DIV";
@@ -373,6 +423,10 @@ public:
 	static void free();
 };
 
+/*
+ * Classe abstraite de laquelle hérite tous les comportements de l'opérateur DivE.
+ * Elle hérite publiquement de AbstractUnaryOperation
+ */
 class AbstarctDivE : public AbstractBinaryOperation{
 public:
 	AbstarctDivE() = default;
@@ -387,6 +441,11 @@ public:
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
+/*
+ * Classe de l'opérateur Equ, premettant la comparaison d'égalité de deux littérales
+ * Lors de son appel (par la méthode apply) dépile 2 littérales et les compare (en fonction de leur type)
+ * elle empile la litttérale entière 1 si les deux littérales sont égales, la littérale entière 0 sinon.
+ */
 class Equ : public BinaryOperator {
 protected:
 	std::string name = "=";
@@ -397,6 +456,10 @@ public:
 	static void free();
 };
 
+/*
+ * Classe abstraite de laquelle hérite tous les comportements de l'opérateur Equ.
+ * Elle hérite publiquement de AbstractUnaryOperation
+ */
 class AbstractEqu : public AbstractBinaryOperation{
 public:
 	AbstractEqu() = default;
@@ -459,7 +522,11 @@ public:
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
-
+/*
+ * Classe de l'opérateur Dif, premettant la comparaison d'inégalité de deux littérales
+ * Lors de son appel (par la méthode apply) dépile 2 littérales et les compare (en fonction de leur type)
+ * elle empile la litttérale entière 0 si les deux littérales sont égales, la littérale entière 1 sinon.
+ */
 class Dif : public BinaryOperator {
 protected:
 	std::string name = "!=";
@@ -470,6 +537,10 @@ public:
 	static void free();
 };
 
+/*
+ * Classe abstraite de laquelle hérite tous les comportements de l'opérateur Dif.
+ * Elle hérite publiquement de AbstractUnaryOperation
+ */
 class AbstractDif : public AbstractBinaryOperation{
 public:
 	AbstractDif() = default;
@@ -532,7 +603,11 @@ public:
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
-
+/*
+ * Classe de l'opérateur InfEqu, premettant la comparaison d'infériorité (et égalité) de deux littérales
+ * Lors de son appel (par la méthode apply) dépile 2 littérales et les compare (en fonction de leur type)
+ * elle empile la litttérale entière 1 si la littérale en deuxième position (par rapport au haut de la pile) est inférieure ou égale à la littérale en premiere position.
+ */
 class InfEqu : public BinaryOperator {
 protected:
 	std::string name = "=<";
@@ -543,6 +618,10 @@ public:
 	static void free();
 };
 
+/*
+ * Classe abstraite de laquelle hérite tous les comportements de l'opérateur InfEqu.
+ * Elle hérite publiquement de AbstractUnaryOperation
+ */
 class AbstractInfEqu : public AbstractBinaryOperation{
 public:
 	AbstractInfEqu() = default;
@@ -605,6 +684,11 @@ public:
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
+/*
+ * Classe de l'opérateur Inf, premettant la comparaison d'infériorité de deux littérales
+ * Lors de son appel (par la méthode apply) dépile 2 littérales et les compare (en fonction de leur type)
+ * elle empile la litttérale entière 1 si la littérale en deuxième position (par rapport au haut de la pile) est inférieure à la littérale en premiere position.
+ */
 class Inf : public BinaryOperator {
 protected:
 	std::string name = "<";
@@ -615,6 +699,10 @@ public:
 	static void free();
 };
 
+/*
+ * Classe abstraite de laquelle hérite tous les comportements de l'opérateur Inf.
+ * Elle hérite publiquement de AbstractUnaryOperation
+ */
 class AbstractInf : public AbstractBinaryOperation{
 public:
 	AbstractInf() = default;
@@ -677,6 +765,11 @@ public:
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
+/*
+ * Classe de l'opérateur SupEqu, premettant la comparaison de supériorité (et d'égalité) de deux littérales
+ * Lors de son appel (par la méthode apply) dépile 2 littérales et les compare (en fonction de leur type)
+ * elle empile la litttérale entière 1 si la littérale en deuxième position (par rapport au haut de la pile) est supérieure ou égale à la littérale en premiere position.
+ */
 class SupEqu : public BinaryOperator {
 protected:
 	std::string name = ">=";
@@ -687,6 +780,10 @@ public:
 	static void free();
 };
 
+/*
+ * Classe abstraite de laquelle hérite tous les comportements de l'opérateur SupEqu.
+ * Elle hérite publiquement de AbstractUnaryOperation
+ */
 class AbstractSupEqu : public AbstractBinaryOperation{
 public:
 	AbstractSupEqu() = default;
@@ -749,6 +846,11 @@ public:
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
+/*
+ * Classe de l'opérateur Sup, premettant la comparaison de supériorité de deux littérales
+ * Lors de son appel (par la méthode apply) dépile 2 littérales et les compare (en fonction de leur type)
+ * elle empile la litttérale entière 1 si la littérale en deuxième position (par rapport au haut de la pile) est supérieure à la littérale en premiere position.
+ */
 class Sup : public BinaryOperator {
 protected:
 	std::string name = ">";
@@ -759,6 +861,10 @@ public:
 	static void free();
 };
 
+/*
+ * Classe abstraite de laquelle hérite tous les comportements de l'opérateur Sup.
+ * Elle hérite publiquement de AbstractUnaryOperation
+ */
 class AbstractSup : public AbstractBinaryOperation{
 public:
 	AbstractSup() = default;
@@ -821,6 +927,10 @@ public:
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
 
+/*
+ * Classe de l'opérateur And
+ * renvoit un ET logique
+ */
 class And : public BinaryOperator {
 protected:
 	std::string name = "AND";
@@ -829,9 +939,24 @@ protected:
 public:
 	static And& get();
 	static void free();
+    /*
+     * Méthode permettant l'éxécution de l'opérateur AND.
+     * Si l'execution se passe bien elle empile le résultat d'un ET logique etre les deux littérales au sommet de la pile
+     * la littérale entière (LInteger) 1 correspond à un Vrai, la littérale entière (LInteger) 0 correspond à un Faux
+     *
+     * Toute littérale qui n'est pas la littérale entière 0 est considérée comme étant vraie
+     *
+     * @param La pile sur laquelle l'opérateur s'applique
+     *
+     * @return true si l'opérateur à pu s'executer correctement, false sinon
+     */
 	bool apply(Stack& s);
 };
 
+/*
+ * Classe de l'opérateur Or
+ * renvoit un OU logique
+ */
 class Or : public BinaryOperator {
 protected:
 	std::string name = "OR";
@@ -840,9 +965,24 @@ protected:
 public:
 	static Or& get();
 	static void free();
+    /*
+     * Méthode permettant l'éxécution de l'opérateur OR.
+     * Si l'execution se passe bien elle empile le résultat d'un OU logique etre les deux littérales au sommet de la pile
+     * la littérale entière (LInteger) 1 correspond à un Vrai, la littérale entière (LInteger) 0 correspond à un Faux
+     *
+     * Toute littérale qui n'est pas la littérale entière 0 est considérée comme étant vraie
+     *
+     * @param La pile sur laquelle l'opérateur s'applique
+     *
+     * @return true si l'opérateur à pu s'executer correctement, false sinon
+     */
 	bool apply(Stack& s);
 };
 
+/*
+ * Classe de l'opérateur Swap
+ * écahnge les positions des deux littérales au sommet de la pile
+ */
 class Swap : public BinaryOperator {
 protected:
 	std::string name = "SWAP";
@@ -851,9 +991,21 @@ protected:
 public:
 	static Swap& get();
 	static void free();
+    /*
+     * Méthode permettant l'éxécution de l'opérateur Swap.
+     *Elle échange les positions des deux littérales au sommet de la pile
+     *
+     * @param La pile sur laquelle l'opérateur s'applique
+     *
+     * @return true si l'opérateur à pu s'executer correctement, false sinon
+     */
 	bool apply(Stack& s);
 };
 
+/*
+ * Classe de l'opérateur Sto
+ * permet de stocker une littérale dans une variable
+ */
 class Sto : public BinaryOperator {
 protected:
 	std::string name = "STO";
@@ -862,9 +1014,22 @@ protected:
 public:
 	static Sto& get();
 	static void free();
+    /*
+     * Méthode permettant l'éxécution de l'opérateur Sto.
+     * Elle permet de stocker une littérale dans une variable.
+     * La littérale au sommet de la pile doit être la littérale à stocker, la littérale suivante est une littérale expression du nom de la variable à stocker.
+     *
+     * @param La pile sur laquelle l'opérateur s'applique
+     *
+     * @return true si l'opérateur à pu s'executer correctement, false sinon
+     */
 	bool apply(Stack& s);
 };
 
+/*
+ * Classe de l'opérateur Sto
+ * permet l'execution d'un If Then
+ */
 class Ift : public BinaryOperator {
 protected:
 	std::string name = "IFT";
@@ -873,6 +1038,15 @@ protected:
 public:
 	static Ift& get();
 	static void free();
+	/*
+	 * Méthode permettant l'éxécution de l'opérateur IFT.
+	 * La méthode dépile 2 littérales. La 1ere (i.e. le dernier dépilé) est un test logique (tout type de littérale pour un "Vrai", littérale entière 0 pour un "Faux".
+	 * Si la valeur de ce test est vrai, la deuxième littérale est évalué sinon elle est abandonnée. La deuxième littérale doit donc être une expression (LExpression) pour un programme (LProgram)
+     *
+     * @param La pile sur laquelle l'opérateur s'applique
+     *
+     * @return true si l'opérateur à pu s'executer correctement, false sinon
+	 */
 	bool apply(Stack& s);
 };
 

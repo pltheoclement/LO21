@@ -45,6 +45,9 @@ bool Operator::isOperator(std::string s){
 }
 
 TypeOperator& Operator::getOperator(std::string s){
+	if(!isOperator(s)){
+		throw OperatorException("Undefined operator");
+	}
 	return *operators.at(s);
 }
 
