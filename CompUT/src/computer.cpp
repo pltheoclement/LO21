@@ -151,7 +151,7 @@ std::string Computer::evalLine(const std::string &s) {
                 } else {
                     LiteralType lt = Literal::isLiteral(inst);
                     if (lt == lerror) {
-                        message = "No such operator or literal: " + inst;
+                        message = "Invalid literal or operator: " + inst;
                         return line;
                     } else if (lt == latom) {
                         if (variables.count(inst)) {

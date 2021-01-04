@@ -1,7 +1,8 @@
-
 #include <string>
 #include <vector>
 #include <memory>
+#include <set>
+
 #include "../include/literal.h"
 
 LiteralType Literal::isLiteral(const std::string& s){
@@ -43,8 +44,18 @@ LiteralType Literal::isLiteral(const std::string& s){
                 return lexpression;
             }
         }
-        if(s[0]=='[' && s[s.size()-1] == ']')
+        if(s[0]=='[' && s[s.size()-1] == ']') {
+            static std::set<char> allowedChars;
+            if (allowedChars.empty()) {
+                std::string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 []\".+-*/";
+                allowedChars.insert(chars.begin(), chars.end());
+            }
+            for (char c : s) {
+                if (allowedChars.count(c) == 0)
+                    return lerror;
+            }
             return lprogram;
+        }
     }
     return lerror;
 }
