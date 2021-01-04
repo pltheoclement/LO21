@@ -16,7 +16,7 @@
 #include <QComboBox>
 #include <QSpinBox>
 #include <QObject>
-#include <QDebug>
+#include <QFileDialog>
 #include <algorithm>
 
 #include "computer.h"
@@ -37,6 +37,7 @@ class QCompUT : public QWidget{
     QMap<QString,QPushButton*> buttons_secondary_view;
     QMap<QString,QPushButton*> buttons_var;
     QMap<QString,QPushButton*> buttons_prog;
+    QMap<QString,QPushButton*> buttons_settings;
     QMap<QString,QVBoxLayout*> layout_Vertical;
     QMap<QString,QHBoxLayout*> layout_Horizontal;
     QMap<QString,QWidget*> secondary_view;
@@ -50,6 +51,7 @@ public:
     void creation();
     void Initialisation();
     void Initialisation_Stack();
+    void Update_Var_Prog();
 
 public slots:
     void refresh_stack();
@@ -65,6 +67,9 @@ public slots:
     void slotVariable();
     void slotProgram();
     void slot_Nbr_Line_view_Stack();
+    void slotSave(); void slotLoad();
+
+
 };
 
 #endif // QCOMPUT_H

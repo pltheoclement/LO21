@@ -13,7 +13,6 @@
 #include "../include/computer.h"
 #include "../include/literal.h"
 
-#include <QDebug>
 
 using namespace std;
 
@@ -24,11 +23,11 @@ void UnaryOperator::addBehaviour(LiteralType A, std::shared_ptr<AbstractUnaryOpe
 bool UnaryOperator::apply(Stack& s){
 	if(s.size() < 1)
             throw OperatorException("Need 1 element in the stack");
-	const shared_ptr<Literal> elA = s.top();// le premier argument
+	const shared_ptr<Literal> elA = s.top();
     LiteralType A=elA->getType();
 
 
-    if (possibles.count(A) > 0) {// existe bien dans ta map then possibles[make_pair(A,B)].execution(); // @suppress("Method cannot be resolved")
+    if (possibles.count(A) > 0) {
 
     	s.pop();
     	const shared_ptr<Literal> res = possibles[A]->execution(elA);
@@ -238,6 +237,35 @@ bool Eval::apply(Stack& s){
         throw OperatorException("Wesh donne moi une expresiion ou un programme !");
     }
     return true;
-
 }
-/* Fin Drop */
+/* Fin Eval */
+/* Début Forget */
+shared_ptr<Forget> Forget::instance = nullptr;
+
+Forget& Forget::get(){
+	if(instance == nullptr){
+		instance = shared_ptr<Forget>(new Forget);
+		Operator::addOperator(instance->name, instance);
+	}
+	return *instance;
+}
+
+void Forget::free(){
+	if(instance != nullptr){
+		Operator::delOperator(instance->name);
+		instance = nullptr;
+	}
+}
+bool Forget::apply(Stack& s){
+	const shared_ptr<Literal> elA = s.top();
+	if (elA->getType() == lexpression){
+		s.pop();
+		Literal* litA = elA.get();
+		LExpression* lexpA = dynamic_cast<LExpression*>(litA);
+		const string var = lexpA->getValue();
+		Computer::getInstance().forgetVariable(var);
+		return true;
+	}else return false;
+}
+/* Fin Forget */
+

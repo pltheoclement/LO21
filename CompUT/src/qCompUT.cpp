@@ -51,6 +51,9 @@ QCompUT::QCompUT(QWidget* father) : QWidget(father){
     connect(buttons_secondary_view["delete_prog"],SIGNAL(clicked()),this,SLOT(slotDeleteProg()));
 
     connect(Nbr_Line_Stack,SIGNAL(valueChanged(int)),this,SLOT(slot_Nbr_Line_view_Stack()));
+
+    connect(buttons_settings["save"],SIGNAL(clicked()),this,SLOT(slotSave()));
+    connect(buttons_settings["load"],SIGNAL(clicked()),this,SLOT(slotLoad()));
 }
 
 
@@ -133,6 +136,7 @@ void QCompUT::creation(){
     QHBoxLayout* layoutH_add_prog = new QHBoxLayout; layout_Horizontal["layoutH_add_prog"] = layoutH_add_prog;
     QHBoxLayout* layoutH_modif_prog = new QHBoxLayout; layout_Horizontal["layoutH_modif_prog"] = layoutH_modif_prog;
     QHBoxLayout* layoutH_del_prog = new QHBoxLayout; layout_Horizontal["layoutH_del_prog"] = layoutH_del_prog;
+    QHBoxLayout* Layout_SaveLoad = new QHBoxLayout; layout_Horizontal["Layout_SaveLoad"] = Layout_SaveLoad;
 
     /*-------------------------------------------------------------------------------------------------------------------------------------------*/
     /*--Création de layout VERTICAUX sous forme de Map-------------------------------------------------------------------------------------------*/
@@ -157,6 +161,9 @@ void QCompUT::creation(){
     QVBoxLayout* layoutV_modif_prog = new QVBoxLayout; layout_Vertical["layoutV_modif_prog"] = layoutV_modif_prog;
     QVBoxLayout* layout_prog = new QVBoxLayout; layout_Vertical["layout_prog"] = layout_prog;
     QVBoxLayout* layout_Program = new QVBoxLayout; layout_Vertical["layout_Program"] = layout_Program;
+
+    QVBoxLayout* Layout_Save = new QVBoxLayout; layout_Vertical["Layout_Save"] = Layout_Save;
+    QVBoxLayout* Layout_Load = new QVBoxLayout; layout_Vertical["Layout_Load"] = Layout_Load;
     QVBoxLayout* Layout_Setting = new QVBoxLayout; layout_Vertical["Layout_Setting"] = Layout_Setting;
 
     /*-------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -208,8 +215,13 @@ void QCompUT::creation(){
     table["table_prog"]->verticalHeader()->hide();
 
     /*--------------------------------------------------------------------------------------------------------------------------------------------*/
-    /*--Création du Spinbox pour le vue secondaire Setting----------------------------------------------------------------------------------------*/
+    /*--Création des labels et boutons pour le vue secondaire Setting----------------------------------------------------------------------------------------*/
     QLabel* label_settings = new QLabel("Number of line in the stack"); label["label_settings"] = label_settings; label["label_settings"]->setFixedSize(160,20);
+    QLabel* label_save = new QLabel("Backup a current status"); label["label_save"] = label_save; label["label_save"]->setFixedSize(160,20);
+    QLabel* label_load = new QLabel("Recovering a saved state"); label["label_load"] = label_load; label["label_load"]->setFixedSize(160,20);
+
+    QPushButton* save = new QPushButton("Save"); buttons_settings["save"] = save; buttons_settings["save"]->setFixedSize(130,30);
+    QPushButton* load = new QPushButton("Load"); buttons_settings["load"] = load; buttons_settings["load"]->setFixedSize(130,30);
 
     /*--------------------------------------------------------------------------------------------------------------------------------------------*/
     /*--Création des 4 onglets au niveau des claviers---------------------------------------------------------------------------------------------*/
@@ -235,7 +247,7 @@ void QCompUT::Initialisation(){
 /**/    layout_Vertical["layout_stack"]->addWidget(table["viewStack"]);
 /**/    layout_Vertical["layout_stack"]->addWidget(Line_Edit["commande"]);
 /**/    Line_Edit["message"]->setReadOnly(true);
-/**/    Line_Edit["message"]->setText("Bonjour et bienvenu dans CompUT");
+/**/    //Line_Edit["message"]->setText("Bonjour et bienvenu dans CompUT");
 /*-------------------------------------------------------------------------------------------------------------------------------------------*/
 /*------Initialisation de secon clavier------------------------------------------------------------------------------------------------------*/
 /**/    layout_Horizontal["layout123"]->addWidget(buttons_First_keyboard["b1"]); layout_Horizontal["layout123"]->addWidget(buttons_First_keyboard["b2"]); layout_Horizontal["layout123"]->addWidget(buttons_First_keyboard["b3"]);
@@ -314,9 +326,13 @@ void QCompUT::Initialisation(){
 /**/    layout_Vertical["layout_prog"]->addLayout(layout_Horizontal["layoutH_del_prog"]);
 /**/
 /**/    //Layout de la vue secondaire Settings
+/**/    layout_Vertical["Layout_Save"]->addWidget(label["label_save"]); layout_Vertical["Layout_Save"]->addWidget(buttons_settings["save"]);
+/**/    layout_Vertical["Layout_Load"]->addWidget(label["label_load"]); layout_Vertical["Layout_Load"]->addWidget(buttons_settings["load"]);
+/**/    layout_Horizontal["Layout_SaveLoad"]->addLayout(layout_Vertical["Layout_Save"]); layout_Horizontal["Layout_SaveLoad"]->addLayout(layout_Vertical["Layout_Load"]);
 /**/    layout_Vertical["Layout_Setting"]->addWidget(label["label_settings"]);
 /**/    layout_Vertical["Layout_Setting"]->addWidget(Nbr_Line_Stack);
-/**/    layout_Vertical["Layout_Setting"]->setAlignment(Qt::AlignTop);
+/**/    layout_Vertical["Layout_Setting"]->addLayout(layout_Horizontal["Layout_SaveLoad"]);
+/**/    layout_Vertical["Layout_Setting"]->setAlignment(Qt::AlignTop);       
 /**/
 /**/    //Initialisation de la couche avec les 2 claviers
 /**/    layout_Horizontal["layout_keyboard_one_two"]->addLayout(layout_Vertical["layout_keyboard_one"]); layout_Horizontal["layout_keyboard_one_two"]->addLayout(layout_Vertical["layout_keyboard_two"]);
@@ -375,6 +391,7 @@ void QCompUT::getNextCommande(){
     QString c=Line_Edit["commande"]->text();
     Computer::getInstance().evalLine(c.toStdString());
     refresh_stack();
+    Update_Var_Prog();
     Line_Edit["commande"]->clear();
     text ="";
 }
@@ -469,36 +486,23 @@ void QCompUT::getNextCommande(){
 /*  */      if (Line_Edit["add_name_var"]->text().isEmpty()) return;
 /*  */      if (Line_Edit["add_edit_var"]->text().isEmpty()) return;
 /*  */
-/*  */      //Varibale pour récupérer le nom et valeur pour la création
+/*  */      //Variable pour récupérer le nom et valeur pour la création
 /*  */      QString name_var = Line_Edit["add_name_var"]->text();
 /*  */      QString value_var = Line_Edit["add_edit_var"]->text();
 /*  */
-/*  */      //Création du bouton qui va apparaitre dans le second clavier cliquable
-/*  */      QWidget* pWidget_var = new QWidget();
-/*  */      QPushButton* btn_var = new QPushButton();buttons_var[name_var] = btn_var; buttons_var[name_var]->setFixedSize(90,30);
+/*  */      if (Literal::isLiteral(name_var.toStdString()) == latom){
+/*  */         LiteralType lt = Literal::isLiteral(value_var.toStdString());
+/*  */          if (lt != lprogram && lt != latom && lt != lerror) {
+/*  */              Computer::getInstance().storeVariable(name_var.toStdString(),*Literal::makeLiteral(value_var.toStdString(), lt));
+/*  */              Line_Edit["add_name_var"]->setText(""); Line_Edit["add_edit_var"]->setText("");
+/*  */          }
+/*  */          else Line_Edit["message"]->setText("Invalid variable");
+/*  */       }
+/*  */       else Line_Edit["message"]->setText("Invalid variable name");
 /*  */
-/*  */      //Alternative pour faire afficher un bouton dans un tableau
-/*  */      buttons_var[name_var]->setText(name_var);
-/*  */      QHBoxLayout* pLayout_var = new QHBoxLayout(pWidget_var);
-/*  */      pLayout_var->addWidget(buttons_var[name_var]);
-/*  */      pLayout_var->setAlignment(Qt::AlignCenter);
-/*  */      pWidget_var->setLayout(pLayout_var);
-/*  */
-/*  */      //Alternative pour augmenter la taille de la table qui accueille les boutons
-/*  */      size_t nbr_row_var = table["table_var"]->rowCount();
-/*  */      table["table_var"]->insertRow(nbr_row_var);
-/*  */      table["table_var"]->setRowHeight(nbr_row_var,45);
-/*  */      table["table_var"]->setCellWidget(nbr_row_var, 0, pWidget_var);
-/*  */
-/*  */      //Ajout dand la liste de modification, puis suppression, puis remise à vide des champs pour entrer le nouveau nom et la nouvelle valeur à créer
-/*  */      list["list_modif_var"]->addItem(name_var); list["list_delete_var"]->addItem(name_var);
-/*  */      Line_Edit["add_name_var"]->setText(""); Line_Edit["add_edit_var"]->setText("");
-/*  */
-/*  */      //Envoi des informations vers le Computer
-/*  */      Computer::getInstance().storeVariable(name_var.toStdString(),*Literal::makeLiteral(value_var.toStdString(), Literal::isLiteral(value_var.toStdString())));
-/*  */
-/*  */      //Connexion du nouveau bouton avec le signal
-/*  */      connect(buttons_var[name_var],SIGNAL(clicked()),this,SLOT(slotVariable()));
+/*  */      //Remet le focus sur le nom d'une prochaine variable à créer
+/*  */      Line_Edit["add_name_var"]->setFocus(Qt::OtherFocusReason);
+/*  */      Update_Var_Prog();
 /****/  }
 
 /*--------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -509,24 +513,26 @@ void QCompUT::getNextCommande(){
 /*  */      if (Line_Edit["modif_edit_var"]->text().isEmpty()) return;
 /*  */      if (list["list_modif_var"]->currentText().isEmpty()) return;
 /*  */
-/*  */      //Varibale pour récupérer l'index dans liste
-/*  */      size_t modif_var = list["list_modif_var"]->currentIndex();
-/*  */      //Varibales pour récupérer le nom existant, le nouveau nom et la nouvelle valeur
+/*  */      //Variables pour récupérer le nom existant, le nouveau nom et la nouvelle valeur
 /*  */      QString new_name_var = Line_Edit["modif_name_var"]->text();
 /*  */      QString new_value_var = Line_Edit["modif_edit_var"]->text();
 /*  */      QString current_name_var = list["list_modif_var"]->currentText();
 /*  */
-/*  */      //Modification du nouveau dans la liste
-/*  */      list["list_modif_var"]->setItemText(modif_var,new_name_var);
+/*  */      if (Literal::isLiteral(new_name_var.toStdString()) == latom){
+/*  */         LiteralType lt = Literal::isLiteral(new_value_var.toStdString());
+/*  */          if (lt != lprogram && lt != latom && lt != lerror) {
+/*  */             Computer::getInstance().forgetVariable(current_name_var.toStdString());
+/*  */             Computer::getInstance().storeVariable(new_name_var.toStdString(),*Literal::makeLiteral(new_value_var.toStdString(), lt));
+/*  */             Line_Edit["modif_name_var"]->setText(""); Line_Edit["modif_edit_var"]->setText("");
+/*  */          }
+/*  */          else Line_Edit["message"]->setText("Invalid Variable");
+/*  */       }
+/*  */       else Line_Edit["message"]->setText("Invalid Variable name");
 /*  */
-/*  */      //Envoi du nom courrant, puis du nouveau nom et nouvelle valeur vers le Computer
-/*  */      Computer::getInstance().forgetVariable(current_name_var.toStdString());
-/*  */      Computer::getInstance().storeVariable(new_name_var.toStdString(),*Literal::makeLiteral(new_value_var.toStdString(), Literal::isLiteral(new_value_var.toStdString())));
+/*  */      //Remet le focus sur le nom à modifier d'une prochaine variable
+/*  */      Line_Edit["modif_name_var"]->setFocus(Qt::OtherFocusReason);
 /*  */
-/*  */      //Modification de la liste de suppression, puis modification du nom dans la map, puis remise à vide les champs pour entrer le nouveau nom et la nouvelle valeur à modifier
-/*  */      list["list_delete_var"]->setItemText(modif_var,new_name_var);
-/*  */      buttons_var[current_name_var]->setText(new_name_var);
-/*  */      Line_Edit["modif_name_var"]->setText(""); Line_Edit["modif_edit_var"]->setText("");
+/*  */      Update_Var_Prog();
 /****/  }
 
 /*--------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -534,21 +540,13 @@ void QCompUT::getNextCommande(){
 /****/  void QCompUT::slotDeleteVariable(){
 /*  */      if (list["list_delete_var"]->currentText().isEmpty()) return;
 /*  */
-/*  */      //Varibale pour récupérer l'index dans liste
-/*  */      size_t Nbr_row_delete_var = list["list_delete_var"]->currentIndex();
-/*  */      //Varibale pour récupérer le nom existant
+/*  */      //Variable pour récupérer le nom existant
 /*  */      QString current_name_var = list["list_delete_var"]->currentText();
 /*  */
 /*  */      //Envoi du nom courrant, pour la suppression au niveau du Computer
 /*  */      Computer::getInstance().forgetVariable(current_name_var.toStdString());
 /*  */
-/*  */      //Suppression dans la table, puis suppression dans les listes de modification et suppression
-/*  */      table["table_var"]->removeRow(Nbr_row_delete_var);
-/*  */      list["list_modif_var"]->removeItem(Nbr_row_delete_var);
-/*  */      list["list_delete_var"]->removeItem(Nbr_row_delete_var);
-/*  */
-/*  */      //Suppression de la clé en question
-/*  */      buttons_var.remove(current_name_var);
+/*  */      Update_Var_Prog();
 /****/  }
 
 
@@ -559,36 +557,27 @@ void QCompUT::getNextCommande(){
 /*  */      if (Line_Edit["add_name_prog"]->text().isEmpty()) return;
 /*  */      if (Line_Edit["add_edit_prog"]->text().isEmpty()) return;
 /*  */
-/*  */      //Varibale pour récupérer le nom et valeur pour la création
+/*  */      //Variable pour récupérer le nom et valeur pour la création
 /*  */      QString name_prog = Line_Edit["add_name_prog"]->text();
 /*  */      QString value_prog = Line_Edit["add_edit_prog"]->text();
 /*  */
-/*  */      //Création du bouton qui va apparaitre dans le second clavier cliquable
-/*  */      QWidget* pWidget_prog = new QWidget();
-/*  */      QPushButton* btn_prog = new QPushButton();buttons_prog[name_prog] = btn_prog; buttons_prog[name_prog]->setFixedSize(90,30);
-/*  */
-/*  */      //Alternative pour faire afficher un bouton dans un tableau
-/*  */      buttons_prog[name_prog]->setText(name_prog);
-/*  */      QHBoxLayout* pLayout_prog = new QHBoxLayout(pWidget_prog);
-/*  */      pLayout_prog->addWidget(buttons_prog[name_prog]);
-/*  */      pLayout_prog->setAlignment(Qt::AlignCenter);
-/*  */      pWidget_prog->setLayout(pLayout_prog);
-/*  */
-/*  */      //Alternative pour augmenter la taille de la table qui accueille les boutons
-/*  */      size_t nbr_row_prog = table["table_prog"]->rowCount();
-/*  */      table["table_prog"]->insertRow(nbr_row_prog);
-/*  */      table["table_prog"]->setRowHeight(nbr_row_prog,45);
-/*  */      table["table_prog"]->setCellWidget(nbr_row_prog, 0, pWidget_prog);
-/*  */
 /*  */      //Ajout dand la liste de modification, puis suppression, puis remise à vide des champs pour entrer le nouveau nom et la nouvelle valeur à créer
-/*  */      list["list_modif_prog"]->addItem(name_prog); list["list_delete_prog"]->addItem(name_prog);
-/*  */      Line_Edit["add_name_prog"]->setText(""); Line_Edit["add_edit_prog"]->setText("");
 /*  */
 /*  */      //Envoi des informations vers le Computer
-/*  */      Computer::getInstance().storeVariable(name_prog.toStdString(),*Literal::makeLiteral(value_prog.toStdString(), Literal::isLiteral(value_prog.toStdString())));
+/*  */      if (Literal::isLiteral(name_prog.toStdString()) == latom){
+/*  */         LiteralType lt = Literal::isLiteral(value_prog.toStdString());
+/*  */          if (lt == lprogram) {
+/*  */              Computer::getInstance().storeVariable(name_prog.toStdString(),*Literal::makeLiteral(value_prog.toStdString(), lt));
+/*  */              Line_Edit["add_name_prog"]->setText(""); Line_Edit["add_edit_prog"]->setText("");
+/*  */          }
+/*  */          else Line_Edit["message"]->setText("Invalid program");
+/*  */       }
+/*  */       else Line_Edit["message"]->setText("Invalid program name");
 /*  */
-/*  */      //Connexion du nouveau bouton avec le signal
-/*  */      connect(buttons_prog[name_prog],SIGNAL(clicked()),this,SLOT(slotProgram()));
+/*  */      //Remet le focus sur le nom d'un prochaine programme à créer
+/*  */      Line_Edit["add_name_prog"]->setFocus(Qt::OtherFocusReason);
+/*  */
+/*  */      Update_Var_Prog();
 /****/  }
 
 /*--------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -599,24 +588,27 @@ void QCompUT::getNextCommande(){
 /*  */      if (Line_Edit["modif_edit_prog"]->text().isEmpty()) return;
 /*  */      if (list["list_delete_prog"]->currentText().isEmpty()) return;
 /*  */
-/*  */      //Varibale pour récupérer l'index dans liste
-/*  */      size_t modif_prog = list["list_modif_prog"]->currentIndex();
-/*  */      //Varibales pour récupérer le nom existant, le nouveau nom et la nouvelle valeur
+/*  */      //Variables pour récupérer le nom existant, le nouveau nom et la nouvelle valeur
 /*  */      QString new_name_prog = Line_Edit["modif_name_prog"]->text();
 /*  */      QString new_value_prog = Line_Edit["modif_edit_prog"]->text();
 /*  */      QString current_name_prog = list["list_modif_prog"]->currentText();
 /*  */
-/*  */      //Modification du nouveau dans la liste
-/*  */      list["list_modif_prog"]->setItemText(modif_prog,new_name_prog);
+/*  */      //Envoi du nom courrant, puis du nouveau nom et nouvelle valeur vers le Computer   
+/*  */      if (Literal::isLiteral(new_name_prog.toStdString()) == latom){
+/*  */         LiteralType lt = Literal::isLiteral(new_value_prog.toStdString());
+/*  */          if (lt == lprogram) {
+/*  */             Computer::getInstance().forgetVariable(current_name_prog.toStdString());
+/*  */             Computer::getInstance().storeVariable(new_name_prog.toStdString(),*Literal::makeLiteral(new_value_prog.toStdString(), lt));
+/*  */             Line_Edit["modif_name_prog"]->setText(""); Line_Edit["modif_edit_prog"]->setText("");
+/*  */          }
+/*  */          else Line_Edit["message"]->setText("Invalid program");
+/*  */       }
+/*  */       else Line_Edit["message"]->setText("Invalid program name");
 /*  */
-/*  */      //Envoi du nom courrant, puis du nouveau nom et nouvelle valeur vers le Computer
-/*  */      Computer::getInstance().forgetVariable(current_name_prog.toStdString());
-/*  */      Computer::getInstance().storeVariable(new_name_prog.toStdString(),*Literal::makeLiteral(new_value_prog.toStdString(), Literal::isLiteral(new_value_prog.toStdString())));
+/*  */      //Remet le focus sur le nom à modifier d'un prochain programme
+/*  */      Line_Edit["modif_name_prog"]->setFocus(Qt::OtherFocusReason);
 /*  */
-/*  */      //Modification de la liste de suppression, puis modification du nom dans la map, puis remise à vide les champs pour entrer le nouveau nom et la nouvelle valeur à modifier
-/*  */      list["list_delete_prog"]->setItemText(modif_prog,new_name_prog);
-/*  */      buttons_prog[current_name_prog]->setText(new_name_prog);
-/*  */      Line_Edit["modif_name_prog"]->setText(""); Line_Edit["modif_edit_prog"]->setText("");
+/*  */      Update_Var_Prog();
 /****/  }
 
 /*--------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -625,21 +617,13 @@ void QCompUT::getNextCommande(){
 /*  */      //Permet de vérifier que les champs necessaires soient bien incrémentés pour réaliser la modification par la suite
 /*  */      if (list["list_delete_prog"]->currentText().isEmpty()) return;
 /*  */
-/*  */      //Varibale pour récupérer l'index dans liste
-/*  */      size_t Nbr_row_delete_prog = list["list_delete_prog"]->currentIndex();
-/*  */      //Varibale pour récupérer le nom existant
+/*  */      //Variable pour récupérer le nom existant
 /*  */      QString current_name_prog = list["list_delete_prog"]->currentText();
 /*  */
 /*  */      //Envoi du nom courrant, pour la suppression au niveau du Computer
 /*  */      Computer::getInstance().forgetVariable(current_name_prog.toStdString());
 /*  */
-/*  */      //Suppression dans la table, puis suppression dans les listes de modification et suppression
-/*  */      table["table_prog"]->removeRow(Nbr_row_delete_prog);
-/*  */      list["list_modif_prog"]->removeItem(Nbr_row_delete_prog);
-/*  */      list["list_delete_prog"]->removeItem(Nbr_row_delete_prog);
-/*  */
-/*  */      //Suppression de la clé en question
-/*  */      buttons_prog.remove(current_name_prog);
+/*  */      Update_Var_Prog();
 /****/  }
 
 
@@ -648,6 +632,9 @@ void QCompUT::slotVariable(){
     text = qobject_cast<QPushButton*>(sender())->text();
     string nom = Computer::getInstance().getVariable(text.toStdString());
     Line_Edit["commande"]->setText(QString::fromStdString(nom));
+
+    //Remet le focus commande
+    Line_Edit["commande"]->setFocus(Qt::OtherFocusReason);
 }
 
 //Slot qui permet de réstituer la valeur d'un programme créé précédemment
@@ -655,8 +642,12 @@ void QCompUT::slotProgram(){
     text = qobject_cast<QPushButton*>(sender())->text();
     string nom = Computer::getInstance().getVariable(text.toStdString());
     Line_Edit["commande"]->setText(QString::fromStdString(nom));
+
+    //Remet le focus commande
+    Line_Edit["commande"]->setFocus(Qt::OtherFocusReason);
 }
 
+//Slot permettant de modifier le nombre visuel de ligne dans le stack
 void QCompUT::slot_Nbr_Line_view_Stack(){
     //viewStack->setRowCount(0);
     Nbr_Line = Nbr_Line_Stack->text().toInt();
@@ -664,4 +655,63 @@ void QCompUT::slot_Nbr_Line_view_Stack(){
     table["viewStack"]->clear();
     Initialisation_Stack();
     refresh_stack();
+}
+
+//Slot pour sauvegarder l'état actuel
+void QCompUT::slotSave(){
+    QString fileName = QFileDialog::getSaveFileName(this, tr("Save file"), "", tr("All Files (*)"));
+    Computer::getInstance().saveToFile(fileName.toStdString());
+}
+
+//Slot pour restituer un précédent état sauvegardé
+void QCompUT::slotLoad(){
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Open file"), "", tr("All Files (*)"));
+    Computer::getInstance().loadFromFile(fileName.toStdString());
+    Update_Var_Prog();
+    refresh_stack();
+}
+
+
+void QCompUT::Update_Var_Prog() {
+    table["table_var"]->setRowCount(0);
+    table["table_prog"]->setRowCount(0);
+    list["list_modif_prog"]->clear();
+    list["list_modif_var"]->clear();
+    list["list_delete_prog"]->clear();
+    list["list_delete_var"]->clear();
+
+    for (string stdname : Computer::getInstance().getVariableNames()) {
+        QString name = QString::fromStdString(stdname);
+        //Création du bouton qui va apparaitre dans le second clavier cliquable
+        QWidget *pWidget_vp = new QWidget();
+        QPushButton *btn_vp = new QPushButton();
+        btn_vp->setFixedSize(90, 30);
+        //Connexion du nouveau bouton avec le signal
+
+        //Alternative pour faire afficher un bouton dans un tableau
+        btn_vp->setText(name);
+        QHBoxLayout *pLayout_vp = new QHBoxLayout(pWidget_vp);
+        pLayout_vp->addWidget(btn_vp);
+        pLayout_vp->setAlignment(Qt::AlignCenter);
+        pWidget_vp->setLayout(pLayout_vp);
+
+        // Ajout dans les menus déroulants et connexion des signaux
+        QString table_name;
+        if (Computer::getInstance().getVariable(stdname)[0] == '[') {
+            table_name = "table_prog";
+            list["list_modif_prog"]->addItem(name); list["list_delete_prog"]->addItem(name);
+            connect(btn_vp, SIGNAL(clicked()), this, SLOT(slotVariable()));
+        } else {
+            table_name = "table_var";
+            list["list_modif_var"]->addItem(name); list["list_delete_var"]->addItem(name);
+            connect(btn_vp, SIGNAL(clicked()), this, SLOT(slotProgram()));
+        }
+
+        //Alternative pour augmenter la taille de la table qui accueille les boutons
+        size_t nbr_row = table[table_name]->rowCount();
+        table[table_name]->insertRow(nbr_row);
+        table[table_name]->setRowHeight(nbr_row, 45);
+        table[table_name]->setCellWidget(nbr_row, 0, pWidget_vp);
+        buttons_var[name] = btn_vp;
+    }
 }

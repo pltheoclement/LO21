@@ -48,7 +48,11 @@ public:
     LReal(const LInteger& i): value(double(i.getValue())){}
     double getValue() const { return value;}
     static const std::shared_ptr<LReal> makeLiteral(const double& d);
-    std::string toString() const{ return std::to_string(value);}
+    std::string toString() const{
+        std::string str = std::to_string(value);
+        str.erase(str.find_last_not_of('0') + 1, std::string::npos);
+        return str;
+    }
     ~LReal() = default;
 };
 

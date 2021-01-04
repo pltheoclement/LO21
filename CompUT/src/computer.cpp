@@ -119,6 +119,7 @@ void Computer::loadFromFile(const std::string &filename) {
                     Stack::getInstance().push(Literal::makeLiteral(line, lt));
                 } else {
                     message = "Invalid file " + filename + " (error line " + std::to_string(lc) + ")";
+                    return;
                 }
             }
         } else {
