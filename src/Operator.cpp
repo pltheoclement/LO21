@@ -48,7 +48,27 @@ TypeOperator& Operator::getOperator(std::string s){
 	return *operators.at(s);
 }
 
-TypeOperator::~TypeOperator(){}
+int AbstractOperation::getValueInteger(const std::shared_ptr<Literal> A){
+	Literal* lit = A.get(); //On récupère un pointeur de Literal sur le shared_ptr
+	LInteger* lInt = dynamic_cast<LInteger*>(lit); //On cast ce pointeur en LInteger
+	int valeur = lInt->getValue(); //On récupère la valeur de ce Literal
+	return valeur;
+}
+
+double AbstractOperation::getValueReal(const std::shared_ptr<Literal> A){
+	Literal* lit = A.get(); //On récupère un pointeur de Literal sur le shared_ptr
+	LReal* lInt = dynamic_cast<LReal*>(lit); //On cast ce pointeur en LReal
+	double valeur = lInt->getValue(); //On récupère la valeur de ce Literal
+	return valeur;
+}
+
+std::pair<int, int> AbstractOperation::getValueRational(const std::shared_ptr<Literal> A){
+	Literal* lit = A.get(); //On récupère un pointeur de Literal sur le shared_ptr
+	LRational* lInt = dynamic_cast<LRational*>(lit); //On cast ce pointeur en LRational
+	int num = lInt->getNum(); //On récupère le numérateur de ce Literal
+	int den = lInt->getDen(); //On récupère le dénominateur de ce Literal
+	return std::make_pair(num, den);
+}
 
 /* Définition de l'opérateur CLEAR */
 shared_ptr<Clear> Clear::instance = nullptr;
@@ -91,6 +111,14 @@ void creationOperators(){
 	Dup::get();
 
 	Drop::get();
+
+    Eval::get();
+
+    Ift::get();
+
+    Forget::get();
+
+    Sto::get();
 
 	shared_ptr<AddIntInt> addIntInt = make_shared<AddIntInt>();
 	addIntInt->addMyself();

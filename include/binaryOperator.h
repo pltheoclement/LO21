@@ -22,11 +22,11 @@ protected:
 	LiteralType typeA;
 	LiteralType typeB;
 public:
-	AbstractBinaryOperation() = default;
+	//AbstractBinaryOperation() = default;
 	AbstractBinaryOperation(LiteralType a, LiteralType b) : typeA(a), typeB(b){}
 	virtual const std::shared_ptr<Literal> execution(std::shared_ptr<Literal> A, std::shared_ptr<Literal> B) = 0;
 	virtual ~AbstractBinaryOperation() = default;
-	virtual void addMyself() = 0;
+
 };
 
 
@@ -116,10 +116,6 @@ public:
 	AddRationalReal(): AddRealRational(lrational, lreal){}
 	const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A, const std::shared_ptr<Literal> B);
 };
-
-
-
-
 
 
 class Mul : public BinaryOperator {
@@ -854,6 +850,28 @@ protected:
 	Swap() = default;
 public:
 	static Swap& get();
+	static void free();
+	bool apply(Stack& s);
+};
+
+class Sto : public BinaryOperator {
+protected:
+	std::string name = "STO";
+	static std::shared_ptr<Sto> instance;
+	Sto() = default;
+public:
+	static Sto& get();
+	static void free();
+	bool apply(Stack& s);
+};
+
+class Ift : public BinaryOperator {
+protected:
+	std::string name = "IFT";
+	static std::shared_ptr<Ift> instance;
+	Ift() = default;
+public:
+	static Ift& get();
 	static void free();
 	bool apply(Stack& s);
 };

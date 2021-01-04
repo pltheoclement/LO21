@@ -13,6 +13,7 @@
 #include "../include/computer.h"
 #include "../include/literal.h"
 
+
 using namespace std;
 
 void UnaryOperator::addBehaviour(LiteralType A, std::shared_ptr<AbstractUnaryOperation> a) {
@@ -21,7 +22,7 @@ void UnaryOperator::addBehaviour(LiteralType A, std::shared_ptr<AbstractUnaryOpe
 
 bool UnaryOperator::apply(Stack& s){
 	if(s.size() < 1)
-			throw OperatorException("Need 1 elements in the stack");
+            throw OperatorException("Need 1 element in the stack");
 	const shared_ptr<Literal> elA = s.top();// le premier argument
     LiteralType A=elA->getType();
 
@@ -108,7 +109,7 @@ shared_ptr<Not> Not::instance = nullptr;
 
 bool Not::apply(Stack& s){
 	if(s.size() < 1)
-			throw OperatorException("Need 1 elements in the stack");
+            throw OperatorException("Need 1 element in the stack");
 	const shared_ptr<Literal> A = s.top();
 	s.pop();
 	Literal* litA = A.get();
@@ -165,7 +166,7 @@ void Dup::free(){
 }
 bool Dup::apply(Stack& s){
 	if(s.size() < 1)
-			throw OperatorException("Need 1 elements in the stack");
+            throw OperatorException("Need 1 element in the stack");
 	const shared_ptr<Literal> elA = s.top();
 
     const shared_ptr<Literal> newLit = elA->getCopy();
@@ -201,7 +202,6 @@ bool Drop::apply(Stack& s){
 shared_ptr<Eval> Eval::instance = nullptr;
 
 Eval& Eval::get(){
-
 	if(instance == nullptr){
 		instance = shared_ptr<Eval>(new Eval);
 		Operator::addOperator(instance->name, instance);
@@ -217,14 +217,55 @@ void Eval::free(){
 }
 
 bool Eval::apply(Stack& s){
-	if(s.size() < 1)
-			throw OperatorException("Need 1 elements in the stack");
-	const shared_ptr<Literal> elA = s.top();
-	Literal* litA = elA.get();
-	LExpression* lexpA = dynamic_cast<LExpression*>(litA);
-	const string var = lexpA->getValue();
-	Computer::getInstance().pushVariable(var);
+    if(s.size() < 1)
+        throw OperatorException("Need 1 elements in the stack");
+    const shared_ptr<Literal> elA = s.top();
+    if (elA->getType() == lexpression){
+        s.pop();
+        Literal* litA = elA.get();
+        LExpression* lexpA = dynamic_cast<LExpression*>(litA);
+        const string var = lexpA->getValue();
+        Computer::getInstance().pushVariable(var);
+    }else if (elA->getType() == lprogram){
+        s.pop();
+        Literal* litA = elA.get();
+        LProgram* lprogA = dynamic_cast<LProgram*>(litA);
+        string sProg = lprogA->getValue();
+        Computer::getInstance().evalLine(sProg.substr(1, sProg.size()-2));
+
+    }else{
+        throw OperatorException("Wesh donne moi une expresiion ou un programme !");
+    }
     return true;
 }
-/* Fin Drop */
+/* Fin Eval */
+/* Début Forget */
+shared_ptr<Forget> Forget::instance = nullptr;
+
+Forget& Forget::get(){
+	if(instance == nullptr){
+		instance = shared_ptr<Forget>(new Forget);
+		Operator::addOperator(instance->name, instance);
+	}
+	return *instance;
+}
+
+void Forget::free(){
+	if(instance != nullptr){
+		Operator::delOperator(instance->name);
+		instance = nullptr;
+	}
+}
+bool Forget::apply(Stack& s){
+	const shared_ptr<Literal> elA = s.top();
+	if (elA->getType() == lexpression){
+		s.pop();
+		Literal* litA = elA.get();
+		LExpression* lexpA = dynamic_cast<LExpression*>(litA);
+		const string var = lexpA->getValue();
+		Computer::getInstance().forgetVariable(var);
+		return true;
+	}else return false;
+}
+/* Fin Forget */
 

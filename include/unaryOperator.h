@@ -20,11 +20,10 @@ class AbstractUnaryOperation : public AbstractOperation, public std::enable_shar
 protected:
 	LiteralType typeA;
 public:
-	AbstractUnaryOperation() = default;
+	//AbstractUnaryOperation() = default;
 	AbstractUnaryOperation(LiteralType a) : typeA(a){}
 	virtual const std::shared_ptr<Literal> execution(const std::shared_ptr<Literal> A) = 0;
 	virtual ~AbstractUnaryOperation() = default;
-	virtual void addMyself() = 0;
 };
 
 class AbstractNeg : public AbstractUnaryOperation{
@@ -115,6 +114,17 @@ protected:
 	Drop() = default;
 public:
 	static Drop& get();
+	static void free();
+	bool apply(Stack& s);
+};
+
+class Forget : public UnaryOperator {
+protected:
+	std::string name = "FORGET";
+	static std::shared_ptr<Forget> instance;
+	Forget() = default;
+public:
+	static Forget& get();
 	static void free();
 	bool apply(Stack& s);
 };

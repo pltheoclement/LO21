@@ -24,6 +24,12 @@ public:
 
 
 class AbstractOperation {
+public:
+	virtual void addMyself() = 0;
+	virtual ~AbstractOperation() = default;
+	int getValueInteger(const std::shared_ptr<Literal> A);
+	double getValueReal(const std::shared_ptr<Literal> A);
+	std::pair<int, int> getValueRational(const std::shared_ptr<Literal> A);
 };
 
 class TypeOperator {
@@ -31,7 +37,7 @@ protected:
 	std::string name;
 public:
 	virtual bool apply(Stack& s) = 0;
-	virtual ~TypeOperator();
+	virtual ~TypeOperator() = default;
 };
 
 class Clear : public TypeOperator {

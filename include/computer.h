@@ -26,7 +26,7 @@ public:
 
 class Computer{
     std::map<std::string, std::string> variables;
-    std::string message;
+    std::string message = "Welcome";
     Computer() = default;
 public:
     static Computer& getInstance();
@@ -35,6 +35,8 @@ public:
     void forgetVariable(const std::string& name);
     void pushVariable(const std::string& name);
     std::string getVariable(const std::string& name);
+    void saveToFile(const std::string& filename) const;
+    void loadFromFile(const std::string& filename);
     std::string evalLine(const std::string& s);
 };
 #endif

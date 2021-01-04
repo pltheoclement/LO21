@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 #include <memory>
-enum LiteralType {linteger,lrational,lreal,latom,lexpression,lprogram,lerror, other};
+enum LiteralType {linteger,lrational,lreal,latom,lexpression,lprogram,lerror};
 
 class LiteralException {
     std::string info;
@@ -14,9 +14,7 @@ public:
 };
 
 class Literal {
-
 public:
-
     static LiteralType isLiteral(const std::string& s);
     static const std::shared_ptr<Literal> makeLiteral(const std::string& s, LiteralType t);
 
@@ -61,7 +59,7 @@ class LRational : public Literal {
     void simplify();
 public:
     LiteralType getType(){ return lrational;}
-    LRational(const int& n, const int& d): num(n),den(d){ this->simplify();}
+    LRational(const int& n, const int& d): num(n),den(d){if (den == 0) throw LiteralException("Null denominator"); this->simplify();}
     LRational(const LInteger& i): num(i.getValue()), den(1){}
     int getNum() const { return num;}
     int getDen() const { return den;}
@@ -89,6 +87,8 @@ public:
     LiteralType getType(){ return lexpression;}
     std::string getValue() const { return value;}
     std::string toString() const { return '\''+value+'\'';}
+    static const std::shared_ptr<LExpression>makeLiteral(std::string s);
+    LExpression(std::string s) : value(s){}
     ~LExpression(){}
 };
 
@@ -97,6 +97,9 @@ class LProgram : public Literal {
 public:
     LiteralType getType(){ return lprogram;}
     std::string toString() const;
+    static const std::shared_ptr<LProgram>makeLiteral(std::string s);
+    LProgram(std::string s) : program(s){}
+    std::string getValue() {return program;}
     ~LProgram(){}
 };
 
