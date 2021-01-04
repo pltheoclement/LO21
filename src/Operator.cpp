@@ -11,6 +11,7 @@
 #include "../include/operator.h"
 #include "../include/unaryOperator.h"
 #include "../include/binaryOperator.h"
+#include "../include/ternaryOperator.h"
 #include "../include/computer.h"
 #include "../include/literal.h"
 
@@ -118,6 +119,8 @@ void creationOperators(){
     Eval::get();
 
     Ift::get();
+
+    Ifte::get();
 
     Forget::get();
 

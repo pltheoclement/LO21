@@ -1027,7 +1027,7 @@ public:
 };
 
 /*
- * Classe de l'opérateur Sto
+ * Classe de l'opérateur IFT
  * permet l'execution d'un If Then
  */
 class Ift : public BinaryOperator {
@@ -1041,7 +1041,7 @@ public:
 	/*
 	 * Méthode permettant l'éxécution de l'opérateur IFT.
 	 * La méthode dépile 2 littérales. La 1ere (i.e. le dernier dépilé) est un test logique (tout type de littérale pour un "Vrai", littérale entière 0 pour un "Faux".
-	 * Si la valeur de ce test est vrai, la deuxième littérale est évalué sinon elle est abandonnée. La deuxième littérale doit donc être une expression (LExpression) pour un programme (LProgram)
+	 * Si la valeur de ce test est vrai, la deuxième littérale est évalué sinon elle est abandonnée. La deuxième littérale doit donc être une expression (LExpression) ou un programme (LProgram)
      *
      * @param La pile sur laquelle l'opérateur s'applique
      *
@@ -1049,5 +1049,6 @@ public:
 	 */
 	bool apply(Stack& s);
 };
+
 
 #endif /* HEADERS_BINARYOPERATOR_H_ */

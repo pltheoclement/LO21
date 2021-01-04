@@ -1569,16 +1569,16 @@ bool Sto::apply(Stack& s){
 	const shared_ptr<Literal> A = s.top();
 	s.pop();
 	const shared_ptr<Literal> B = s.top();
-	if(B.get()->getType() != lexpression){
-		s.push(A);
+	if(A.get()->getType() != lexpression){
+		s.push(B);
 		throw OperatorException("Need an expression");
 	}else{
 		s.pop();
-		Literal* litB = B.get();
-		LExpression* lexpB = dynamic_cast<LExpression*>(litB);
-		string var = lexpB->getValue();
+		Literal* litA = A.get();
+		LExpression* lexpA = dynamic_cast<LExpression*>(litA);
+		string var = lexpA->getValue();
 		var = var.substr(1, var.size()-2);
-		Computer::getInstance().storeVariable(var, *A);
+		Computer::getInstance().storeVariable(var, *B);
 	}
 	return true;
 }
