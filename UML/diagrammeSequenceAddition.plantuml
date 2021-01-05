@@ -5,7 +5,7 @@ actor user
 participant "__C: Computer__" as Computer
 participant "__S: Stack__" as Stack
 participant "__L: LiteralManager__" as LiteralManager
-participant "__O: OperatorManager__" as OperatorManager
+participant "__O: Operator__" as Operator
 participant "__Add: OpAdd__" as Add
 
 user -> Computer : l1 = ecrireCommande()
@@ -48,7 +48,7 @@ activate Computer
   group evalLine()
   Computer -> LiteralManager : isOp = isOperator(l3)
   group if isOp == "OpAdd"
-    Computer -> OperatorManager : Op = getOperator(l3, isOp)
+    Computer -> Operator : Op = getOperator(l3, isOp)
     Computer -> Add **
     Computer -> Add :apply(Stack)
     Add -> Stack : item1 = top()
