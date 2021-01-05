@@ -398,20 +398,20 @@ void QCompUT::getNextCommande(){
 
 /*--------------------------------------------------------------------------------------------------------------------------------------------*/
 /*------Slot pour les boutons du premier------------------------------------------------------------------------------------------------------*/
-/**/    void QCompUT::slot1(){ text +="1"; Line_Edit["commande"]->setText(text); }
-/**/    void QCompUT::slot2(){ text +="2"; Line_Edit["commande"]->setText(text); }
-/**/    void QCompUT::slot3(){ text +="3"; Line_Edit["commande"]->setText(text); }
-/**/    void QCompUT::slot4(){ text +="4"; Line_Edit["commande"]->setText(text); }
-/**/    void QCompUT::slot5(){ text +="5"; Line_Edit["commande"]->setText(text); }
-/**/    void QCompUT::slot6(){ text +="6"; Line_Edit["commande"]->setText(text); }
-/**/    void QCompUT::slot7(){ text +="7"; Line_Edit["commande"]->setText(text); }
-/**/    void QCompUT::slot8(){ text +="8"; Line_Edit["commande"]->setText(text); }
-/**/    void QCompUT::slot9(){ text +="9"; Line_Edit["commande"]->setText(text); }
-/**/    void QCompUT::slot0(){ text +="0"; Line_Edit["commande"]->setText(text); }
-/**/    void QCompUT::slotPlus() { text +="+"; Line_Edit["commande"]->setText(text); }
-/**/    void QCompUT::slotMoins(){ text +="-"; Line_Edit["commande"]->setText(text); }
-/**/    void QCompUT::slotMult() { text +="*"; Line_Edit["commande"]->setText(text); }
-/**/    void QCompUT::slotDiv()  { text +="/"; Line_Edit["commande"]->setText(text); }
+/**/    void QCompUT::slot1(){ text +="1"; Line_Edit["commande"]->setText(text); Line_Edit["commande"]->setFocus(Qt::OtherFocusReason);}
+/**/    void QCompUT::slot2(){ text +="2"; Line_Edit["commande"]->setText(text); Line_Edit["commande"]->setFocus(Qt::OtherFocusReason);}
+/**/    void QCompUT::slot3(){ text +="3"; Line_Edit["commande"]->setText(text); Line_Edit["commande"]->setFocus(Qt::OtherFocusReason);}
+/**/    void QCompUT::slot4(){ text +="4"; Line_Edit["commande"]->setText(text); Line_Edit["commande"]->setFocus(Qt::OtherFocusReason);}
+/**/    void QCompUT::slot5(){ text +="5"; Line_Edit["commande"]->setText(text); Line_Edit["commande"]->setFocus(Qt::OtherFocusReason);}
+/**/    void QCompUT::slot6(){ text +="6"; Line_Edit["commande"]->setText(text); Line_Edit["commande"]->setFocus(Qt::OtherFocusReason);}
+/**/    void QCompUT::slot7(){ text +="7"; Line_Edit["commande"]->setText(text); Line_Edit["commande"]->setFocus(Qt::OtherFocusReason);}
+/**/    void QCompUT::slot8(){ text +="8"; Line_Edit["commande"]->setText(text); Line_Edit["commande"]->setFocus(Qt::OtherFocusReason);}
+/**/    void QCompUT::slot9(){ text +="9"; Line_Edit["commande"]->setText(text); Line_Edit["commande"]->setFocus(Qt::OtherFocusReason);}
+/**/    void QCompUT::slot0(){ text +="0"; Line_Edit["commande"]->setText(text); Line_Edit["commande"]->setFocus(Qt::OtherFocusReason);}
+/**/    void QCompUT::slotPlus() { text +="+"; Line_Edit["commande"]->setText(text); Line_Edit["commande"]->setFocus(Qt::OtherFocusReason);}
+/**/    void QCompUT::slotMoins(){ text +="-"; Line_Edit["commande"]->setText(text); Line_Edit["commande"]->setFocus(Qt::OtherFocusReason);}
+/**/    void QCompUT::slotMult() { text +="*"; Line_Edit["commande"]->setText(text); Line_Edit["commande"]->setFocus(Qt::OtherFocusReason);}
+/**/    void QCompUT::slotDiv()  { text +="/"; Line_Edit["commande"]->setText(text); Line_Edit["commande"]->setFocus(Qt::OtherFocusReason);}
 /**/    void QCompUT::slotEqual() { QCompUT::getNextCommande(); }
 
 /*--------------------------------------------------------------------------------------------------------------------------------------------*/
